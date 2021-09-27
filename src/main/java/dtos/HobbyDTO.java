@@ -11,57 +11,66 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author tha
  */
 public class HobbyDTO {
     private long id;
-    private String str1;
-    private String str2;
+    private String name;
+    private String url;
+    private String category;
+    private String environment;
 
-    public HobbyDTO(String dummyStr1, String dummyStr2) {
-        this.str1 = dummyStr1;
-        this.str2 = dummyStr2;
+    public HobbyDTO(String name, String url, String category, String environment) {
+        this.name = name;
+        this.url = url;
+        this.category = category;
+        this.environment = environment;
     }
 
-    public static List<HobbyDTO> getDtos(List<Hobby> hobbys){
+    public static List<HobbyDTO> getDtos(List<Hobby> hobbies) {
         List<HobbyDTO> hobbyDTOs = new ArrayList();
-        hobbys.forEach(hobby->hobbyDTOs.add(new HobbyDTO(hobby)));
+        hobbies.forEach(hobby -> hobbyDTOs.add(new HobbyDTO(hobby)));
         return hobbyDTOs;
     }
 
-
     public HobbyDTO(Hobby hobby) {
-        if(hobby.getId() != null)
+        if (hobby.getId() != null)
             this.id = hobby.getId();
-        this.str1 = hobby.getDummyStr1();
-        this.str2 = hobby.getDummyStr2();
+        this.name = hobby.getName();
+        this.url = hobby.getUrl();
+        this.category = hobby.getCategory();
+        this.environment = hobby.getEnvironment();
     }
 
-    public String getDummyStr1() {
-        return str1;
+    public String getName() {
+        return name;
     }
 
-    public void setDummyStr1(String dummyStr1) {
-        this.str1 = dummyStr1;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getDummyStr2() {
-        return str2;
+    public String getUrl() {
+        return url;
     }
 
-    public void setDummyStr2(String dummyStr2) {
-        this.str2 = dummyStr2;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    @Override
-    public String toString() {
-        return "HobbyDTO{" + "id=" + id + ", str1=" + str1 + ", str2=" + str2 + '}';
+    public String getCategory() {
+        return category;
     }
-    
-    
-    
-    
-    
-    
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getEnvironment() {
+        return environment;
+    }
+
+    public void setEnvironment(String environment) {
+        this.environment = environment;
+    }
 }

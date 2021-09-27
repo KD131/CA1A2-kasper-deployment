@@ -10,7 +10,6 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 /**
- *
  * Rename Class to a relevant name Add add relevant facade methods
  */
 public class PersonFacade {
@@ -19,11 +18,11 @@ public class PersonFacade {
     private static EntityManagerFactory emf;
 
     //Private Constructor to ensure Singleton
-    private PersonFacade() {}
-    
-    
+    private PersonFacade() {
+    }
+
+
     /**
-     * 
      * @param _emf
      * @return an instance of this facade class.
      */
@@ -38,9 +37,9 @@ public class PersonFacade {
     private EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-    
-    public PersonDTO create(PersonDTO person){
-        Person personEntity = new Person(person.getDummyStr1(), person.getDummyStr2());
+
+    public PersonDTO create(PersonDTO person) {
+        Person personEntity = new Person(person.getName());
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
@@ -51,33 +50,33 @@ public class PersonFacade {
         }
         return new PersonDTO(personEntity);
     }
-    public PersonDTO getById(long id){
+
+    public PersonDTO getById(long id) {
         EntityManager em = emf.createEntityManager();
         return new PersonDTO(em.find(Person.class, id));
     }
-    
+
     //TODO Remove/Change this before use
-    public long getPersonCount(){
+    public long getPersonCount() {
         EntityManager em = emf.createEntityManager();
-        try{
-            long personCount = (long)em.createQuery("SELECT COUNT(p) FROM Person p").getSingleResult();
+        try {
+            long personCount = (long) em.createQuery("SELECT COUNT(p) FROM Person p").getSingleResult();
             return personCount;
-        }finally{  
+        } finally {
             em.close();
         }
     }
-    
-    public List<PersonDTO> getAll(){
+
+    public List<PersonDTO> getAll() {
         EntityManager em = emf.createEntityManager();
         TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p", Person.class);
         List<Person> persons = query.getResultList();
         return PersonDTO.getDtos(persons);
     }
-    
+
     public static void main(String[] args) {
         emf = EMF_Creator.createEntityManagerFactory();
         PersonFacade fe = getPersonFacade(emf);
-        fe.getAll().forEach(dto->System.out.println(dto));
+        fe.getAll().forEach(dto -> System.out.println(dto));
     }
-
 }

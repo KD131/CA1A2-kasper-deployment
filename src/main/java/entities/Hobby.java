@@ -12,18 +12,19 @@ public class Hobby implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String name;
+    private String url;
+    private String category;
+    private String environment;
 
     public Hobby() {
     }
 
-    // TODO, delete this class, or rename to an Entity class that makes sense for what you are about to do
-    // Delete EVERYTHING below if you decide to use this class, it's dummy data used for the initial demo
-    private String dummyStr1;
-    private String dummyStr2;
-
-    public Hobby(String dummyStr1, String dummyStr2) {
-        this.dummyStr1 = dummyStr1;
-        this.dummyStr2 = dummyStr2;
+    public Hobby(String name, String url, String category, String environment) {
+        this.name = name;
+        this.url = url;
+        this.category = category;
+        this.environment = environment;
     }
 
     public Long getId() {
@@ -33,25 +34,36 @@ public class Hobby implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    
-    public String getDummyStr1() {
-        return dummyStr1;
+
+    public String getName() {
+        return name;
     }
 
-    public void setDummyStr1(String dummyStr1) {
-        this.dummyStr1 = dummyStr1;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getDummyStr2() {
-        return dummyStr2;
+    public String getUrl() {
+        return url;
     }
 
-    public void setDummyStr2(String dummyStr2) {
-        this.dummyStr2 = dummyStr2;
+    public void setUrl(String url) {
+        this.url = url;
     }
-    
-    
-    
 
-   
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getEnvironment() {
+        return environment;
+    }
+
+    public void setEnvironment(String environment) {
+        this.environment = environment;
+    }
 }

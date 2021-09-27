@@ -10,20 +10,18 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 /**
- *
  * Rename Class to a relevant name Add add relevant facade methods
  */
 public class HobbyFacade {
 
     private static HobbyFacade instance;
     private static EntityManagerFactory emf;
-    
+
     //Private Constructor to ensure Singleton
-    private HobbyFacade() {}
-    
-    
+    private HobbyFacade() {
+    }
+
     /**
-     * 
      * @param _emf
      * @return an instance of this facade class.
      */
@@ -38,9 +36,9 @@ public class HobbyFacade {
     private EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-    
-    public HobbyDTO create(HobbyDTO hobby){
-        Hobby hobbyEntity = new Hobby(hobby.getDummyStr1(), hobby.getDummyStr2());
+
+    public HobbyDTO create(HobbyDTO hobby) {
+        Hobby hobbyEntity = new Hobby(hobby.getName(), hobby.getUrl(), hobby.getCategory(), hobby.getEnvironment());
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
@@ -51,33 +49,33 @@ public class HobbyFacade {
         }
         return new HobbyDTO(hobbyEntity);
     }
-    public HobbyDTO getById(long id){
+
+    public HobbyDTO getById(long id) {
         EntityManager em = emf.createEntityManager();
         return new HobbyDTO(em.find(Hobby.class, id));
     }
-    
-    //TODO Remove/Change this before use
-    public long getHobbyCount(){
+
+    public long getHobbyCount() {
         EntityManager em = emf.createEntityManager();
-        try{
-            long hobbyCount = (long)em.createQuery("SELECT COUNT(h) FROM Hobby h").getSingleResult();
+        try {
+            long hobbyCount = (long) em.createQuery("SELECT COUNT(h) FROM Hobby h").getSingleResult();
             return hobbyCount;
-        }finally{  
+        } finally {
             em.close();
         }
     }
-    
-    public List<HobbyDTO> getAll(){
+
+    public List<HobbyDTO> getAll() {
         EntityManager em = emf.createEntityManager();
-        TypedQuery<Hobby> query = em.createQuery("SELECT r FROM Hobby h", Hobby.class);
+        TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h", Hobby.class);
         List<Hobby> hobbies = query.getResultList();
         return HobbyDTO.getDtos(hobbies);
     }
-    
+
     public static void main(String[] args) {
         emf = EMF_Creator.createEntityManagerFactory();
         HobbyFacade fe = getHobbyFacade(emf);
-        fe.getAll().forEach(dto->System.out.println(dto));
+        fe.getAll().forEach(dto -> System.out.println(dto));
     }
 
 }

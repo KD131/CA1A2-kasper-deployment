@@ -11,57 +11,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author tha
  */
 public class PersonDTO {
     private long id;
-    private String str1;
-    private String str2;
+    private String name;
 
-    public PersonDTO(String dummyStr1, String dummyStr2) {
-        this.str1 = dummyStr1;
-        this.str2 = dummyStr2;
+    public PersonDTO(String name) {
+        this.name = name;
     }
 
-    public static List<PersonDTO> getDtos(List<Person> persons){
+    public static List<PersonDTO> getDtos(List<Person> persons) {
         List<PersonDTO> personDTOs = new ArrayList();
-        persons.forEach(person->personDTOs.add(new PersonDTO(person)));
+        persons.forEach(person -> personDTOs.add(new PersonDTO(person)));
         return personDTOs;
     }
 
 
     public PersonDTO(Person person) {
-        if(person.getId() != null)
+        if (person.getId() != null)
             this.id = person.getId();
-        this.str1 = person.getDummyStr1();
-        this.str2 = person.getDummyStr2();
+        this.name = person.getName();
     }
 
-    public String getDummyStr1() {
-        return str1;
+    public String getName() {
+        return name;
     }
 
-    public void setDummyStr1(String dummyStr1) {
-        this.str1 = dummyStr1;
+    public void setName(String name) {
+        this.name = name;
     }
-
-    public String getDummyStr2() {
-        return str2;
-    }
-
-    public void setDummyStr2(String dummyStr2) {
-        this.str2 = dummyStr2;
-    }
-
-    @Override
-    public String toString() {
-        return "PersonDTO{" + "id=" + id + ", str1=" + str1 + ", str2=" + str2 + '}';
-    }
-    
-    
-    
-    
-    
-    
 }
