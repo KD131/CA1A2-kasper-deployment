@@ -27,12 +27,19 @@ class PersonFacadeTest
     void setUp()
     {
         EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
+        try
+        {
+            em.getTransaction().begin();
             em.createNamedQuery("Person.deleteAllRows");
             em.createNamedQuery("Person.resetPK");
             em.persist(new Person(11111111, "bob@bob.com", "Bob", "Roberts"));
             em.persist(new Person(22222222, "alice@alice.com", "Alice", "Allison"));
-        em.getTransaction().commit();
+            em.getTransaction().commit();
+        }
+        finally
+        {
+            em.close();
+        }
     }
     
     @Test
