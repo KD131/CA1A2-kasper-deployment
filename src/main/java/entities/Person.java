@@ -25,7 +25,10 @@ public class Person implements Serializable {
             CascadeType.MERGE
     })
     private List<Hobby> hobbies;
-    // TODO: Kasper: Relationship?
+    
+    @ManyToOne(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE})
     private Address address;
 
     public Person() {
@@ -86,7 +89,11 @@ public class Person implements Serializable {
     }
 
     public void setAddress(Address address) {
-        this.address = address;
+        if (address != null)
+        {
+            this.address = address;
+            address.getPersons().add(this);
+        }
     }
 
     public List<Hobby> getHobbies() {

@@ -2,6 +2,8 @@ package entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -14,7 +16,14 @@ public class Address implements Serializable {
     private Long id;
     private String address;
 
+    @ManyToOne(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
     private Zip zip;
+    
+    @OneToMany(mappedBy = "address")
+    private List<Person> persons;
 
     public Address() {
     }
@@ -22,6 +31,7 @@ public class Address implements Serializable {
     public Address(String address, Zip zip) {
         this.address = address;
         this.zip = zip;
+        this.persons = new ArrayList<>();
     }
 
     public Long getId() {
@@ -46,5 +56,10 @@ public class Address implements Serializable {
 
     public void setZip(Zip zip) {
         this.zip = zip;
+    }
+    
+    public List<Person> getPersons()
+    {
+        return persons;
     }
 }
