@@ -15,21 +15,25 @@ public class Hobby implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String url;
+    private String link;
     private String category;
-    private String environment;
+
+    private boolean outdoor;
+
+
     
     @ManyToMany(mappedBy = "hobbies")
     private List<Person> persons;
 
+
     public Hobby() {
     }
 
-    public Hobby(String name, String url, String category, String environment) {
+    public Hobby(String name, String link, String category, boolean outdoor) {
         this.name = name;
-        this.url = url;
+        this.link = link;
         this.category = category;
-        this.environment = environment;
+        this.outdoor = outdoor;
         this.persons = new ArrayList<>();
     }
 
@@ -49,12 +53,25 @@ public class Hobby implements Serializable {
         this.name = name;
     }
 
-    public String getUrl() {
-        return url;
+    public String getLink() {
+        return link;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public boolean isOutdoor() {
+        return outdoor;
+    }
+
+    public void setOutdoor(boolean outdoor) {
+        this.outdoor = outdoor;
+    }
+    
+    public List<Person> getPersons()
+    {
+        return persons;
     }
 
     public String getCategory() {
@@ -65,16 +82,7 @@ public class Hobby implements Serializable {
         this.category = category;
     }
 
-    public String getEnvironment() {
-        return environment;
-    }
-
-    public void setEnvironment(String environment) {
-        this.environment = environment;
-    }
-    
-    public List<Person> getPersons()
-    {
-        return persons;
+    public void setPersons(List<Person> persons) {
+        this.persons = persons;
     }
 }

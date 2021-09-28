@@ -37,7 +37,7 @@ public class PersonFacade implements PersonFacadeInterface {
 
     @Override
     public PersonDTO create(PersonDTO person) {
-        Person personEntity = new Person(person.getNumber(), person.getEmail(), person.getFirstName(), person.getLastName());
+        Person personEntity = new Person(person.getNumber(), person.getEmail(), person.getFirstName(), person.getLastName(), person.get);
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();

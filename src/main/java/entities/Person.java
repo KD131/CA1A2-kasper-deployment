@@ -26,15 +26,19 @@ public class Person implements Serializable {
     })
     private List<Hobby> hobbies;
 
+    private Address address;
+
     public Person() {
     }
 
-    public Person(int number, String email, String firstName, String lastName) {
+    public Person(int number, String email, String firstName, String lastName, Address address, List<Hobby> hobbies) {
         this.number = number;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.address = address;
         this.hobbies = new ArrayList<>();
+
     }
 
     public Long getId() {
@@ -77,8 +81,16 @@ public class Person implements Serializable {
         this.lastName = lastName;
     }
 
+    public Address getAddress() {
+        return address;
+    }
 
-    public List<Hobby> getHobbies() {
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public List<Hobby> getHobbies()
+    {
         return hobbies;
     }
 
