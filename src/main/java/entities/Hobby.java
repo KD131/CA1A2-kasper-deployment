@@ -19,7 +19,8 @@ public class Hobby implements Serializable {
     private String category;
     private String environment;
     
-    @ManyToMany(mappedBy = "hobbies")
+    @ManyToMany(cascade = CascadeType.REMOVE,
+            mappedBy = "hobbies")
     private List<Person> persons;
 
     public Hobby() {
