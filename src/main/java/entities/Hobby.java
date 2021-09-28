@@ -2,6 +2,8 @@ package entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -15,7 +17,14 @@ public class Hobby implements Serializable {
     private String name;
     private String link;
     private String category;
+
     private boolean outdoor;
+
+
+    
+    @ManyToMany(mappedBy = "hobbies")
+    private List<Person> persons;
+
 
     public Hobby() {
     }
@@ -25,6 +34,7 @@ public class Hobby implements Serializable {
         this.link = link;
         this.category = category;
         this.outdoor = outdoor;
+        this.persons = new ArrayList<>();
     }
 
     public Long getId() {
@@ -43,14 +53,6 @@ public class Hobby implements Serializable {
         this.name = name;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
     public String getLink() {
         return link;
     }
@@ -65,5 +67,22 @@ public class Hobby implements Serializable {
 
     public void setOutdoor(boolean outdoor) {
         this.outdoor = outdoor;
+    }
+    
+    public List<Person> getPersons()
+    {
+        return persons;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setPersons(List<Person> persons) {
+        this.persons = persons;
     }
 }

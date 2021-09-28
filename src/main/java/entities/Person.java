@@ -2,10 +2,13 @@ package entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
 @NamedQuery(name = "Person.deleteAllRows", query = "DELETE from Person")
+@NamedNativeQuery(name = "Person.resetPK", query = "ALTER TABLE Person AUTO_INCREMENT = 1")
 public class Person implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -16,18 +19,26 @@ public class Person implements Serializable {
     private String email;
     private String firstName;
     private String lastName;
+    
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    private List<Hobby> hobbies;
 
     private Address address;
 
     public Person() {
     }
 
-    public Person(int number, String email, String firstName, String lastName, Address address) {
+    public Person(int number, String email, String firstName, String lastName, Address address, List<Hobby> hobbies) {
         this.number = number;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
+        this.hobbies = new ArrayList<>();
+
     }
 
     public Long getId() {
@@ -76,5 +87,28 @@ public class Person implements Serializable {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public List<Hobby> getHobbies()
+    {
+        return hobbies;
+    }
+    
+    public void addHobby(Hobby hobby)
+    {
+        if (hobby != null)
+        {
+            this.hobbies.add(hobby);
+            hobby.getPersons().add(this);
+        }
+    }
+    
+    public void removeHobby(Hobby hobby)
+    {
+        if (hobby != null)
+        {
+            this.hobbies.remove(hobby);
+            hobby.getPersons().remove(this);
+        }
     }
 }

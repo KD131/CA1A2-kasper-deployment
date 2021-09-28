@@ -1,8 +1,8 @@
 package facades;
 
-import dtos.PersonDTO;
-import entities.Person;
-import facades.inter.PersonFacadeInterface;
+import dtos.PhoneDTO;
+import entities.Phone;
+import facades.inter.PhoneFacadeInterface;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
@@ -13,19 +13,19 @@ import java.util.List;
 /**
  * Rename Class to a relevant name Add add relevant facade methods
  */
-public class PersonFacade implements PersonFacadeInterface {
+public class PhoneFacade implements PhoneFacadeInterface {
 
-    private static PersonFacade instance;
+    private static PhoneFacade instance;
     private static EntityManagerFactory emf;
 
     //Private Constructor to ensure Singleton
-    private PersonFacade() {
+    private PhoneFacade() {
     }
 
-    public static PersonFacade getPersonFacade(EntityManagerFactory _emf) {
+    public static PhoneFacade getPhoneFacade(EntityManagerFactory _emf) {
         if (instance == null) {
             emf = _emf;
-            instance = new PersonFacade();
+            instance = new PhoneFacade();
         }
         return instance;
     }
@@ -35,47 +35,47 @@ public class PersonFacade implements PersonFacadeInterface {
     }
 
     @Override
-    public PersonDTO create(PersonDTO person) {
-        Person personEntity = new Person(person.getNumber(), person.getEmail(), person.getFirstName(), person.getLastName(), person.get);
+    public PhoneDTO create(PhoneDTO phone) {
+        Phone phoneEntity = new Phone(phone.getNumber(), phone.getInfo());
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
-            em.persist(personEntity);
+            em.persist(phoneEntity);
             em.getTransaction().commit();
         } finally {
             em.close();
         }
-        return new PersonDTO(personEntity);
+        return new PhoneDTO(phoneEntity);
     }
 
     @Override
-    public PersonDTO getById(long id) {
+    public PhoneDTO getById(long id) {
         EntityManager em = emf.createEntityManager();
-        return new PersonDTO(em.find(Person.class, id));
+        return new PhoneDTO(em.find(Phone.class, id));
     }
 
     @Override
-    public long getPersonCount() {
+    public long getPhoneCount() {
         EntityManager em = emf.createEntityManager();
         try {
-            long personCount = (long) em.createQuery("SELECT COUNT(p) FROM Person p").getSingleResult();
-            return personCount;
+            long phoneCount = (long) em.createQuery("SELECT COUNT(p) FROM Phone p").getSingleResult();
+            return phoneCount;
         } finally {
             em.close();
         }
     }
 
     @Override
-    public List<PersonDTO> getAll() {
+    public List<PhoneDTO> getAll() {
         EntityManager em = emf.createEntityManager();
-        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p", Person.class);
-        List<Person> persons = query.getResultList();
-        return PersonDTO.getDtos(persons);
+        TypedQuery<Phone> query = em.createQuery("SELECT p FROM Phone p", Phone.class);
+        List<Phone> phones = query.getResultList();
+        return PhoneDTO.getDtos(phones);
     }
 
     public static void main(String[] args) {
         emf = EMF_Creator.createEntityManagerFactory();
-        PersonFacade pf = getPersonFacade(emf);
+        PhoneFacade pf = getPhoneFacade(emf);
         pf.getAll().forEach(dto -> System.out.println(dto));
     }
 }

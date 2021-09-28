@@ -11,7 +11,7 @@ public class Zip implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int zip;
-    private String city:
+    private String city;
 
     public Zip() {
     }
