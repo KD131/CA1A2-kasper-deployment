@@ -21,7 +21,6 @@ public class PersonFacade {
     private PersonFacade() {
     }
 
-
     /**
      * @param _emf
      * @return an instance of this facade class.
@@ -39,7 +38,7 @@ public class PersonFacade {
     }
 
     public PersonDTO create(PersonDTO person) {
-        Person personEntity = new Person(person.getName());
+        Person personEntity = new Person(person.getNumber(), person.getEmail(), person.getFirstName(), person.getLastName());
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();

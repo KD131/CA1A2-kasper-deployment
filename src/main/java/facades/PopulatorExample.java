@@ -7,14 +7,15 @@ package facades;
 
 import dtos.RenameMeDTO;
 import entities.RenameMe;
-import javax.persistence.EntityManagerFactory;
 import utils.EMF_Creator;
+
+import javax.persistence.EntityManagerFactory;
 
 /**
  *
  * @author tha
  */
-public class Populator {
+public class PopulatorExample {
     public static void populate(){
         EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory();
         FacadeExample fe = FacadeExample.getFacadeExample(emf);

@@ -15,10 +15,16 @@ import java.util.List;
  */
 public class PersonDTO {
     private long id;
-    private String name;
+    private int number;
+    private String email;
+    private String firstName;
+    private String lastName;
 
-    public PersonDTO(String name) {
-        this.name = name;
+    public PersonDTO(int number, String email, String firstName, String lastName) {
+        this.number = number;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public static List<PersonDTO> getDtos(List<Person> persons) {
@@ -31,14 +37,41 @@ public class PersonDTO {
     public PersonDTO(Person person) {
         if (person.getId() != null)
             this.id = person.getId();
-        this.name = person.getName();
+        this.number = person.getNumber();
+        this.email = person.getEmail();
+        this.firstName = person.getFirstName();
+        this.lastName = person.getLastName();
     }
 
-    public String getName() {
-        return name;
+    public int getNumber() {
+        return number;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }
