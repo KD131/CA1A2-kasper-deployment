@@ -33,6 +33,14 @@ public class PersonDTO {
         this.address = address;
         this.hobbies = hobbies;
     }
+    public PersonDTO(List<Phone> phones, String email, String firstName, String lastName, Address address) {
+        this.phones = phones;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+        this.hobbies = new ArrayList<>();
+    }
 
     public static List<PersonDTO> getDtos(List<Person> persons) {
         List<PersonDTO> personDTOs = new ArrayList();

@@ -46,8 +46,16 @@ public class Person implements Serializable {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
+        this.hobbies = hobbies;
+    }
+
+    public Person(List<Phone> phones, String email, String firstName, String lastName, Address address) {
+        this.phones = phones;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
         this.hobbies = new ArrayList<>();
-        this.phones = new ArrayList<>();
     }
 
     public Long getId() {
