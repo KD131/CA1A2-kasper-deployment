@@ -26,6 +26,13 @@ public class Person implements Serializable {
     })
     private List<Hobby> hobbies;
     
+    @OneToMany(mappedBy = "person",
+            cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    private List<Phone> phones;
+    
     @ManyToOne(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE})
@@ -34,6 +41,8 @@ public class Person implements Serializable {
     public Person() {
     }
 
+    // TODO: hobbies and phones in constructor?
+    //  if phone replaces number, we'll get issues in PersonFacade when we make Persons
     public Person(int number, String email, String firstName, String lastName, Address address, List<Hobby> hobbies) {
         this.number = number;
         this.email = email;
@@ -41,7 +50,7 @@ public class Person implements Serializable {
         this.lastName = lastName;
         this.address = address;
         this.hobbies = new ArrayList<>();
-
+        this.phones = new ArrayList<>();
     }
 
     public Long getId() {
@@ -115,6 +124,20 @@ public class Person implements Serializable {
         if (hobby != null) {
             this.hobbies.remove(hobby);
             hobby.getPersons().remove(this);
+        }
+    }
+    
+    public List<Phone> getPhones()
+    {
+        return phones;
+    }
+    
+    public void addPhone(Phone phone)
+    {
+        if (phone != null)
+        {
+            this.phones.add(phone);
+            phone.setPerson(this);
         }
     }
 }

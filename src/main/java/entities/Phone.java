@@ -15,6 +15,9 @@ public class Phone implements Serializable {
     private Long id;
     private int number;
     private String info;
+    
+    @ManyToOne()
+    private Person person;
 
     public Phone() {
     }
@@ -46,5 +49,15 @@ public class Phone implements Serializable {
 
     public void setInfo(String info) {
         this.info = info;
+    }
+    
+    public Person getPerson()
+    {
+        return person;
+    }
+    
+    public void setPerson(Person person)
+    {
+        this.person = person;
     }
 }
