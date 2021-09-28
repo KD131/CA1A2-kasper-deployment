@@ -3,6 +3,7 @@ package entities;
 import javax.persistence.*;
 import java.io.Serializable;
 
+// TODO see if it fails because of the table name in the query
 @Table(name = "phone")
 
 @Entity
