@@ -25,7 +25,7 @@ public class Person implements Serializable {
             CascadeType.MERGE
     })
     private List<Hobby> hobbies;
-
+    // TODO: Kasper: Relationship?
     private Address address;
 
     public Person() {
@@ -89,8 +89,7 @@ public class Person implements Serializable {
         this.address = address;
     }
 
-    public List<Hobby> getHobbies()
-    {
+    public List<Hobby> getHobbies() {
         return hobbies;
     }
 

@@ -1,7 +1,6 @@
 package facades.inter;
 
-import dtos.HobbyDTO;
-import dtos.PersonDTO;
+import dtos.*;
 
 import java.util.List;
 

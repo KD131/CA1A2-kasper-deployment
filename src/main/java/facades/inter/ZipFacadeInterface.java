@@ -1,6 +1,6 @@
 package facades.inter;
 
-import dtos.PersonDTO;
+import dtos.ZipDTO;
 
 import java.util.List;
 

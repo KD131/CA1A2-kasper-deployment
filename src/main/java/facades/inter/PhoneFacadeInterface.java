@@ -1,6 +1,7 @@
 package facades.inter;
 
 import dtos.PersonDTO;
+import dtos.PhoneDTO;
 
 import java.util.List;
 

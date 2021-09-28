@@ -1,7 +1,6 @@
 package facades;
 
-import dtos.HobbyDTO;
-import dtos.PersonDTO;
+import dtos.*;
 import entities.Person;
 import facades.inter.PersonFacadeInterface;
 import utils.EMF_Creator;
@@ -37,7 +36,14 @@ public class PersonFacade implements PersonFacadeInterface {
 
     @Override
     public PersonDTO create(PersonDTO person) {
-        Person personEntity = new Person(person.getNumber(), person.getEmail(), person.getFirstName(), person.getLastName(), person.get);
+        //int number, String email, String firstName, String lastName, Address address, List<Hobby> hobbies
+        Person personEntity = new Person(
+                person.getNumber(),
+                person.getEmail(),
+                person.getFirstName(),
+                person.getLastName(),
+                person.getAddress(),
+                person.getHobbies());
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();

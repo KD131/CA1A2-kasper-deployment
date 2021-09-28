@@ -2,6 +2,7 @@ package facades;
 
 import dtos.HobbyDTO;
 import dtos.PersonDTO;
+import dtos.ZipDTO;
 import entities.Hobby;
 import facades.inter.HobbyFacadeInterface;
 import utils.EMF_Creator;
