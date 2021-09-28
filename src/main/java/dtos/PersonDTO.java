@@ -8,6 +8,7 @@ package dtos;
 import entities.Address;
 import entities.Hobby;
 import entities.Person;
+import entities.Phone;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,19 +18,20 @@ import java.util.List;
  */
 public class PersonDTO {
     private long id;
-    private int number;
+    private List<Phone> phones;
     private String email;
     private String firstName;
     private String lastName;
     private Address address;
     private List<Hobby> hobbies;
 
-    public PersonDTO(int number, String email, String firstName, String lastName, Address address, List<Hobby> hobbies) {
-        this.number = number;
+    public PersonDTO(List<Phone> phones, String email, String firstName, String lastName, Address address, List<Hobby> hobbies) {
+        this.phones = phones;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
+        this.hobbies = hobbies;
     }
 
     public static List<PersonDTO> getDtos(List<Person> persons) {
@@ -42,19 +44,20 @@ public class PersonDTO {
     public PersonDTO(Person person) {
         if (person.getId() != null)
             this.id = person.getId();
-            this.number = person.getNumber();
-            this.email = person.getEmail();
-            this.firstName = person.getFirstName();
-            this.lastName = person.getLastName();
-            this.address = person.getAddress();
+        this.phones = person.getPhones();
+        this.email = person.getEmail();
+        this.firstName = person.getFirstName();
+        this.lastName = person.getLastName();
+        this.address = person.getAddress();
+        this.hobbies = person.getHobbies();
     }
 
-    public int getNumber() {
-        return number;
+    public List<Phone> getPhones() {
+        return phones;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public void setPhones(List<Phone> phones) {
+        this.phones = phones;
     }
 
     public String getEmail() {

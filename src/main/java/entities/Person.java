@@ -15,7 +15,6 @@ public class Person implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private int number;
     private String email;
     private String firstName;
     private String lastName;
@@ -25,14 +24,14 @@ public class Person implements Serializable {
             CascadeType.MERGE
     })
     private List<Hobby> hobbies;
-    
+
     @OneToMany(mappedBy = "person",
             cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-    })
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     private List<Phone> phones;
-    
+
     @ManyToOne(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE})
@@ -41,10 +40,8 @@ public class Person implements Serializable {
     public Person() {
     }
 
-    // TODO: hobbies and phones in constructor?
-    //  if phone replaces number, we'll get issues in PersonFacade when we make Persons
-    public Person(int number, String email, String firstName, String lastName, Address address, List<Hobby> hobbies) {
-        this.number = number;
+    public Person(List<Phone> phones, String email, String firstName, String lastName, Address address, List<Hobby> hobbies) {
+        this.phones = phones;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -61,12 +58,19 @@ public class Person implements Serializable {
         this.id = id;
     }
 
-    public int getNumber() {
-        return number;
+    public List<Phone> getPhones() {
+        return phones;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public void setPhones(List<Phone> phones) {
+        this.phones = phones;
+    }
+
+    public void addPhone(Phone phone) {
+        if (phone != null) {
+            this.phones.add(phone);
+            phone.setPerson(this);
+        }
     }
 
     public String getEmail() {
@@ -98,8 +102,7 @@ public class Person implements Serializable {
     }
 
     public void setAddress(Address address) {
-        if (address != null)
-        {
+        if (address != null) {
             this.address = address;
             address.getPersons().add(this);
         }
@@ -124,20 +127,6 @@ public class Person implements Serializable {
         if (hobby != null) {
             this.hobbies.remove(hobby);
             hobby.getPersons().remove(this);
-        }
-    }
-    
-    public List<Phone> getPhones()
-    {
-        return phones;
-    }
-    
-    public void addPhone(Phone phone)
-    {
-        if (phone != null)
-        {
-            this.phones.add(phone);
-            phone.setPerson(this);
         }
     }
 }

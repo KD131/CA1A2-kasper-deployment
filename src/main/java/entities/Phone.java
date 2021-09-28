@@ -23,6 +23,11 @@ public class Phone implements Serializable {
     public Phone() {
     }
 
+    public Phone(int number) {
+        this.number = number;
+        this.info = "personal";
+    }
+
     public Phone(int number, String info) {
         this.number = number;
         this.info = info;

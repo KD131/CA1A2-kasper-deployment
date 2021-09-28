@@ -1,6 +1,8 @@
 package facades;
 
+import entities.Hobby;
 import entities.Person;
+import entities.Phone;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +11,7 @@ import utils.EMF_Creator;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PersonFacadeTest
 {
@@ -32,8 +34,8 @@ class PersonFacadeTest
             em.getTransaction().begin();
             em.createNamedQuery("Person.deleteAllRows");
             em.createNamedQuery("Person.resetPK");
-            em.persist(new Person(11111111, "bob@bob.com", "Bob", "Roberts"));
-            em.persist(new Person(22222222, "alice@alice.com", "Alice", "Allison"));
+            em.persist(new Person(new Phone(11111111), "bob@bob.com", "Bob", "Roberts"));
+            em.persist(new Person(new Phone(22222222), "alice@alice.com", "Alice", "Allison"));
             em.getTransaction().commit();
         }
         finally

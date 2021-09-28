@@ -36,9 +36,8 @@ public class PersonFacade implements PersonFacadeInterface {
 
     @Override
     public PersonDTO create(PersonDTO person) {
-        //int number, String email, String firstName, String lastName, Address address, List<Hobby> hobbies
         Person personEntity = new Person(
-                person.getNumber(),
+                person.getPhones(),
                 person.getEmail(),
                 person.getFirstName(),
                 person.getLastName(),
