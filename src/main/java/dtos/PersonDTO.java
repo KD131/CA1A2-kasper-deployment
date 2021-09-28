@@ -5,6 +5,7 @@
  */
 package dtos;
 
+import entities.Address;
 import entities.Person;
 
 import java.util.ArrayList;
@@ -19,12 +20,14 @@ public class PersonDTO {
     private String email;
     private String firstName;
     private String lastName;
+    private Address address;
 
-    public PersonDTO(int number, String email, String firstName, String lastName) {
+    public PersonDTO(int number, String email, String firstName, String lastName, Address address) {
         this.number = number;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.address = address;
     }
 
     public static List<PersonDTO> getDtos(List<Person> persons) {
@@ -37,10 +40,11 @@ public class PersonDTO {
     public PersonDTO(Person person) {
         if (person.getId() != null)
             this.id = person.getId();
-        this.number = person.getNumber();
-        this.email = person.getEmail();
-        this.firstName = person.getFirstName();
-        this.lastName = person.getLastName();
+            this.number = person.getNumber();
+            this.email = person.getEmail();
+            this.firstName = person.getFirstName();
+            this.lastName = person.getLastName();
+            this.address = person.getAddress();
     }
 
     public int getNumber() {
@@ -73,5 +77,13 @@ public class PersonDTO {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }

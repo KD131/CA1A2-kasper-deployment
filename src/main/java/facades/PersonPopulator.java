@@ -18,9 +18,9 @@ public class PersonPopulator {
     public static void populate() {
         EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory();
         PersonFacade personFacade = PersonFacade.getPersonFacade(emf);
-        personFacade.create(new PersonDTO(new Person(50104201, "norm@macdonnald.com", "Norm", "Macdonnald")));
+        /*personFacade.create(new PersonDTO(new Person(50104201, "norm@macdonnald.com", "Norm", "Macdonnald")));
         personFacade.create(new PersonDTO(new Person(20204151, "conan@obrien.com", "Conan", "O'Brien")));
-        personFacade.create(new PersonDTO(new Person(11040615, "Stephen@colbert.com", "Stephen", "Colbert")));
+        personFacade.create(new PersonDTO(new Person(11040615, "Stephen@colbert.com", "Stephen", "Colbert")));*/
     }
 
     public static void main(String[] args) {

@@ -38,7 +38,7 @@ public class HobbyFacade {
     }
 
     public HobbyDTO create(HobbyDTO hobby) {
-        Hobby hobbyEntity = new Hobby(hobby.getName(), hobby.getUrl(), hobby.getCategory(), hobby.getEnvironment());
+        Hobby hobbyEntity = new Hobby(hobby.getName(), hobby.getLink(), hobby.getCategory(), hobby.isOutdoor());
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
