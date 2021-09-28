@@ -17,14 +17,17 @@ public class Person implements Serializable {
     private String firstName;
     private String lastName;
 
+    private Address address;
+
     public Person() {
     }
 
-    public Person(int number, String email, String firstName, String lastName) {
+    public Person(int number, String email, String firstName, String lastName, Address address) {
         this.number = number;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.address = address;
     }
 
     public Long getId() {
@@ -65,5 +68,13 @@ public class Person implements Serializable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }

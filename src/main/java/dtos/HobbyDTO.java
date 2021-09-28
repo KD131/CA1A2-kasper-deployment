@@ -16,15 +16,15 @@ import java.util.List;
 public class HobbyDTO {
     private long id;
     private String name;
-    private String url;
+    private String link;
     private String category;
-    private String environment;
+    private boolean outdoor;
 
-    public HobbyDTO(String name, String url, String category, String environment) {
+    public HobbyDTO(String name, String link, String category, boolean outdoor) {
         this.name = name;
-        this.url = url;
+        this.link = link;
         this.category = category;
-        this.environment = environment;
+        this.outdoor = outdoor;
     }
 
     public static List<HobbyDTO> getDtos(List<Hobby> hobbies) {
@@ -37,9 +37,9 @@ public class HobbyDTO {
         if (hobby.getId() != null)
             this.id = hobby.getId();
         this.name = hobby.getName();
-        this.url = hobby.getUrl();
+        this.link = hobby.getLink();
         this.category = hobby.getCategory();
-        this.environment = hobby.getEnvironment();
+        this.outdoor = hobby.isOutdoor();
     }
 
     public String getName() {
@@ -50,12 +50,12 @@ public class HobbyDTO {
         this.name = name;
     }
 
-    public String getUrl() {
-        return url;
+    public String getLink() {
+        return link;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public String getCategory() {
@@ -66,11 +66,11 @@ public class HobbyDTO {
         this.category = category;
     }
 
-    public String getEnvironment() {
-        return environment;
+    public boolean isOutdoor() {
+        return outdoor;
     }
 
-    public void setEnvironment(String environment) {
-        this.environment = environment;
+    public void setOutdoor(boolean outdoor) {
+        this.outdoor = outdoor;
     }
 }
