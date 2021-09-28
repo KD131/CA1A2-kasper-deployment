@@ -1,5 +1,6 @@
 package facades;
 
+import dtos.HobbyDTO;
 import dtos.PersonDTO;
 import entities.Person;
 import facades.inter.PersonFacadeInterface;
@@ -49,9 +50,48 @@ public class PersonFacade implements PersonFacadeInterface {
     }
 
     @Override
+    public PersonDTO edit(PersonDTO person) {
+        return null;
+    }
+
+    @Override
+    public boolean delete(long id) {
+        return false;
+    }
+
+    @Override
     public PersonDTO getById(long id) {
         EntityManager em = emf.createEntityManager();
         return new PersonDTO(em.find(Person.class, id));
+    }
+
+    @Override
+    public PersonDTO getByPhone(PhoneDTO phone) {
+        return null;
+    }
+
+    @Override
+    public List<PersonDTO> getByHobby(HobbyDTO hobby) {
+        return null;
+    }
+
+    @Override
+    public List<PersonDTO> getByAddress(AddressDTO address) {
+        return null;
+    }
+
+    @Override
+    public List<PersonDTO> getByZip(ZipDTO zip) {
+        return null;
+    }
+
+
+    @Override
+    public List<PersonDTO> getAll() {
+        EntityManager em = emf.createEntityManager();
+        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p", Person.class);
+        List<Person> persons = query.getResultList();
+        return PersonDTO.getDtos(persons);
     }
 
     @Override
@@ -63,14 +103,6 @@ public class PersonFacade implements PersonFacadeInterface {
         } finally {
             em.close();
         }
-    }
-
-    @Override
-    public List<PersonDTO> getAll() {
-        EntityManager em = emf.createEntityManager();
-        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p", Person.class);
-        List<Person> persons = query.getResultList();
-        return PersonDTO.getDtos(persons);
     }
 
     public static void main(String[] args) {

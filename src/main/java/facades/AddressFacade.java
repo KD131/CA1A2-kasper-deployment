@@ -48,10 +48,26 @@ public class AddressFacade implements AddressFacadeInterface {
         return new AddressDTO(addressEntity);
     }
 
+
+    @Override
+    public AddressDTO edit(AddressDTO address) {
+        return null;
+    }
+
+    @Override
+    public boolean delete(long id) {
+        return false;
+    }
+
     @Override
     public AddressDTO getById(long id) {
         EntityManager em = emf.createEntityManager();
         return new AddressDTO(em.find(Address.class, id));
+    }
+
+    @Override
+    public List<AddressDTO> getByZip() {
+        return null;
     }
 
     @Override

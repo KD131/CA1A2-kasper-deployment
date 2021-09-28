@@ -10,6 +10,8 @@ public interface PhoneFacadeInterface {
 
     PhoneDTO getById(long id);
 
+    List<PhoneDTO> getByPerson(PersonDTO person);
+
     List<PhoneDTO> getAll();
 
     long getPhoneCount();

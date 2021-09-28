@@ -1,6 +1,7 @@
 package facades;
 
 import dtos.HobbyDTO;
+import dtos.PersonDTO;
 import entities.Hobby;
 import facades.inter.HobbyFacadeInterface;
 import utils.EMF_Creator;
@@ -53,9 +54,47 @@ public class HobbyFacade implements HobbyFacadeInterface {
     }
 
     @Override
+    public HobbyDTO edit(HobbyDTO Hobby) {
+        return null;
+    }
+
+    @Override
+    public boolean delete(long id) {
+        return false;
+    }
+
+    @Override
     public HobbyDTO getById(long id) {
         EntityManager em = emf.createEntityManager();
         return new HobbyDTO(em.find(Hobby.class, id));
+    }
+
+    @Override
+    public List<HobbyDTO> getByCategory(String category) {
+        return null;
+    }
+
+    @Override
+    public List<HobbyDTO> getIfOutdoor(boolean outdoor) {
+        return null;
+    }
+
+    @Override
+    public List<HobbyDTO> getByPerson(PersonDTO person) {
+        return null;
+    }
+
+    @Override
+    public List<HobbyDTO> getByZip(ZipDTO Zip) {
+        return null;
+    }
+
+    @Override
+    public List<HobbyDTO> getAll() {
+        EntityManager em = emf.createEntityManager();
+        TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h", Hobby.class);
+        List<Hobby> hobbies = query.getResultList();
+        return HobbyDTO.getDtos(hobbies);
     }
 
     @Override
@@ -67,14 +106,6 @@ public class HobbyFacade implements HobbyFacadeInterface {
         } finally {
             em.close();
         }
-    }
-
-    @Override
-    public List<HobbyDTO> getAll() {
-        EntityManager em = emf.createEntityManager();
-        TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h", Hobby.class);
-        List<Hobby> hobbies = query.getResultList();
-        return HobbyDTO.getDtos(hobbies);
     }
 
     public static void main(String[] args) {

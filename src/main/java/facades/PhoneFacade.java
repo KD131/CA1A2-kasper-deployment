@@ -1,5 +1,6 @@
 package facades;
 
+import dtos.PersonDTO;
 import dtos.PhoneDTO;
 import entities.Phone;
 import facades.inter.PhoneFacadeInterface;
@@ -55,14 +56,8 @@ public class PhoneFacade implements PhoneFacadeInterface {
     }
 
     @Override
-    public long getPhoneCount() {
-        EntityManager em = emf.createEntityManager();
-        try {
-            long phoneCount = (long) em.createQuery("SELECT COUNT(p) FROM Phone p").getSingleResult();
-            return phoneCount;
-        } finally {
-            em.close();
-        }
+    public List<PhoneDTO> getByPerson(PersonDTO person) {
+        return null;
     }
 
     @Override
@@ -71,6 +66,17 @@ public class PhoneFacade implements PhoneFacadeInterface {
         TypedQuery<Phone> query = em.createQuery("SELECT p FROM Phone p", Phone.class);
         List<Phone> phones = query.getResultList();
         return PhoneDTO.getDtos(phones);
+    }
+
+    @Override
+    public long getPhoneCount() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            long phoneCount = (long) em.createQuery("SELECT COUNT(p) FROM Phone p").getSingleResult();
+            return phoneCount;
+        } finally {
+            em.close();
+        }
     }
 
     public static void main(String[] args) {

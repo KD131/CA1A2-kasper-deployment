@@ -19,7 +19,7 @@ public class Person implements Serializable {
     private String email;
     private String firstName;
     private String lastName;
-    
+
     @ManyToMany(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
@@ -76,25 +76,25 @@ public class Person implements Serializable {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    
-    public List<Hobby> getHobbies()
-    {
+
+
+    public List<Hobby> getHobbies() {
         return hobbies;
     }
-    
-    public void addHobby(Hobby hobby)
-    {
-        if (hobby != null)
-        {
+
+    public void setHobbies(List<Hobby> hobbies) {
+        this.hobbies = hobbies;
+    }
+
+    public void addHobby(Hobby hobby) {
+        if (hobby != null) {
             this.hobbies.add(hobby);
             hobby.getPersons().add(this);
         }
     }
-    
-    public void removeHobby(Hobby hobby)
-    {
-        if (hobby != null)
-        {
+
+    public void removeHobby(Hobby hobby) {
+        if (hobby != null) {
             this.hobbies.remove(hobby);
             hobby.getPersons().remove(this);
         }
