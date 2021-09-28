@@ -2,6 +2,7 @@ package facades;
 
 import dtos.HobbyDTO;
 import entities.Hobby;
+import facades.inter.HobbyFacadeInterface;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Rename Class to a relevant name Add add relevant facade methods
  */
-public class HobbyFacade {
+public class HobbyFacade implements HobbyFacadeInterface {
 
     private static HobbyFacade instance;
     private static EntityManagerFactory emf;
@@ -37,6 +38,7 @@ public class HobbyFacade {
         return emf.createEntityManager();
     }
 
+    @Override
     public HobbyDTO create(HobbyDTO hobby) {
         Hobby hobbyEntity = new Hobby(hobby.getName(), hobby.getUrl(), hobby.getCategory(), hobby.getEnvironment());
         EntityManager em = emf.createEntityManager();
@@ -50,11 +52,13 @@ public class HobbyFacade {
         return new HobbyDTO(hobbyEntity);
     }
 
+    @Override
     public HobbyDTO getById(long id) {
         EntityManager em = emf.createEntityManager();
         return new HobbyDTO(em.find(Hobby.class, id));
     }
 
+    @Override
     public long getHobbyCount() {
         EntityManager em = emf.createEntityManager();
         try {
@@ -65,6 +69,7 @@ public class HobbyFacade {
         }
     }
 
+    @Override
     public List<HobbyDTO> getAll() {
         EntityManager em = emf.createEntityManager();
         TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h", Hobby.class);
@@ -74,8 +79,8 @@ public class HobbyFacade {
 
     public static void main(String[] args) {
         emf = EMF_Creator.createEntityManagerFactory();
-        HobbyFacade fe = getHobbyFacade(emf);
-        fe.getAll().forEach(dto -> System.out.println(dto));
+        HobbyFacade hf = getHobbyFacade(emf);
+        hf.getAll().forEach(dto -> System.out.println(dto));
     }
 
 }
