@@ -4,15 +4,15 @@ on:
     branches: 
     - main
 jobs:
-  Do-the-travis-thing:
+  Deploy-Remote:
     runs-on: ubuntu-20.04 #or ubuntu-latest
     # services:
     #   mysql:
     #     image: mysql:8.0
     #     env:
     #       DB_DATABASE: startcode_test
-    #       DB_USER: dev
-    #       DB_PASSWORD: ax2
+    #       DB_USER: not dev
+    #       DB_PASSWORD: not ax2
     steps:
       - name: checkout
         uses: actions/checkout@v2
