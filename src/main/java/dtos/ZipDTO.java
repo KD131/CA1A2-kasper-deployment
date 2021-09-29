@@ -25,9 +25,10 @@ public class ZipDTO {
     }
 
     public static List<ZipDTO> getDtos(List<Zip> zips) {
-        List<ZipDTO> ZipDTOs = new ArrayList();
-        zips.forEach(zip -> ZipDTOs.add(new ZipDTO(zip)));
-        return ZipDTOs;
+
+        List<ZipDTO> zipDTOs = new ArrayList();
+        zips.forEach(zip -> zipDTOs.add(new ZipDTO(zip)));
+        return zipDTOs;
     }
 
 
