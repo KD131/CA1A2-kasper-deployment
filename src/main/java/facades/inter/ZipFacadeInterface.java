@@ -12,7 +12,7 @@ public interface ZipFacadeInterface {
 
     boolean delete(int zip);
 
-    ZipDTO getById(int zip);
+    ZipDTO getByZip(int zip);
 
     List<ZipDTO> getAll();
 
