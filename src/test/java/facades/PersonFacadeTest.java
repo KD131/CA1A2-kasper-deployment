@@ -1,8 +1,10 @@
 package facades;
 
-import entities.Hobby;
-import entities.Person;
-import entities.Phone;
+import dtos.PersonDTO;
+import dtos.PhoneDTO;
+import dtos.ZipDTO;
+import edu.emory.mathcs.backport.java.util.Arrays;
+import entities.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +13,11 @@ import utils.EMF_Creator;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class PersonFacadeTest
 {
@@ -32,10 +38,24 @@ class PersonFacadeTest
         try
         {
             em.getTransaction().begin();
-            em.createNamedQuery("Person.deleteAllRows");
-            em.createNamedQuery("Person.resetPK");
-            em.persist(new Person(new Phone(11111111), "bob@bob.com", "Bob", "Roberts"));
-            em.persist(new Person(new Phone(22222222), "alice@alice.com", "Alice", "Allison"));
+            // needs either cascading delete or more delete queries to take out the other tables
+//            em.createNamedQuery("Person.deleteAllRows").executeUpdate();
+//            em.createNamedQuery("Person.resetPK").executeUpdate();
+            em.persist(new Person(
+                    new ArrayList<Phone>(Arrays.asList(new Phone[]{new Phone(11111111)})),
+                    "bob@bob.com",
+                    "Bob",
+                    "Roberts",
+                    new Address("Test street 21",
+                            new Zip(6969, "Nice-ville"))));
+            List<Phone> phones2 = new ArrayList<>();
+            phones2.add(new Phone(22222222));
+            em.persist(new Person(phones2,
+                    "alice@alice.com",
+                    "Alice",
+                    "Allison",
+                    new Address("2nd and Hill 34",
+                            new Zip(4242, "Cool-town"))));
             em.getTransaction().commit();
         }
         finally
@@ -52,6 +72,8 @@ class PersonFacadeTest
     @Test
     void getById()
     {
+        PersonDTO person = facade.getById(1);
+        assertNotNull(person);
     }
     
     @Test
@@ -63,5 +85,47 @@ class PersonFacadeTest
     @Test
     void getAll()
     {
+        List<PersonDTO> persons = facade.getAll();
+        assertNotNull(persons);
+        assertEquals(2, persons.size());
+    }
+    
+    @Test
+    void edit()
+    {
+    }
+    
+    @Test
+    void delete()
+    {
+    }
+    
+    @Test
+    void getByPhone()
+    {
+        PhoneDTO phone = new PhoneDTO(11111111, "personal");
+        PersonDTO person = facade.getByPhone(phone);
+        assertNotNull(person);
+        assertEquals("Bob", person.getFirstName());
+    }
+    
+    @Test
+    void getByHobby()
+    {
+    }
+    
+    @Test
+    void getByAddress()
+    {
+    }
+    
+    @Test
+    void getByZip()
+    {
+        ZipDTO zip = new ZipDTO(4242, "Cool-town");
+        List<PersonDTO> persons = facade.getByZip(zip);
+        assertNotNull(persons);
+        assertEquals(1, persons.size());
+        assertEquals("Alice", persons.get(0).getFirstName());
     }
 }
