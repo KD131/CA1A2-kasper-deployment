@@ -13,10 +13,14 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+<<<<<<< HEAD
 
         <remote.server>https://www.karpantschof.com/manager/text</remote.server>
 
         <!-- TODO: Add your own database name -->
+=======
+        <remote.server>https://www.karpantschof.com/manager/text</remote.server>
+>>>>>>> dev
         <db.name>CA1A2</db.name>
     </properties>
 
