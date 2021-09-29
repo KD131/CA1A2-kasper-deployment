@@ -5,8 +5,10 @@ import dtos.PersonDTO;
 import dtos.PhoneDTO;
 import dtos.ZipDTO;
 import edu.emory.mathcs.backport.java.util.Arrays;
-import entities.*;
-import org.junit.jupiter.api.AfterEach;
+import entities.Address;
+import entities.Person;
+import entities.Phone;
+import entities.Zip;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +16,6 @@ import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,12 +127,21 @@ class PersonFacadeTest
     void delete()
     {
     }
-    
+
     @Test
     void getByPhone()
     {
         PhoneDTO phone = new PhoneDTO(11111111, "personal");
         PersonDTO person = facade.getByPhone(phone);
+        assertNotNull(person);
+        assertEquals("Bob", person.getFirstName());
+    }
+
+    @Test
+    void getByNumber()
+    {
+        int number = 11111111;
+        PersonDTO person = facade.getByNumber(number);
         assertNotNull(person);
         assertEquals("Bob", person.getFirstName());
     }

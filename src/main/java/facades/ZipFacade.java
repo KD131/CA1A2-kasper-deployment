@@ -59,7 +59,7 @@ public class ZipFacade implements ZipFacadeInterface {
     }
 
     @Override
-    public ZipDTO getById(int zip) {
+    public ZipDTO getByZip(int zip) {
         EntityManager em = emf.createEntityManager();
         return new ZipDTO(em.find(Zip.class, zip));
     }
