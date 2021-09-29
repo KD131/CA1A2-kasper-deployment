@@ -33,21 +33,28 @@ public class AddressFacade implements AddressFacadeInterface {
     private EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-
+    
     @Override
-    public AddressDTO create(AddressDTO address) {
-        Address addressEntity = new Address(address.getAddress(), address.getZip());
-        EntityManager em = emf.createEntityManager();
-        try {
-            em.getTransaction().begin();
-            em.persist(addressEntity);
-            em.getTransaction().commit();
-        } finally {
-            em.close();
-        }
-        return new AddressDTO(addressEntity);
+    public AddressDTO create(AddressDTO address)
+    {
+        return null;
     }
-
+    
+    /*
+        @Override
+        public AddressDTO create(AddressDTO address) {
+            Address addressEntity = new Address(address.getAddress(), address.getZip());
+            EntityManager em = emf.createEntityManager();
+            try {
+                em.getTransaction().begin();
+                em.persist(addressEntity);
+                em.getTransaction().commit();
+            } finally {
+                em.close();
+            }
+            return new AddressDTO(addressEntity);
+        }
+    */
     @Override
     public AddressDTO edit(AddressDTO address) {
         return null;

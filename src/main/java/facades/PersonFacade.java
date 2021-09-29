@@ -30,27 +30,34 @@ public class PersonFacade implements PersonFacadeInterface {
     private EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-
+    
     @Override
-    public PersonDTO create(PersonDTO person) {
-        Person personEntity = new Person(
-                person.getPhones(),
-                person.getEmail(),
-                person.getFirstName(),
-                person.getLastName(),
-                person.getAddress(),
-                person.getHobbies());
-        EntityManager em = emf.createEntityManager();
-        try {
-            em.getTransaction().begin();
-            em.persist(personEntity);
-            em.getTransaction().commit();
-            return new PersonDTO(personEntity);
-        } finally {
-            em.close();
-        }
+    public PersonDTO create(PersonDTO person)
+    {
+        return null;
     }
-
+    
+    /*
+        @Override
+        public PersonDTO create(PersonDTO person) {
+            Person personEntity = new Person(
+                    person.getPhones(),
+                    person.getEmail(),
+                    person.getFirstName(),
+                    person.getLastName(),
+                    person.getAddress(),
+                    person.getHobbies());
+            EntityManager em = emf.createEntityManager();
+            try {
+                em.getTransaction().begin();
+                em.persist(personEntity);
+                em.getTransaction().commit();
+                return new PersonDTO(personEntity);
+            } finally {
+                em.close();
+            }
+        }
+    */
     @Override
     public PersonDTO edit(PersonDTO person) {
         return null;

@@ -19,9 +19,9 @@ public class AddressDTO {
     private Long id;
     private String address;
 
-    private Zip zip;
+    private ZipDTO zip;
 
-    public AddressDTO(String address, Zip zip) {
+    public AddressDTO(String address, ZipDTO zip) {
         this.address = address;
         this.zip = zip;
     }
@@ -37,7 +37,7 @@ public class AddressDTO {
         if (address.getId() != null)
             this.id = address.getId();
             this.address = address.getAddress();
-            this.zip = address.getZip();
+            this.zip = new ZipDTO(address.getZip());
     }
 
     public String getAddress() {
@@ -48,11 +48,11 @@ public class AddressDTO {
         this.address = address;
     }
 
-    public Zip getZip() {
+    public ZipDTO getZip() {
         return zip;
     }
 
-    public void setZip(Zip zip) {
+    public void setZip(ZipDTO zip) {
         this.zip = zip;
     }
 }
