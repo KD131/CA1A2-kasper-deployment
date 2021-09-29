@@ -18,13 +18,13 @@ public class HobbyDTO {
     private String name;
     private String link;
     private String category;
-    private boolean outdoor;
+    private String type;
 
-    public HobbyDTO(String name, String link, String category, boolean outdoor) {
+    public HobbyDTO(String name, String link, String category, String type) {
         this.name = name;
         this.link = link;
         this.category = category;
-        this.outdoor = outdoor;
+        this.type = type;
     }
 
     public static List<HobbyDTO> getDtos(List<Hobby> hobbies) {
@@ -39,7 +39,7 @@ public class HobbyDTO {
         this.name = hobby.getName();
         this.link = hobby.getLink();
         this.category = hobby.getCategory();
-        this.outdoor = hobby.isOutdoor();
+        this.type = hobby.getType();
     }
 
     public String getName() {
@@ -66,11 +66,11 @@ public class HobbyDTO {
         this.category = category;
     }
 
-    public boolean isOutdoor() {
-        return outdoor;
+    public String getType() {
+        return type;
     }
 
-    public void setOutdoor(boolean outdoor) {
-        this.outdoor = outdoor;
+    public void setType(String type) {
+        this.type = type;
     }
 }
