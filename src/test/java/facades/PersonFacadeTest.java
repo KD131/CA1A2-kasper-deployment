@@ -136,15 +136,6 @@ class PersonFacadeTest
         assertNotNull(person);
         assertEquals("Bob", person.getFirstName());
     }
-
-    @Test
-    void getByNumber()
-    {
-        int number = 11111111;
-        PersonDTO person = facade.getByNumber(number);
-        assertNotNull(person);
-        assertEquals("Bob", person.getFirstName());
-    }
     
     @Test
     void getByHobby()

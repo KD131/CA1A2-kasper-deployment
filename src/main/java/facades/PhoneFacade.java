@@ -37,31 +37,39 @@ public class PhoneFacade implements PhoneFacadeInterface {
 
     @Override
     public PhoneDTO create(PhoneDTO phone) {
-        Phone phoneEntity = new Phone(phone.getNumber(), phone.getInfo());
         EntityManager em = emf.createEntityManager();
         try {
+            Phone phoneEntity = new Phone(phone.getNumber(), phone.getInfo());
             em.getTransaction().begin();
             em.persist(phoneEntity);
             em.getTransaction().commit();
+            return new PhoneDTO(phoneEntity);
         } finally {
             em.close();
         }
-        return new PhoneDTO(phoneEntity);
     }
 
     @Override
     public PhoneDTO getById(long id) {
         EntityManager em = emf.createEntityManager();
-        return new PhoneDTO(em.find(Phone.class, id));
+        try {
+            return new PhoneDTO(em.find(Phone.class, id));
+        } finally {
+            em.close();
+        }
     }
 
     @Override
     public PhoneDTO getByNumber(int number) {
         EntityManager em = emf.createEntityManager();
-        TypedQuery<Phone> query = em.createQuery("SELECT p FROM Phone p WHERE p.number = :number", Phone.class);
-        query.setParameter("number", number);
-        Phone phone = query.getSingleResult();
-        return new PhoneDTO(phone);
+        try {
+            TypedQuery<Phone> query = em.createQuery("SELECT p FROM Phone p WHERE p.number = :number", Phone.class);
+            query.setParameter("number", number);
+            Phone phone = query.getSingleResult();
+            return new PhoneDTO(phone);
+        } finally {
+            em.close();
+        }
     }
 
     @Override
@@ -72,9 +80,13 @@ public class PhoneFacade implements PhoneFacadeInterface {
     @Override
     public List<PhoneDTO> getAll() {
         EntityManager em = emf.createEntityManager();
-        TypedQuery<Phone> query = em.createQuery("SELECT p FROM Phone p", Phone.class);
-        List<Phone> phones = query.getResultList();
-        return PhoneDTO.getDtos(phones);
+        try {
+            TypedQuery<Phone> query = em.createQuery("SELECT p FROM Phone p", Phone.class);
+            List<Phone> phones = query.getResultList();
+            return PhoneDTO.getDtos(phones);
+        } finally {
+            em.close();
+        }
     }
 
     @Override

@@ -67,7 +67,11 @@ public class HobbyFacade implements HobbyFacadeInterface {
     @Override
     public HobbyDTO getById(long id) {
         EntityManager em = emf.createEntityManager();
-        return new HobbyDTO(em.find(Hobby.class, id));
+        try {
+            return new HobbyDTO(em.find(Hobby.class, id));
+        } finally {
+            em.close();
+        }
     }
 
     @Override
@@ -76,7 +80,9 @@ public class HobbyFacade implements HobbyFacadeInterface {
     }
 
     @Override
-    public List<HobbyDTO> getByType(String type) { return null; }
+    public List<HobbyDTO> getByType(String type) {
+        return null;
+    }
 
     @Override
     public List<HobbyDTO> getByPerson(PersonDTO person) {
@@ -91,9 +97,13 @@ public class HobbyFacade implements HobbyFacadeInterface {
     @Override
     public List<HobbyDTO> getAll() {
         EntityManager em = emf.createEntityManager();
-        TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h", Hobby.class);
-        List<Hobby> hobbies = query.getResultList();
-        return HobbyDTO.getDtos(hobbies);
+        try {
+            TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h", Hobby.class);
+            List<Hobby> hobbies = query.getResultList();
+            return HobbyDTO.getDtos(hobbies);
+        } finally {
+            em.close();
+        }
     }
 
     @Override

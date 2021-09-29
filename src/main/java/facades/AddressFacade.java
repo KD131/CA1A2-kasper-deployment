@@ -61,7 +61,11 @@ public class AddressFacade implements AddressFacadeInterface {
     @Override
     public AddressDTO getById(long id) {
         EntityManager em = emf.createEntityManager();
-        return new AddressDTO(em.find(Address.class, id));
+        try {
+            return new AddressDTO(em.find(Address.class, id));
+        } finally {
+            em.close();
+        }
     }
 
     @Override
@@ -83,9 +87,13 @@ public class AddressFacade implements AddressFacadeInterface {
     @Override
     public List<AddressDTO> getAll() {
         EntityManager em = emf.createEntityManager();
-        TypedQuery<Address> query = em.createQuery("SELECT a FROM Address a", Address.class);
-        List<Address> addresses = query.getResultList();
-        return AddressDTO.getDtos(addresses);
+        try {
+            TypedQuery<Address> query = em.createQuery("SELECT a FROM Address a", Address.class);
+            List<Address> addresses = query.getResultList();
+            return AddressDTO.getDtos(addresses);
+        } finally {
+            em.close();
+        }
     }
 
     public static void main(String[] args) {

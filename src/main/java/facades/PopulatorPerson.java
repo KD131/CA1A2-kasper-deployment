@@ -5,7 +5,6 @@
  */
 package facades;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
 import entities.*;
 import utils.EMF_Creator;
 
@@ -60,7 +59,7 @@ public class PopulatorPerson {
                 "Jens",
                 "Vejmand",
                 new Address("Skuldelevvej 6",
-                        new Zip(4050, "Skibby")), hobby2);
+                        new Zip(4100, "Skibbies")), hobby2);
 
         try
         {

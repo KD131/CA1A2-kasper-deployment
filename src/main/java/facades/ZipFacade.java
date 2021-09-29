@@ -36,16 +36,16 @@ public class ZipFacade implements ZipFacadeInterface {
 
     @Override
     public ZipDTO create(ZipDTO zip) {
-        Zip zipEntity = new Zip(zip.getZip(), zip.getCity());
         EntityManager em = emf.createEntityManager();
         try {
+            Zip zipEntity = new Zip(zip.getZip(), zip.getCity());
             em.getTransaction().begin();
             em.persist(zipEntity);
             em.getTransaction().commit();
+            return new ZipDTO(zipEntity);
         } finally {
             em.close();
         }
-        return new ZipDTO(zipEntity);
     }
 
     @Override
@@ -61,15 +61,23 @@ public class ZipFacade implements ZipFacadeInterface {
     @Override
     public ZipDTO getByZip(int zip) {
         EntityManager em = emf.createEntityManager();
-        return new ZipDTO(em.find(Zip.class, zip));
+        try {
+            return new ZipDTO(em.find(Zip.class, zip));
+        } finally {
+            em.close();
+        }
     }
 
     @Override
     public List<ZipDTO> getAll() {
         EntityManager em = emf.createEntityManager();
-        TypedQuery<Zip> query = em.createQuery("SELECT z FROM Zip z", Zip.class);
-        List<Zip> zips = query.getResultList();
-        return ZipDTO.getDtos(zips);
+        try {
+            TypedQuery<Zip> query = em.createQuery("SELECT z FROM Zip z", Zip.class);
+            List<Zip> zips = query.getResultList();
+            return ZipDTO.getDtos(zips);
+        } finally {
+            em.close();
+        }
     }
 
     @Override

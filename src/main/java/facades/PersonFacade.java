@@ -10,9 +10,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-/**
- * Rename Class to a relevant name Add add relevant facade methods
- */
 public class PersonFacade implements PersonFacadeInterface {
 
     private static PersonFacade instance;
@@ -48,10 +45,10 @@ public class PersonFacade implements PersonFacadeInterface {
             em.getTransaction().begin();
             em.persist(personEntity);
             em.getTransaction().commit();
+            return new PersonDTO(personEntity);
         } finally {
             em.close();
         }
-        return new PersonDTO(personEntity);
     }
 
     @Override
@@ -67,53 +64,77 @@ public class PersonFacade implements PersonFacadeInterface {
     @Override
     public PersonDTO getById(long id) {
         EntityManager em = emf.createEntityManager();
-        return new PersonDTO(em.find(Person.class, id));
+        try {
+            return new PersonDTO(em.find(Person.class, id));
+        } finally {
+            em.close();
+        }
     }
 
     @Override
     public PersonDTO getByPhone(PhoneDTO phone) {
         EntityManager em = emf.createEntityManager();
-        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.phones ph WHERE ph.number = :phone", Person.class); // IN / MEMBER OF ?
-        query.setParameter("phone", phone.getNumber());
-        Person person = query.getSingleResult();
-        return new PersonDTO(person);
+        try {
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.phones ph WHERE ph.number = :phone", Person.class); // IN / MEMBER OF ?
+            query.setParameter("phone", phone.getNumber());
+            Person person = query.getSingleResult();
+            return new PersonDTO(person);
+        } finally {
+            em.close();
+        }
     }
 
     @Override
     public List<PersonDTO> getByHobby(HobbyDTO hobby) {
         EntityManager em = emf.createEntityManager();
-        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.hobbies h WHERE :hobby MEMBER OF h", Person.class); // IN / MEMBER OF ?
-        query.setParameter("hobby", hobby);
-        List<Person> persons = query.getResultList();
-        return PersonDTO.getDtos(persons);
+        try {
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.hobbies h WHERE :hobby MEMBER OF h", Person.class); // IN / MEMBER OF ?
+            query.setParameter("hobby", hobby);
+            List<Person> persons = query.getResultList();
+            return PersonDTO.getDtos(persons);
+        } finally {
+            em.close();
+        }
     }
 
     @Override
     public List<PersonDTO> getByAddress(AddressDTO address) {
         EntityManager em = emf.createEntityManager();
-        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.address a where a.zip.zip = :zip AND a.address = :address", Person.class);
-        query.setParameter("zip", address.getZip().getZip());
-        query.setParameter("address", address.getAddress());
-        List<Person> persons = query.getResultList();
-        return PersonDTO.getDtos(persons);
+        try {
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.address a where a.zip.zip = :zip AND a.address = :address", Person.class);
+            query.setParameter("zip", address.getZip().getZip());
+            query.setParameter("address", address.getAddress());
+            List<Person> persons = query.getResultList();
+            return PersonDTO.getDtos(persons);
+        } finally {
+            em.close();
+        }
     }
 
     @Override
     public List<PersonDTO> getByZip(ZipDTO zip) {
         EntityManager em = emf.createEntityManager();
-        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.address.zip z where z.zip = :zip", Person.class);
-        query.setParameter("zip", zip.getZip());
-        List<Person> persons = query.getResultList();
-        return PersonDTO.getDtos(persons);
+        try {
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.address.zip z where z.zip = :zip", Person.class);
+            query.setParameter("zip", zip.getZip());
+            List<Person> persons = query.getResultList();
+            return PersonDTO.getDtos(persons);
+        } finally {
+            em.close();
+        }
     }
 
 
     @Override
     public List<PersonDTO> getAll() {
         EntityManager em = emf.createEntityManager();
-        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p", Person.class);
-        List<Person> persons = query.getResultList();
-        return PersonDTO.getDtos(persons);
+        try {
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p", Person.class);
+            List<Person> persons = query.getResultList();
+            return PersonDTO.getDtos(persons);
+        } finally {
+            em.close();
+        }
     }
 
     @Override
