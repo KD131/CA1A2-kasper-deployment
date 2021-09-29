@@ -1,5 +1,6 @@
 package facades;
 
+import dtos.AddressDTO;
 import dtos.PersonDTO;
 import dtos.PhoneDTO;
 import dtos.ZipDTO;
@@ -143,6 +144,12 @@ class PersonFacadeTest
     @Test
     void getByAddress()
     {
+        AddressDTO address = new AddressDTO("Test street 21",
+                new Zip(6969, "Nice-ville"));
+        List<PersonDTO> persons = facade.getByAddress(address);
+        assertNotNull(persons);
+        assertEquals(1, persons.size());
+        assertEquals("Bob", persons.get(0).getFirstName());
     }
     
     @Test
