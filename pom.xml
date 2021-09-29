@@ -123,6 +123,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.21.0</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
                 <dependencies>
                     <dependency>
                         <groupId>org.junit.platform</groupId>
@@ -145,9 +148,6 @@
                     <source>1.8</source>
                     <target>1.8</target>
                     <compilerArguments>
-                        <configuration>
-                            <skipTests>true</skipTests>
-                        </configuration>
                         <endorseddirs>${endorsed.dir}</endorseddirs>
                     </compilerArguments>
                     <compilerArgs>
