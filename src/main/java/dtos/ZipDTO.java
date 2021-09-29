@@ -16,7 +16,6 @@ import java.util.List;
  * @author tha
  */
 public class ZipDTO {
-    private Long id;
     private int zip;
     private String city;
 
@@ -26,6 +25,7 @@ public class ZipDTO {
     }
 
     public static List<ZipDTO> getDtos(List<Zip> zips) {
+
         List<ZipDTO> zipDTOs = new ArrayList();
         zips.forEach(zip -> zipDTOs.add(new ZipDTO(zip)));
         return zipDTOs;
@@ -33,8 +33,7 @@ public class ZipDTO {
 
 
     public ZipDTO(Zip zip) {
-        if (zip.getId() != null)
-            this.id = zip.getId();
+        //if (zip.getZip() != null) int can't be compared to nul with != operator
             this.zip = zip.getZip();
             this.city = zip.getCity();
 
