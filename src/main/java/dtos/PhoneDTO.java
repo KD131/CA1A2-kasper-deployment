@@ -5,7 +5,6 @@
  */
 package dtos;
 
-import entities.Hobby;
 import entities.Phone;
 
 import java.util.ArrayList;
@@ -33,8 +32,8 @@ public class PhoneDTO {
     public PhoneDTO(Phone phone) {
         if (phone.getId() != null)
             this.id = phone.getId();
-            this.number = phone.getNumber();
-            this.info = phone.getInfo();
+        this.number = phone.getNumber();
+        this.info = phone.getInfo();
     }
 
     public int getNumber() {
