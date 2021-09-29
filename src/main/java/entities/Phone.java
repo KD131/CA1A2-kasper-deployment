@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 // TODO see if it fails because of the table name in the query
-@Table(name = "phone")
+@Table(name = "PHONE")
 
 @Entity
 @NamedQuery(name = "Phone.deleteAllRows", query = "DELETE from Phone")

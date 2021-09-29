@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Table(name = "ZIP")
 
 @Entity
 @NamedQuery(name = "Zip.deleteAllRows", query = "DELETE from Zip")

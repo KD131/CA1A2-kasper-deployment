@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Table(name = "PERSON")
 
 @Entity
 @NamedQuery(name = "Person.deleteAllRows", query = "DELETE from Person")
