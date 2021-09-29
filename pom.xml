@@ -16,6 +16,7 @@
 
         <remote.server>https://www.karpantschof.com/manager/text</remote.server>
 
+        <!-- TODO: Add your own database name -->
         <db.name>CA1A2</db.name>
     </properties>
 
