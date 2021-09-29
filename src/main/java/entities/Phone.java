@@ -7,7 +7,7 @@ import java.io.Serializable;
 @Table(name = "PHONE")
 
 @Entity
-@NamedQuery(name = "Phone.deleteAllRows", query = "DELETE from Phone")
+@NamedQuery(name = "Phone.deleteAllRows", query = "DELETE FROM Phone")
 public class Phone implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -8,8 +8,8 @@ import java.util.List;
 @Table(name = "PERSON")
 
 @Entity
-@NamedQuery(name = "Person.deleteAllRows", query = "DELETE from Person")
-@NamedNativeQuery(name = "Person.resetPK", query = "ALTER TABLE Person AUTO_INCREMENT = 1")
+@NamedQuery(name = "Person.deleteAllRows", query = "DELETE FROM Person")
+@NamedNativeQuery(name = "Person.resetPK", query = "ALTER TABLE PERSON AUTO_INCREMENT = 1")
 public class Person implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -8,7 +8,7 @@ import java.util.List;
 @Table(name = "ADDRESS")
 
 @Entity
-@NamedQuery(name = "Address.deleteAllRows", query = "DELETE from Address")
+@NamedQuery(name = "Address.deleteAllRows", query = "DELETE FROM Address")
 public class Address implements Serializable {
 
     private static final long serialVersionUID = 1L;

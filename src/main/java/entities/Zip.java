@@ -8,7 +8,7 @@ import java.util.List;
 @Table(name = "ZIP")
 
 @Entity
-@NamedQuery(name = "Zip.deleteAllRows", query = "DELETE from Zip")
+@NamedQuery(name = "Zip.deleteAllRows", query = "DELETE FROM Zip")
 public class Zip implements Serializable {
     @Id
     private int zip;
