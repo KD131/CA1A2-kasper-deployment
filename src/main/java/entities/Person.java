@@ -34,7 +34,9 @@ public class Person implements Serializable {
 
     @ManyToOne(cascade = {
             CascadeType.PERSIST,
-            CascadeType.MERGE})
+            CascadeType.REMOVE,
+            CascadeType.MERGE
+    })
     private Address address;
 
     public Person() {
