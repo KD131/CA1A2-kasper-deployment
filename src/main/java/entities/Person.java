@@ -29,6 +29,7 @@ public class Person implements Serializable {
     @OneToMany(mappedBy = "person",
             cascade = {
                     CascadeType.PERSIST,
+                    CascadeType.REMOVE,
                     CascadeType.MERGE
             })
     private List<Phone> phones;

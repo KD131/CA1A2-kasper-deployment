@@ -19,7 +19,6 @@ public class Phone implements Serializable {
     
     @ManyToOne(cascade = {
             CascadeType.PERSIST,
-            CascadeType.REMOVE,
             CascadeType.MERGE
     })
     private Person person;
