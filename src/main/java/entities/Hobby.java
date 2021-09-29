@@ -18,7 +18,7 @@ public class Hobby implements Serializable {
     private String link;
     private String category;
 
-    private boolean outdoor;
+    private String type;
 
 
     
@@ -29,11 +29,11 @@ public class Hobby implements Serializable {
     public Hobby() {
     }
 
-    public Hobby(String name, String link, String category, boolean outdoor) {
+    public Hobby(String name, String link, String category, String type) {
         this.name = name;
         this.link = link;
         this.category = category;
-        this.outdoor = outdoor;
+        this.type = type;
         this.persons = new ArrayList<>();
     }
 
@@ -61,14 +61,14 @@ public class Hobby implements Serializable {
         this.link = link;
     }
 
-    public boolean isOutdoor() {
-        return outdoor;
+    public String getType() {
+        return type;
     }
 
-    public void setOutdoor(boolean outdoor) {
-        this.outdoor = outdoor;
+    public void setType(String type) {
+        this.type = type;
     }
-    
+
     public List<Person> getPersons()
     {
         return persons;

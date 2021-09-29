@@ -18,7 +18,7 @@ public interface HobbyFacadeInterface {
 
     List<HobbyDTO> getByCategory(String category);
 
-    List<HobbyDTO> getIfOutdoor(boolean outdoor);
+    List<HobbyDTO> getByType(String type);
 
     List<HobbyDTO> getByPerson(PersonDTO person);
 

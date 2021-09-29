@@ -42,7 +42,7 @@ public class HobbyFacade implements HobbyFacadeInterface {
 
     @Override
     public HobbyDTO create(HobbyDTO hobby) {
-        Hobby hobbyEntity = new Hobby(hobby.getName(), hobby.getLink(), hobby.getCategory(), hobby.isOutdoor());
+        Hobby hobbyEntity = new Hobby(hobby.getName(), hobby.getLink(), hobby.getCategory(), hobby.getType());
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
@@ -76,9 +76,7 @@ public class HobbyFacade implements HobbyFacadeInterface {
     }
 
     @Override
-    public List<HobbyDTO> getIfOutdoor(boolean outdoor) {
-        return null;
-    }
+    public List<HobbyDTO> getByType(String type) { return null; }
 
     @Override
     public List<HobbyDTO> getByPerson(PersonDTO person) {
