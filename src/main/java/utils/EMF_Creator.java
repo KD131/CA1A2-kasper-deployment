@@ -2,8 +2,6 @@ package utils;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 public class EMF_Creator {
@@ -43,8 +41,8 @@ public class EMF_Creator {
             System.out.println("USER           -->" + System.getenv("USER"));
             System.out.println("PW             -->" + System.getenv("PW"));
             System.out.println("CONNECTION_STR -->" + System.getenv("CONNECTION_STR"));
-            String user = System.getenv("USER");
-            String pw = System.getenv("PW");
+            String user = System.getenv("DB_USER");
+            String pw = System.getenv("DB_PW");
             String dbName = getDbName(); //Gets the database name from pom.xml
             String connection_str = System.getenv("CONNECTION_STR") + dbName; //Creates the full JDBC connection string
             Properties props = new Properties();
@@ -84,6 +82,7 @@ public class EMF_Creator {
     }
 
     private static String getDbName() {
+        return "CA1A2";/*
         Properties pomProperties;
         InputStream is = EMF_Creator.class.getClassLoader().getResourceAsStream("properties-from-pom.properties");
         pomProperties = new Properties();
@@ -92,7 +91,7 @@ public class EMF_Creator {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return pomProperties.getProperty("db.name");
+        return pomProperties.getProperty("db.name");*/
     }
 
 }
