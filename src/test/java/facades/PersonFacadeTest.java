@@ -5,6 +5,7 @@ import dtos.PhoneDTO;
 import dtos.ZipDTO;
 import edu.emory.mathcs.backport.java.util.Arrays;
 import entities.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,9 @@ class PersonFacadeTest
     private static EntityManagerFactory emf;
     private static PersonFacade facade;
     
+    private static Person p1;
+    private static Person p2;
+    
     @BeforeAll
     static void beforeAll()
     {
@@ -35,27 +39,34 @@ class PersonFacadeTest
     void setUp()
     {
         EntityManager em = emf.createEntityManager();
+        
+        p1 = new Person(
+                new ArrayList<Phone>(Arrays.asList(new Phone[]{new Phone(11111111)})),
+                "bob@bob.com",
+                "Bob",
+                "Roberts",
+                new Address("Test street 21",
+                        new Zip(6969, "Nice-ville")));
+    
+        List<Phone> phones2 = new ArrayList<>();
+        phones2.add(new Phone(22222222));
+        p2 = new Person(phones2,
+                "alice@alice.com",
+                "Alice",
+                "Allison",
+                new Address("2nd and Hill 34",
+                        new Zip(4242, "Cool-town")));
         try
         {
             em.getTransaction().begin();
             // needs either cascading delete or more delete queries to take out the other tables
-//            em.createNamedQuery("Person.deleteAllRows").executeUpdate();
-//            em.createNamedQuery("Person.resetPK").executeUpdate();
-            em.persist(new Person(
-                    new ArrayList<Phone>(Arrays.asList(new Phone[]{new Phone(11111111)})),
-                    "bob@bob.com",
-                    "Bob",
-                    "Roberts",
-                    new Address("Test street 21",
-                            new Zip(6969, "Nice-ville"))));
-            List<Phone> phones2 = new ArrayList<>();
-            phones2.add(new Phone(22222222));
-            em.persist(new Person(phones2,
-                    "alice@alice.com",
-                    "Alice",
-                    "Allison",
-                    new Address("2nd and Hill 34",
-                            new Zip(4242, "Cool-town"))));
+            em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Person.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Person.resetPK").executeUpdate();
+            em.createNamedQuery("Address.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Zip.deleteAllRows").executeUpdate();
+            em.persist(p1);
+            em.persist(p2);
             em.getTransaction().commit();
         }
         finally
@@ -63,6 +74,21 @@ class PersonFacadeTest
             em.close();
         }
     }
+//
+//    @AfterEach
+//    void tearDown()
+//    {
+//        EntityManager em = emf.createEntityManager();
+//        try
+//        {
+//            em.remove(p1);
+//            em.remove(p2);
+//        }
+//        finally
+//        {
+//            em.close();
+//        }
+//    }
     
     @Test
     void create()
