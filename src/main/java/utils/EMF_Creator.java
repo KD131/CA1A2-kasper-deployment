@@ -1,10 +1,10 @@
 package utils;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 public class EMF_Creator {
 
@@ -34,17 +34,17 @@ public class EMF_Creator {
 
     private static EntityManagerFactory createEntityManagerFactory(boolean isTest) {
 
-        
+
         boolean isDeployed = (System.getenv("DEPLOYED") != null);
         if (isDeployed) {
             /* Strategy for deployment */
             System.out.println("USING ENVIRONMENT VARIABLES");
             System.out.println("DEPLOYED       -->" + System.getenv("DEPLOYED"));
-            System.out.println("USER           -->" + System.getenv("USER"));
-            System.out.println("PW             -->" + System.getenv("PW"));
+            System.out.println("USER           -->" + System.getenv("DB_USER"));
+            System.out.println("PW             -->" + System.getenv("DB_PASS"));
             System.out.println("CONNECTION_STR -->" + System.getenv("CONNECTION_STR"));
-            String user = System.getenv("USER");
-            String pw = System.getenv("PW");
+            String user = System.getenv("DB_USER");
+            String pw = System.getenv("DB_PASS");
             String dbName = getDbName(); //Gets the database name from pom.xml
             String connection_str = System.getenv("CONNECTION_STR") + dbName; //Creates the full JDBC connection string
             Properties props = new Properties();
@@ -52,10 +52,10 @@ public class EMF_Creator {
             props.setProperty("javax.persistence.jdbc.password", pw);
             props.setProperty("javax.persistence.jdbc.url", connection_str);
             props.setProperty("javax.persistence.jdbc.driver", "com.mysql.cj.jdbc.Driver");
-            
+
             //Sets the production log-level to show only potential problems
-            props.setProperty("eclipselink.logging.level","WARNING");
-            props.setProperty("eclipselink.logging.level.sql","WARNING");
+            props.setProperty("eclipselink.logging.level", "WARNING");
+            props.setProperty("eclipselink.logging.level.sql", "WARNING");
             return Persistence.createEntityManagerFactory("pu", props);
         }
 
@@ -70,17 +70,17 @@ public class EMF_Creator {
         }
         EntityManagerFactory emf = null;
         try {
-         emf =  Persistence.createEntityManagerFactory(puName, null);
-       
-        } catch (javax.persistence.PersistenceException ex){
+            emf = Persistence.createEntityManagerFactory(puName, null);
+
+        } catch (javax.persistence.PersistenceException ex) {
             System.out.println("##########################################################");
             System.out.println("######      ERROR Creating a persistence Unit       ######");
             System.out.println("###### Have you started the dev and test databases? ######");
             System.out.println("######          (docker-compose up -d )             ######");
             System.out.println("##########################################################");
-            throw ex; 
+            throw ex;
         }
-         return emf;
+        return emf;
     }
 
     private static String getDbName() {
