@@ -9,6 +9,7 @@ import entities.Address;
 import entities.Person;
 import entities.Phone;
 import entities.Zip;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,8 +32,14 @@ class PersonFacadeTest {
 
     @BeforeAll
     static void beforeAll() {
+        EMF_Creator.startREST_TestWithDB();
         emf = EMF_Creator.createEntityManagerFactoryForTest();
         facade = PersonFacade.getPersonFacade(emf);
+    }
+
+    @AfterAll
+    static void afterAll() {
+        EMF_Creator.endREST_TestWithDB();
     }
 
     @BeforeEach
