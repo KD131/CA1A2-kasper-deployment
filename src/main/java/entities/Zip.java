@@ -10,8 +10,6 @@ import java.util.List;
 @NamedQuery(name = "Zip.deleteAllRows", query = "DELETE from Zip")
 public class Zip implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private int zip;
     private String city;
     
@@ -25,14 +23,6 @@ public class Zip implements Serializable {
         this.zip = zip;
         this.city = city;
         this.addresses = new ArrayList<>();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public int getZip() {

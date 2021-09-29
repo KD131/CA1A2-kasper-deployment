@@ -54,14 +54,14 @@ public class ZipFacade implements ZipFacadeInterface {
     }
 
     @Override
-    public boolean delete(long id) {
+    public boolean delete(int zip) {
         return false;
     }
 
     @Override
-    public ZipDTO getById(long id) {
+    public ZipDTO getById(int zip) {
         EntityManager em = emf.createEntityManager();
-        return new ZipDTO(em.find(Zip.class, id));
+        return new ZipDTO(em.find(Zip.class, zip));
     }
 
     @Override
