@@ -73,8 +73,8 @@ public class PersonFacade implements PersonFacadeInterface {
     @Override
     public PersonDTO getByPhone(PhoneDTO phone) {
         EntityManager em = emf.createEntityManager();
-        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.phones ph WHERE :phone MEMBER OF ph", Person.class); // IN / MEMBER OF ?
-        query.setParameter("phone", phone);
+        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.phones ph WHERE ph.number = :phone", Person.class); // IN / MEMBER OF ?
+        query.setParameter("phone", phone.getNumber());
         Person person = query.getSingleResult();
         return new PersonDTO(person);
     }
@@ -100,8 +100,8 @@ public class PersonFacade implements PersonFacadeInterface {
     @Override
     public List<PersonDTO> getByZip(ZipDTO zip) {
         EntityManager em = emf.createEntityManager();
-        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.address.zip z where z = :zip", Person.class);
-        query.setParameter("zip", zip);
+        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.address.zip z where z.zip = :zip", Person.class);
+        query.setParameter("zip", zip.getZip());
         List<Person> persons = query.getResultList();
         return PersonDTO.getDtos(persons);
     }
