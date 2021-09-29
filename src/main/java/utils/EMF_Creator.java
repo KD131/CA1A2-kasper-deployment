@@ -2,6 +2,8 @@ package utils;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class EMF_Creator {
@@ -38,8 +40,8 @@ public class EMF_Creator {
             /* Strategy for deployment */
             System.out.println("USING ENVIRONMENT VARIABLES");
             System.out.println("DEPLOYED       -->" + System.getenv("DEPLOYED"));
-            System.out.println("USER           -->" + System.getenv("USER"));
-            System.out.println("PW             -->" + System.getenv("PW"));
+            System.out.println("USER           -->" + System.getenv("DB_USER"));
+            System.out.println("PW             -->" + System.getenv("DB_PW"));
             System.out.println("CONNECTION_STR -->" + System.getenv("CONNECTION_STR"));
             String user = System.getenv("DB_USER");
             String pw = System.getenv("DB_PW");
@@ -82,7 +84,6 @@ public class EMF_Creator {
     }
 
     private static String getDbName() {
-        return "CA1A2";/*
         Properties pomProperties;
         InputStream is = EMF_Creator.class.getClassLoader().getResourceAsStream("properties-from-pom.properties");
         pomProperties = new Properties();
@@ -91,7 +92,7 @@ public class EMF_Creator {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return pomProperties.getProperty("db.name");*/
+        return pomProperties.getProperty("db.name");
     }
 
 }

@@ -32,14 +32,14 @@ class PersonFacadeTest {
 
     @BeforeAll
     static void beforeAll() {
-        EMF_Creator.startREST_TestWithDB();
+        //EMF_Creator.startREST_TestWithDB();
         emf = EMF_Creator.createEntityManagerFactoryForTest();
         facade = PersonFacade.getPersonFacade(emf);
     }
 
     @AfterAll
     static void afterAll() {
-        EMF_Creator.endREST_TestWithDB();
+        //EMF_Creator.endREST_TestWithDB();
     }
 
     @BeforeEach
