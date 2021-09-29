@@ -45,7 +45,8 @@ public class Person implements Serializable {
     }
 
     public Person(List<Phone> phones, String email, String firstName, String lastName, Address address, List<Hobby> hobbies) {
-        this.phones = phones;
+        this.phones = new ArrayList<>();
+        phones.forEach(this::addPhone);
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
