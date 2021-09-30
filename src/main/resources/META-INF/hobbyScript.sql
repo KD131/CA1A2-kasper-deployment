@@ -1,4 +1,4 @@
-use HOBBY;
+DELETE FROM HOBBY;
 INSERT INTO HOBBY (name,link,category,type)  VALUES ('3D-udskrivning','https://en.wikipedia.org/wiki/3D_printing','Generel','Indendørs');
 INSERT INTO HOBBY (name,link,category,type)  VALUES ('Akrobatik','https://en.wikipedia.org/wiki/Acrobatics','Generel','Indendørs');
 INSERT INTO HOBBY (name,link,category,type)  VALUES ('Skuespil','https://en.wikipedia.org/wiki/Acting','Generel','Indendørs');
