@@ -39,8 +39,8 @@ jobs:
           # collation server: 'utf8_general_ci' # Optional, default value is 'utf8mb4_general_ci'. The '--collation-server' option for mysqld
           mysql version: '8.0'
           mysql database: 'CA1A2_test'
-          mysql user: ${{ secrets.DB_USER }}
-          mysql password: ${{ secrets.DB_PASS }}
+          mysql user: "dev"
+          mysql password: "ax2"
       - name: Cache Maven packages # cache maven repos to save time on future builds
         uses: actions/cache@v2
         with:
