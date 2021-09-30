@@ -7,6 +7,7 @@ import dtos.PhoneDTO;
 import dtos.ZipDTO;
 import facades.PersonFacade;
 import facades.PhoneFacade;
+import facades.PopulatorPerson;
 import facades.ZipFacade;
 import utils.EMF_Creator;
 
@@ -77,5 +78,13 @@ public class PersonResource {
         long count = PERSON_FACADE.getPersonCount();
         //System.out.println("--------------->"+count);
         return "{\"count\":" + count + "}";  //Done manually so no need for a DTO
+    }
+
+    @Path("populate")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getPopulate() {
+        boolean success = PopulatorPerson.populate();
+        return "{\"Populated:\":" + success + "}";  //Done manually so no need for a DTO
     }
 }
