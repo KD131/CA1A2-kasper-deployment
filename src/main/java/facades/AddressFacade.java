@@ -2,6 +2,7 @@ package facades;
 
 import dtos.AddressDTO;
 import entities.Address;
+import entities.Zip;
 import facades.inter.AddressFacadeInterface;
 import utils.EMF_Creator;
 
@@ -36,15 +37,9 @@ public class AddressFacade implements AddressFacadeInterface {
 
     @Override
     public AddressDTO create(AddressDTO address) {
-        return null;
-    }
-
-
-    @Override
-    public AddressDTO create(AddressDTO address) {
         EntityManager em = emf.createEntityManager();
         Zip zipEntity = em.find(Zip.class, address.getZip().getZip());
-        Address addressEntity = new Address(address.getAddress(), ZipEntity);
+        Address addressEntity = new Address(address.getAddress(), zipEntity);
         try {
             em.getTransaction().begin();
             em.persist(addressEntity);
