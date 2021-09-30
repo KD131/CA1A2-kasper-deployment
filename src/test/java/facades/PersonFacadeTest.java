@@ -19,7 +19,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
+@Disabled
 class PersonFacadeTest {
     private static EntityManagerFactory emf;
     private static PersonFacade facade;
