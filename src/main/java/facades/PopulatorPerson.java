@@ -10,75 +10,121 @@ import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author tha
  */
 public class PopulatorPerson {
+    private static List<Hobby> getHobbies(EntityManager em) {
+        TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h", Hobby.class);
+        return (List<Hobby>) query.getResultList();
+    }
+
+    private static List<Zip> getZips(EntityManager em) {
+        TypedQuery<Zip> query = em.createQuery("SELECT z FROM Zip z", Zip.class);
+        return (List<Zip>) query.getResultList();
+    }
+
+    private static int getRandomNumber() {
+        Random rand = new Random();
+        StringBuilder num = new StringBuilder();
+        for (int i = 0; i < 8; i++) {
+            num.append(rand.nextInt(10));
+        }
+        return Integer.parseInt(num.toString());
+    }
+
+    private static Person buildPerson(String email, String fname, String lname, String address, List<Zip> zips, List<Hobby> hobbies) {
+        Random rand = new Random();
+        List<Phone> pho = new ArrayList<>();
+        List<Hobby> hob = new ArrayList();
+        StringBuilder num = new StringBuilder();
+        for (int i = 0; i < 8; i++) num.append(rand.nextInt(10));
+        pho.add(new Phone(getRandomNumber()));
+        pho.add(new Phone(getRandomNumber(), "work"));
+        hob.add(hobbies.get(rand.nextInt(hobbies.size())));
+        hob.add(hobbies.get(rand.nextInt(hobbies.size())));
+        return new Person(pho, email, fname, lname, new Address(address, zips.get(rand.nextInt(zips.size()))), hob);
+    }
+
     public static boolean populate() {
         EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
         try {
-            List<Hobby> hobby1 = new ArrayList<>();
-            hobby1.add(new Hobby("Håndbold", "https://en.wikipedia.org/wiki/Handball", "Generel", " Konkurrence"));
-            hobby1.add(new Hobby("Spøgelsesjagt", "https://en.wikipedia.org/wiki/Ghost_hunting", "Generel", "Udendørs"));
-            List<Phone> phones1 = new ArrayList<>();
-            phones1.add(new Phone(11111111));
-            phones1.add(new Phone(11111112));
-            Person p1 = new Person(phones1,
-                    "Bente@ko.dk",
+            List<Hobby> hobbies = getHobbies(em);
+            List<Zip> zips = getZips(em);
+            List<Person> persons = new ArrayList();
+
+            persons.add(buildPerson(
+                    "bente@bentsenogco.dk",
                     "Bente",
-                    "Ko",
-                    new Address("Lysallen 246",
-                            new Zip(4000, "Roskilde")), hobby1);
+                    "Bentsen",
+                    "Lysallen 246",
+                    zips, hobbies));
 
-            List<Hobby> hobby2 = new ArrayList<>();
-            hobby2.add(new Hobby("Herping", "https://en.wikipedia.org/wiki/Herping", "Generel", " Observation"));
-            hobby2.add(new Hobby("Højeffektiv raket", "https://en.wikipedia.org/wiki/High-power_rocketry", "Generel", "Udendørs"));
-            List<Phone> phones2 = new ArrayList<>();
-            phones2.add(new Phone(22222221));
-            phones2.add(new Phone(22222222));
-            Person p2 = new Person(phones2,
-                    "JensVejmand@hotmail.com",
-                    "Jens",
-                    "Vejmand",
-                    new Address("Skuldelevvej 6",
-                            new Zip(4050, "Skibby")), hobby2);
+            persons.add(buildPerson(
+                    "gammelSteen@hotmail.com",
+                    "Steen",
+                    "Aldermann",
+                    "Skuldelevvej 6, st. t.h.",
+                    zips, hobbies));
 
-            List<Hobby> hobby3 = new ArrayList<>();
-            hobby3.add(new Hobby("Fodbold", "https://en.wikipedia.org/wiki/Soccer", "Generel", "Udendørs"));
-            hobby3.add(new Hobby("Freestyle fodbold", "https://en.wikipedia.org/wiki/Freestyle_football", "Generel", "Udendørs"));
-            List<Phone> phones3 = new ArrayList<>();
-            phones3.add(new Phone(33333331));
-            phones3.add(new Phone(33333332));
-            Person p3 = new Person(phones3,
-                    "JensVejmand@hotmail.com",
-                    "Jens",
-                    "Vejmand",
-                    new Address("Skuldelevvej 6",
-                            new Zip(4100, "Skibbies")), hobby3);
+            persons.add(buildPerson(
+                    "kasper@christensen.dk",
+                    "Kasper",
+                    "Christensen",
+                    "Rolighedsvej 12, 3. t.v.",
+                    zips, hobbies));
+
+            persons.add(buildPerson(
+                    "mmmonaco@gmail.com",
+                    "Monica",
+                    "Kirkegaard",
+                    "Kirsebærsvej 101, 1. t.h.",
+                    zips, hobbies));
+
+            persons.add(buildPerson(
+                    "malibro@hotmail.dk",
+                    "Malou",
+                    "Brohammer",
+                    "Vestergade 19, 5. t.v.",
+                    zips, hobbies));
+
+            persons.add(buildPerson(
+                    "mikki1999@gmail.com",
+                    "Mikkel",
+                    "Trove",
+                    "Skomagervej 164",
+                    zips, hobbies));
+
+            persons.add(buildPerson(
+                    "eriksvend72@gmail.com",
+                    "Erik",
+                    "Svendsen",
+                    "Teglvej 5",
+                    zips, hobbies));
+
             em.getTransaction().begin();
             // needs either cascading delete or more delete queries to take out the other tables
-            em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
             em.createNamedQuery("Person.deleteAllRows").executeUpdate();
             em.createNamedQuery("Person.resetPK").executeUpdate();
-            em.createNamedQuery("Address.deleteAllRows").executeUpdate();
-            em.createNamedQuery("Zip.deleteAllRows").executeUpdate();
-            em.persist(p1);
-            em.persist(p2);
-            em.persist(p3);
+            for (Person person : persons) {
+                em.persist(person);
+            }
             em.getTransaction().commit();
-        } catch(Exception e) {
+        } catch (Exception e) {
             return false;
-        }finally {
+        } finally {
             em.close();
         }
         return true;
     }
 
     public static void main(String[] args) {
-        boolean bool = populate();
+        boolean popped = populate();
     }
 }
