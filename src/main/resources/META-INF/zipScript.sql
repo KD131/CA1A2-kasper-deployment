@@ -1,4 +1,5 @@
-INSERT INTO  VALUES ('0555','Scanning');
+use ZIP;
+INSERT INTO ZIP VALUES ('0555','Scanning');
 INSERT INTO ZIP VALUES ('0800','Høje Taastrup');
 INSERT INTO ZIP VALUES ('0877','København C');
 INSERT INTO ZIP VALUES ('0892','Sjælland USF P');
