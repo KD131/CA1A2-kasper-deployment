@@ -40,11 +40,11 @@ public class EMF_Creator {
             /* Strategy for deployment */
             System.out.println("USING ENVIRONMENT VARIABLES");
             System.out.println("DEPLOYED       -->" + System.getenv("DEPLOYED"));
-            System.out.println("USER           -->" + System.getenv("DB_USER"));
-            System.out.println("PW             -->" + System.getenv("DB_PASS"));
+            System.out.println("USER           -->" + System.getenv("USER"));
+            System.out.println("PW             -->" + System.getenv("PASS"));
             System.out.println("CONNECTION_STR -->" + System.getenv("CONNECTION_STR"));
-            String user = System.getenv("DB_USER");
-            String pw = System.getenv("DB_PASS");
+            String user = System.getenv("USER");
+            String pw = System.getenv("PASS");
             String dbName = getDbName(); //Gets the database name from pom.xml
             String connection_str = System.getenv("CONNECTION_STR") + dbName; //Creates the full JDBC connection string
             Properties props = new Properties();
