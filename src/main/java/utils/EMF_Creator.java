@@ -5,6 +5,8 @@ import javax.persistence.Persistence;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class EMF_Creator {
 
@@ -18,7 +20,7 @@ public class EMF_Creator {
     }
 
     /**
-      Call this method in your @AfterAll method if startREST_TestWithDB() was previously called
+     * Call this method in your @AfterAll method if startREST_TestWithDB() was previously called
      */
     public static void endREST_TestWithDB() {
         System.clearProperty("IS_INTEGRATION_TEST_WITH_DB");
@@ -34,7 +36,6 @@ public class EMF_Creator {
 
     private static EntityManagerFactory createEntityManagerFactory(boolean isTest) {
 
-
         boolean isDeployed = (System.getenv("DEPLOYED") != null);
         if (isDeployed) {
             /* Strategy for deployment */
@@ -43,6 +44,7 @@ public class EMF_Creator {
             System.out.println("USER           -->" + System.getenv("USER"));
             System.out.println("PW             -->" + System.getenv("PW"));
             System.out.println("CONNECTION_STR -->" + System.getenv("CONNECTION_STR"));
+            Logger.getLogger("web").log(Level.SEVERE, System.getenv("USER"), System.getenv("PW"));
             String user = System.getenv("USER");
             String pw = System.getenv("PW");
             String dbName = getDbName(); //Gets the database name from pom.xml
