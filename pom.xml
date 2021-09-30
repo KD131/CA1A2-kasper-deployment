@@ -110,8 +110,8 @@
                 <configuration>
                     <server>TomcatServer</server>
                     <url>${remote.server}</url>
-                    <username>${REMOTE_USER}</username>
-                    <password>${REMOTE_PW}</password>
+                    <username>${remote.user}</username>
+                    <password>${remote.password}</password>
                     <update>true</update>
                 </configuration>
             </plugin>
