@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * @author tha
+ * @author Alex & Johan
+ * MANUALLY DROP TABLE ADDRESS, PERSON, PERSON_HOBBY & PHONE BEFORE RUNNING (KEEP HOBBY & ZIP)
  */
 public class PopulatorPerson {
     private static List<Hobby> getHobbies(EntityManager em) {
@@ -110,8 +111,10 @@ public class PopulatorPerson {
 
             em.getTransaction().begin();
             // needs either cascading delete or more delete queries to take out the other tables
+            /*em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Address.deleteAllRows").executeUpdate();
             em.createNamedQuery("Person.deleteAllRows").executeUpdate();
-            em.createNamedQuery("Person.resetPK").executeUpdate();
+            em.createNamedQuery("Person.resetPK").executeUpdate();*/
             for (Person person : persons) {
                 em.persist(person);
             }
