@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import dtos.PersonDTO;
 import dtos.PhoneDTO;
 import dtos.ZipDTO;
+import entities.Person;
 import facades.PersonFacade;
 import facades.PhoneFacade;
 import facades.PopulatorPerson;
@@ -12,10 +13,7 @@ import facades.ZipFacade;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManagerFactory;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -87,4 +85,17 @@ public class PersonResource {
         String pop = PopulatorPerson.populate();
         return "{\"Message:\":" + pop + "}";
     }
+
+    @Path("Update")
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String updatePerson(String person) {
+        PersonDTO p = GSON.fromJson(person, PersonDTO.class);
+        PersonDTO pEdited = PERSON_FACADE.edit(p);
+        return GSON.toJson(pEdited);
+
+
+        }
+
 }
