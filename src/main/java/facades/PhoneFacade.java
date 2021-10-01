@@ -74,7 +74,27 @@ public class PhoneFacade implements PhoneFacadeInterface {
 
     @Override
     public List<PhoneDTO> getByPerson(PersonDTO person) {
-        return null;
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<Phone> query = em.createQuery("SELECT p FROM Phone p WHERE p.person.id = :personId", Phone.class);
+            query.setParameter("personId", person.getId());
+            List<Phone> phones = query.getResultList();
+            return PhoneDTO.getDtos(phones);
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<PhoneDTO> getByPersonId(long personId) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<Phone> query = em.createQuery("SELECT p FROM Phone p WHERE p.person.id = :personId", Phone.class);
+            query.setParameter("personId", personId);
+            List<Phone> phones = query.getResultList();
+            return PhoneDTO.getDtos(phones);
+        } finally {
+            em.close();
+        }
     }
 
     @Override
