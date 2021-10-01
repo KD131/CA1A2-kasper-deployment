@@ -124,7 +124,7 @@ class PersonFacadeTest {
     }
 
     @Test
-    void delete(long id) {
+    void delete() {
       /*  try {
             AddressDTO addressDTO = new AddressDTO(em.find(Address.class, id));
             if(addressDTO != null) {
