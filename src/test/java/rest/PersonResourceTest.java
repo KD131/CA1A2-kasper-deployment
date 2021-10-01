@@ -1,7 +1,10 @@
 package rest;
 
+import dtos.PersonDTO;
 import edu.emory.mathcs.backport.java.util.Arrays;
 import entities.*;
+import facades.PersonFacade;
+import io.restassured.http.ContentType;
 import utils.EMF_Creator;
 import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
@@ -30,6 +33,7 @@ public class PersonResourceTest {
     private static final int SERVER_PORT = 7777;
     private static final String SERVER_URL = "http://localhost/api";
     private static Person p1, p2;
+    private static PersonFacade personFacade;
 
     static final URI BASE_URI = UriBuilder.fromUri(SERVER_URL).port(SERVER_PORT).build();
     private static HttpServer httpServer;
@@ -45,6 +49,7 @@ public class PersonResourceTest {
         //This method must be called before you request the EntityManagerFactory
         EMF_Creator.startREST_TestWithDB();
         emf = EMF_Creator.createEntityManagerFactoryForTest();
+        personFacade = PersonFacade.getPersonFacade(emf);
 
         httpServer = startServer();
         //Setup RestAssured
@@ -131,6 +136,19 @@ public class PersonResourceTest {
 
     @Test
     void updatePerson() {
+        PersonDTO p2DTO = new PersonDTO(p2);
+        p2DTO.setFirstName("John");
 
+        given()
+                .contentType(ContentType.JSON)
+                .body(p2DTO)
+                .when()
+                .put("person/"+ p2DTO.getId())
+                .then()
+                .body("email", equalTo("alice@alice.com"))
+                .body("firstName", equalTo("John"))
+                .body("lastName", equalTo("Allison"))
+                .body("address", equalTo("2nd and Hill 34"))
+                .body("id", equalTo(p2DTO.getId())); // maybe cast to int or delete...
     }
 }
