@@ -41,7 +41,17 @@ public class HobbyDTO {
         this.category = hobby.getCategory();
         this.type = hobby.getType();
     }
-
+    
+    public long getId()
+    {
+        return id;
+    }
+    
+    public void setId(long id)
+    {
+        this.id = id;
+    }
+    
     public String getName() {
         return name;
     }
