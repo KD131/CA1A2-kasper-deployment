@@ -93,11 +93,11 @@ public class PersonResourceTest {
         try {
             em.getTransaction().begin();
             // needs either cascading delete or more delete queries to take out the other tables
-            em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
-            em.createNamedQuery("Person.deleteAllRows").executeUpdate();
-            em.createNamedQuery("Person.resetPK").executeUpdate();
-            em.createNamedQuery("Address.deleteAllRows").executeUpdate();
-            em.createNamedQuery("Zip.deleteAllRows").executeUpdate();
+//            em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
+//            em.createNamedQuery("Person.deleteAllRows").executeUpdate();
+//            em.createNamedQuery("Person.resetPK").executeUpdate();
+//            em.createNamedQuery("Address.deleteAllRows").executeUpdate();
+//            em.createNamedQuery("Zip.deleteAllRows").executeUpdate();
             em.persist(p1);
             em.persist(p2);
             em.getTransaction().commit();
@@ -143,12 +143,12 @@ public class PersonResourceTest {
                 .contentType(ContentType.JSON)
                 .body(p2DTO)
                 .when()
-                .put("person/"+ p2DTO.getId())
+                .put("/person")
                 .then()
                 .body("email", equalTo("alice@alice.com"))
                 .body("firstName", equalTo("John"))
                 .body("lastName", equalTo("Allison"))
-                .body("address", equalTo("2nd and Hill 34"))
-                .body("id", equalTo(p2DTO.getId())); // maybe cast to int or delete...
+                .body("address.address", equalTo("2nd and Hill 34"))
+                .body("id", equalTo(p2DTO.getId().intValue())); // maybe cast to int or delete...
     }
 }

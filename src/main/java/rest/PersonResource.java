@@ -86,16 +86,12 @@ public class PersonResource {
         return "{\"Message:\":" + pop + "}";
     }
 
-    @Path("")
     @PUT
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public String updatePerson(String person, @PathParam("id") Long id) {
+    public String updatePerson(String person) {
         PersonDTO p = GSON.fromJson(person, PersonDTO.class);
         PersonDTO pEdited = PERSON_FACADE.edit(p);
-        return "[\"Message:\":" + GSON.toJson(pEdited) + "}";
-
-
+        return GSON.toJson(pEdited);
         }
-
 }
