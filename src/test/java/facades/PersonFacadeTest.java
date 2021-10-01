@@ -1,14 +1,8 @@
 package facades;
 
-import dtos.AddressDTO;
-import dtos.PersonDTO;
-import dtos.PhoneDTO;
-import dtos.ZipDTO;
+import dtos.*;
 import edu.emory.mathcs.backport.java.util.Arrays;
-import entities.Address;
-import entities.Person;
-import entities.Phone;
-import entities.Zip;
+import entities.*;
 import org.junit.jupiter.api.*;
 import utils.EMF_Creator;
 
@@ -17,15 +11,13 @@ import javax.persistence.EntityManagerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PersonFacadeTest {
     private static EntityManagerFactory emf;
     private static PersonFacade facade;
 
-    private static Person p1;
-    private static Person p2;
+    private static Person p1, p2;
 
     @BeforeAll
     static void beforeAll() {
@@ -40,6 +32,10 @@ class PersonFacadeTest {
     @BeforeEach
     void setUp() {
         EntityManager em = emf.createEntityManager();
+        
+        Hobby h1 = new Hobby("Skiing", "skiing.com", "General", "Outdoors");
+        Hobby h2 = new Hobby("Polo", "polo.com", "Sport", "Outdoors");
+        Hobby h3 = new Hobby("Jogging", "jogging.com", "General", "Outdoors");
 
         p1 = new Person(
                 new ArrayList<Phone>(Arrays.asList(new Phone[]{new Phone(11111111)})),
@@ -48,7 +44,10 @@ class PersonFacadeTest {
                 "Roberts",
                 new Address("Test street 21",
                         new Zip(6969, "Nice-ville")));
-
+        
+        p1.addHobby(h1);
+        p1.addHobby(h2);
+        
         List<Phone> phones2 = new ArrayList<>();
         phones2.add(new Phone(22222222));
         p2 = new Person(phones2,
@@ -57,7 +56,10 @@ class PersonFacadeTest {
                 "Allison",
                 new Address("2nd and Hill 34",
                         new Zip(4242, "Cool-town")));
-
+        
+        p2.addHobby(h2);
+        p2.addHobby(h3);
+        
         try {
             em.getTransaction().begin();
             // needs either cascading delete or more delete queries to take out the other tables
@@ -95,8 +97,9 @@ class PersonFacadeTest {
 
     @Test
     void getById() {
-        PersonDTO person = facade.getById(1);
+        PersonDTO person = facade.getById(p1.getId());
         assertNotNull(person);
+        assertEquals(p1.getFirstName(), person.getFirstName());
     }
 
     @Test
@@ -134,14 +137,25 @@ class PersonFacadeTest {
 
     @Test
     void getByPhone() {
-        PhoneDTO phone = new PhoneDTO(11111111, "personal");
+        PhoneDTO phone = new PhoneDTO(p1.getPhones().get(0));
         PersonDTO person = facade.getByPhone(phone);
         assertNotNull(person);
-        assertEquals("Bob", person.getFirstName());
+        assertEquals(p1.getFirstName(), person.getFirstName());
     }
 
     @Test
     void getByHobby() {
+        HobbyDTO hobby1 = new HobbyDTO(p1.getHobbies().get(1)); // h2
+        List<PersonDTO> persons1 = facade.getByHobby(hobby1);
+        assertNotNull(persons1);
+        assertEquals(2, persons1.size());
+        // assertThat(persons1, containsInAnyOrder(new PersonDTO(p1), new PersonDTO(p2));
+        
+        HobbyDTO hobby2 = new HobbyDTO(p2.getHobbies().get(1)); // h3
+        List<PersonDTO> persons2 = facade.getByHobby(hobby2);
+        assertNotNull(persons2);
+        assertEquals(1, persons2.size());
+        
     }
 
     @Test

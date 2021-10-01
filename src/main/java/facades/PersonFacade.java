@@ -1,6 +1,7 @@
 package facades;
 
 import dtos.*;
+import entities.Hobby;
 import entities.Address;
 import entities.Person;
 import facades.inter.PersonFacadeInterface;
@@ -119,8 +120,9 @@ public class PersonFacade implements PersonFacadeInterface {
     public List<PersonDTO> getByHobby(HobbyDTO hobby) {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.hobbies h WHERE :hobby MEMBER OF h", Person.class); // IN / MEMBER OF ?
-            query.setParameter("hobby", hobby);
+            Hobby hobbyEntity = em.find(Hobby.class, hobby.getId());
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE :hobby MEMBER OF p.hobbies", Person.class); // IN / MEMBER OF ?
+            query.setParameter("hobby", hobbyEntity);
             List<Person> persons = query.getResultList();
             return PersonDTO.getDtos(persons);
         } finally {
