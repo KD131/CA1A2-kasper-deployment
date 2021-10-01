@@ -76,7 +76,11 @@ public class PhoneFacade implements PhoneFacadeInterface {
     public List<PhoneDTO> getByPerson(PersonDTO person) {
         EntityManager em = emf.createEntityManager();
         try {
+            /* requires bidirectionality, I think
             TypedQuery<Phone> query = em.createQuery("SELECT p FROM Phone p WHERE p.person.id = :personId", Phone.class);
+            */
+            // unidirectional from Person to their Phones
+            TypedQuery<Phone> query = em.createQuery("SELECT pe.phones FROM Person pe WHERE pe.id = :personId", Phone.class);
             query.setParameter("personId", person.getId());
             List<Phone> phones = query.getResultList();
             return PhoneDTO.getDtos(phones);
@@ -88,7 +92,11 @@ public class PhoneFacade implements PhoneFacadeInterface {
     public List<PhoneDTO> getByPersonId(long personId) {
         EntityManager em = emf.createEntityManager();
         try {
+            /* requires bidirectionality, I think
             TypedQuery<Phone> query = em.createQuery("SELECT p FROM Phone p WHERE p.person.id = :personId", Phone.class);
+            */
+            // unidirectional from Person to their Phones
+            TypedQuery<Phone> query = em.createQuery("SELECT pe.phones FROM Person pe WHERE pe.id = :personId", Phone.class);
             query.setParameter("personId", personId);
             List<Phone> phones = query.getResultList();
             return PhoneDTO.getDtos(phones);
