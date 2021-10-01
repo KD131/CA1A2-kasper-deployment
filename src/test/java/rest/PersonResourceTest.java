@@ -92,12 +92,13 @@ public class PersonResourceTest {
 
         try {
             em.getTransaction().begin();
-            // needs either cascading delete or more delete queries to take out the other tables
-//            em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
-//            em.createNamedQuery("Person.deleteAllRows").executeUpdate();
-//            em.createNamedQuery("Person.resetPK").executeUpdate();
-//            em.createNamedQuery("Address.deleteAllRows").executeUpdate();
-//            em.createNamedQuery("Zip.deleteAllRows").executeUpdate();
+            // hopefully there's a better way than use a native query to wipe out the join table
+            em.createNativeQuery("DELETE FROM PERSON_PHONE").executeUpdate();
+            em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Person.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Person.resetPK").executeUpdate();
+            em.createNamedQuery("Address.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Zip.deleteAllRows").executeUpdate();
             em.persist(p1);
             em.persist(p2);
             em.getTransaction().commit();
