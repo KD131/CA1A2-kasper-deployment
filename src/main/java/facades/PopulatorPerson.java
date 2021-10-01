@@ -111,10 +111,10 @@ public class PopulatorPerson {
 
             em.getTransaction().begin();
             // needs either cascading delete or more delete queries to take out the other tables
-            /*em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
-            em.createNamedQuery("Address.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
             em.createNamedQuery("Person.deleteAllRows").executeUpdate();
-            em.createNamedQuery("Person.resetPK").executeUpdate();*/
+            em.createNamedQuery("Person.resetPK").executeUpdate();
+            em.createNamedQuery("Address.deleteAllRows").executeUpdate();
             for (Person person : persons) {
                 em.persist(person);
             }
