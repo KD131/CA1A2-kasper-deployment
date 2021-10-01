@@ -23,6 +23,11 @@ public class AddressFacade implements AddressFacadeInterface {
     private AddressFacade() {
     }
 
+    @Override
+    public AddressDTO edit(Address address) {
+        return null;
+    }
+
     public static AddressFacade getAddressFacade(EntityManagerFactory _emf) {
         if (instance == null) {
             emf = _emf;
@@ -51,13 +56,16 @@ public class AddressFacade implements AddressFacadeInterface {
     }
 
     @Override
-    public AddressDTO edit(AddressDTO address) {
-        return null;
-    }
-
-    @Override
-    public boolean delete(long id) {
-        return false;
+    public void delete(long id) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            AddressDTO addressDTO = new AddressDTO(em.find(Address.class, id));
+            if(addressDTO != null) {
+                em.remove(addressDTO);
+            }
+        } finally {
+            em.close();
+        }
     }
 
     @Override

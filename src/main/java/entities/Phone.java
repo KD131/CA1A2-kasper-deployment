@@ -38,6 +38,14 @@ public class Phone implements Serializable {
         this.info = info;
     }
 
+    public Phone(PhoneDTO phoneDTO) {
+        this.id = id;
+        this.number = number;
+        this.info = info;
+    }
+
+
+
     public Long getId() {
         return id;
     }

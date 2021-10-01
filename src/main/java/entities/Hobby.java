@@ -40,6 +40,22 @@ public class Hobby implements Serializable {
         this.persons = new ArrayList<>();
     }
 
+    public List<Hobby> updateHobbyDTOToEntity(List<HobbyDTO> hobbiesDTO) {
+        List<Hobby> hobbies = new ArrayList<>();
+        for (HobbyDTO h : hobbiesDTO) {
+            hobbies.add(new Hobby(h));
+        }
+        return hobbies;
+    }
+
+    public Hobby(HobbyDTO hobbyDTO) {
+        this.id = hobbyDTO.getId();
+        this.name = hobbyDTO.getName();
+        this.link = hobbyDTO.getLink();
+        this.category = hobbyDTO.getCategory();
+        this.type = hobbyDTO.getType();
+    }
+
     public Long getId() {
         return id;
     }

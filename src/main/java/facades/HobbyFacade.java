@@ -1,8 +1,10 @@
 package facades;
 
+import dtos.AddressDTO;
 import dtos.HobbyDTO;
 import dtos.PersonDTO;
 import dtos.ZipDTO;
+import entities.Address;
 import entities.Hobby;
 import facades.inter.HobbyFacadeInterface;
 import utils.EMF_Creator;
@@ -60,8 +62,16 @@ public class HobbyFacade implements HobbyFacadeInterface {
     }
 
     @Override
-    public boolean delete(long id) {
-        return false;
+    public void delete(long id) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            HobbyDTO hobbyDTO = new HobbyDTO(em.find(Hobby.class, id));
+            if(hobbyDTO != null) {
+                em.remove(hobbyDTO);
+            }
+        } finally {
+            em.close();
+        }
     }
 
     @Override

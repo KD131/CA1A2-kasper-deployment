@@ -62,6 +62,12 @@ public class AddressDTO {
         if (!getId().equals(entity.getId())) return false;
         if (!getAddress().equals(entity.getAddress())) return false;
         return getZip().equals(entity.getZip());
+
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+
     }
 }
 

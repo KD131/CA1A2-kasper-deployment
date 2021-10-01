@@ -23,12 +23,12 @@ import java.util.List;
 @Path("person")
 public class PersonResource {
 
-    private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
+    private final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
 
-    private static final PersonFacade PERSON_FACADE = PersonFacade.getPersonFacade(EMF);
-    private static final PhoneFacade PHONE_FACADE = PhoneFacade.getPhoneFacade(EMF);
-    private static final ZipFacade ZIP_FACADE = ZipFacade.getZipFacade(EMF);
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private final PersonFacade PERSON_FACADE = PersonFacade.getPersonFacade(EMF);
+    private final PhoneFacade PHONE_FACADE = PhoneFacade.getPhoneFacade(EMF);
+    private final ZipFacade ZIP_FACADE = ZipFacade.getZipFacade(EMF);
+    private final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})

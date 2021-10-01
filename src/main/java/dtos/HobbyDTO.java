@@ -78,11 +78,18 @@ public class HobbyDTO {
         this.type = type;
     }
 
+
     public boolean equals(Hobby entity) {
         if (!getId().equals(entity.getId())) return false;
         if (!getName().equals(entity.getName())) return false;
         if (!getLink().equals(entity.getLink())) return false;
         if (!getCategory().equals(entity.getCategory())) return false;
         return getType().equals(entity.getType());
+
+    }
+
+    public void setId(long id) {
+        this.id = id;
+
     }
 }

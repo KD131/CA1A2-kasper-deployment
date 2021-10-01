@@ -1,6 +1,7 @@
 package facades.inter;
 
 import dtos.*;
+import entities.Person;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface PersonFacadeInterface {
 
     PersonDTO edit(PersonDTO person);
 
-    boolean delete(long id);
+    void delete(long id);
 
     PersonDTO getById(long id);
 

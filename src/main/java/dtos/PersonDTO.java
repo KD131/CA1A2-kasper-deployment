@@ -110,6 +110,7 @@ public class PersonDTO {
         this.hobbies = hobbies;
     }
 
+
     public boolean equals(Person entity) {
         if (!getId().equals(entity.getId())) return false;
         if (!getEmail().equals(entity.getEmail())) return false;
@@ -118,5 +119,10 @@ public class PersonDTO {
         if (!getHobbies().equals(entity.getHobbies())) return false;
         if (!getPhones().equals(entity.getPhones())) return false;
         return getAddress().equals(entity.getAddress());
+    }
+
+    public void setId(long id) {
+        this.id = id;
+
     }
 }

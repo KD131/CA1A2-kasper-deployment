@@ -28,6 +28,11 @@ public class Zip implements Serializable {
         this.addresses = new ArrayList<>();
     }
 
+    public Zip(ZipDTO zipDTO) {
+        this.zip = zip;
+        this.city = city;
+    }
+
     public int getZip() {
         return zip;
     }

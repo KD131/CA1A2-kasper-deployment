@@ -1,6 +1,7 @@
 package facades.inter;
 
 import dtos.AddressDTO;
+import entities.Address;
 
 import java.util.List;
 
@@ -8,9 +9,9 @@ public interface AddressFacadeInterface {
 
     AddressDTO create(AddressDTO address);
 
-    AddressDTO edit(AddressDTO address);
+    AddressDTO edit(Address address);
 
-    boolean delete(long id);
+    void delete(long id);
 
     AddressDTO getById(long id);
 
