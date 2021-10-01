@@ -12,7 +12,7 @@ public interface HobbyFacadeInterface {
 
     HobbyDTO edit(HobbyDTO Hobby);
 
-    boolean delete(long id);
+    void delete(long id);
 
     HobbyDTO getById(long id);
 

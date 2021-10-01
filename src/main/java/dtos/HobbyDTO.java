@@ -14,7 +14,7 @@ import java.util.List;
  * @author tha
  */
 public class HobbyDTO {
-    private long id;
+    private Long id;
     private String name;
     private String link;
     private String category;
@@ -41,17 +41,10 @@ public class HobbyDTO {
         this.category = hobby.getCategory();
         this.type = hobby.getType();
     }
-    
-    public long getId()
-    {
+
+    public Long getId() {
         return id;
     }
-    
-    public void setId(long id)
-    {
-        this.id = id;
-    }
-    
     public String getName() {
         return name;
     }
@@ -82,5 +75,20 @@ public class HobbyDTO {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+
+    public boolean equals(Hobby entity) {
+        if (!getId().equals(entity.getId())) return false;
+        if (!getName().equals(entity.getName())) return false;
+        if (!getLink().equals(entity.getLink())) return false;
+        if (!getCategory().equals(entity.getCategory())) return false;
+        return getType().equals(entity.getType());
+
+    }
+
+    public void setId(long id) {
+        this.id = id;
+
     }
 }

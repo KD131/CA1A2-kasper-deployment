@@ -1,5 +1,7 @@
 package entities;
 
+import dtos.ZipDTO;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,6 +28,11 @@ public class Zip implements Serializable {
         this.addresses = new ArrayList<>();
     }
 
+    public Zip(ZipDTO zipDTO) {
+        this.zip = zip;
+        this.city = city;
+    }
+
     public int getZip() {
         return zip;
     }
@@ -46,4 +53,10 @@ public class Zip implements Serializable {
     {
         return addresses;
     }
+
+    public boolean equals(ZipDTO dto) {
+        if (getZip() != dto.getZip()) return false;
+        return getCity().equals(dto.getCity());
+    }
+
 }

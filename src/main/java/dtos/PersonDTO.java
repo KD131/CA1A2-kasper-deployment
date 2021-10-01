@@ -5,10 +5,7 @@
  */
 package dtos;
 
-import entities.Address;
-import entities.Hobby;
 import entities.Person;
-import entities.Phone;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +14,7 @@ import java.util.List;
  * @author tha
  */
 public class PersonDTO {
-    private long id;
+    private Long id;
     private List<PhoneDTO> phones;
     private String email;
     private String firstName;
@@ -33,6 +30,7 @@ public class PersonDTO {
         this.address = address;
         this.hobbies = hobbies;
     }
+
     public PersonDTO(List<PhoneDTO> phones, String email, String firstName, String lastName, AddressDTO address) {
         this.phones = phones;
         this.email = email;
@@ -58,6 +56,10 @@ public class PersonDTO {
         this.lastName = person.getLastName();
         this.address = new AddressDTO(person.getAddress());
         this.hobbies = HobbyDTO.getDtos(person.getHobbies());
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public List<PhoneDTO> getPhones() {
@@ -106,5 +108,21 @@ public class PersonDTO {
 
     public void setHobbies(List<HobbyDTO> hobbies) {
         this.hobbies = hobbies;
+    }
+
+
+    public boolean equals(Person entity) {
+        if (!getId().equals(entity.getId())) return false;
+        if (!getEmail().equals(entity.getEmail())) return false;
+        if (!getFirstName().equals(entity.getFirstName())) return false;
+        if (!getLastName().equals(entity.getLastName())) return false;
+        if (!getHobbies().equals(entity.getHobbies())) return false;
+        if (!getPhones().equals(entity.getPhones())) return false;
+        return getAddress().equals(entity.getAddress());
+    }
+
+    public void setId(long id) {
+        this.id = id;
+
     }
 }

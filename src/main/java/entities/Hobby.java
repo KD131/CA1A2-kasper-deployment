@@ -1,5 +1,7 @@
 package entities;
 
+import dtos.HobbyDTO;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -36,6 +38,22 @@ public class Hobby implements Serializable {
         this.category = category;
         this.type = type;
         this.persons = new ArrayList<>();
+    }
+
+    public List<Hobby> updateHobbyDTOToEntity(List<HobbyDTO> hobbiesDTO) {
+        List<Hobby> hobbies = new ArrayList<>();
+        for (HobbyDTO h : hobbiesDTO) {
+            hobbies.add(new Hobby(h));
+        }
+        return hobbies;
+    }
+
+    public Hobby(HobbyDTO hobbyDTO) {
+        this.id = hobbyDTO.getId();
+        this.name = hobbyDTO.getName();
+        this.link = hobbyDTO.getLink();
+        this.category = hobbyDTO.getCategory();
+        this.type = hobbyDTO.getType();
     }
 
     public Long getId() {
@@ -85,5 +103,13 @@ public class Hobby implements Serializable {
 
     public void setPersons(List<Person> persons) {
         this.persons = persons;
+    }
+
+    public boolean equals(HobbyDTO dto) {
+        if (!getId().equals(dto.getId())) return false;
+        if (!getName().equals(dto.getName())) return false;
+        if (!getLink().equals(dto.getLink())) return false;
+        if (!getCategory().equals(dto.getCategory())) return false;
+        return getType().equals(dto.getType());
     }
 }

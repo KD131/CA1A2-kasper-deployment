@@ -1,5 +1,7 @@
 package entities;
 
+import dtos.PhoneDTO;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -16,7 +18,7 @@ public class Phone implements Serializable {
     private Long id;
     private int number;
     private String info;
-    
+
     @ManyToOne(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
@@ -35,6 +37,14 @@ public class Phone implements Serializable {
         this.number = number;
         this.info = info;
     }
+
+    public Phone(PhoneDTO phoneDTO) {
+        this.id = id;
+        this.number = number;
+        this.info = info;
+    }
+
+
 
     public Long getId() {
         return id;
@@ -59,14 +69,18 @@ public class Phone implements Serializable {
     public void setInfo(String info) {
         this.info = info;
     }
-    
-    public Person getPerson()
-    {
+
+    public Person getPerson() {
         return person;
     }
-    
-    public void setPerson(Person person)
-    {
+
+    public void setPerson(Person person) {
         this.person = person;
+    }
+
+    public boolean equals(PhoneDTO dto) {
+        if (getNumber() != dto.getNumber()) return false;
+        if (!getId().equals(dto.getId())) return false;
+        return !getInfo().equals(dto.getInfo());
     }
 }

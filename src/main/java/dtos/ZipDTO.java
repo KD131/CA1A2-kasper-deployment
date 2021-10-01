@@ -5,8 +5,6 @@
  */
 package dtos;
 
-import entities.Address;
-import entities.Person;
 import entities.Zip;
 
 import java.util.ArrayList;
@@ -53,6 +51,11 @@ public class ZipDTO {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public boolean equals(Zip entity) {
+        if (getZip() != entity.getZip()) return false;
+        return getCity().equals(entity.getCity());
     }
 }
 

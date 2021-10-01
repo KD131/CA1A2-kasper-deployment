@@ -52,7 +52,7 @@ public class PopulatorPerson {
         return new Person(pho, email, fname, lname, new Address(address, zips.get(rand.nextInt(zips.size()))), hob);
     }
 
-    public static boolean populate() {
+    public static String populate() {
         EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
         try {
@@ -120,14 +120,14 @@ public class PopulatorPerson {
             }
             em.getTransaction().commit();
         } catch (Exception e) {
-            return false;
+            return e.getMessage();
         } finally {
             em.close();
         }
-        return true;
+        return "Succes";
     }
 
     public static void main(String[] args) {
-        boolean popped = populate();
+        String popped = populate();
     }
 }

@@ -1,5 +1,7 @@
 package entities;
 
+import dtos.*;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,6 +12,17 @@ import java.util.List;
 @Entity
 @NamedQuery(name = "Person.deleteAllRows", query = "DELETE FROM Person")
 @NamedNativeQuery(name = "Person.resetPK", query = "ALTER TABLE PERSON AUTO_INCREMENT = 1")
+
+@SqlResultSetMapping(name="updateResult", columns = { @ColumnResult(name = "count")})
+
+@NamedNativeQueries({
+        @NamedNativeQuery(
+                name    =   "updatePerson",
+                query   =   "UPDATE Person SET email = ?, firstName = ?, lastName = ?, hobbies = ?, phones = ?, address = ? WHERE id = ?"
+                ,resultSetMapping = "updateResult"
+        )
+})
+
 public class Person implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -143,4 +156,61 @@ public class Person implements Serializable {
             hobby.getPersons().remove(this);
         }
     }
+
+    public boolean equals(PersonDTO dto) {
+        if (!getId().equals(dto.getId())) return false;
+        if (!getEmail().equals(dto.getEmail())) return false;
+        if (!getFirstName().equals(dto.getFirstName())) return false;
+        if (!getLastName().equals(dto.getLastName())) return false;
+        if (!getHobbies().equals(dto.getHobbies())) return false;
+        if (!getPhones().equals(dto.getPhones())) return false;
+        return getAddress().equals(dto.getAddress());
+    }
+
+    public Person person(PersonDTO personDTO){
+        if(personDTO.getId() != 0) {
+            this.id = personDTO.getId();
+            this.email = personDTO.getEmail();
+            this.firstName = personDTO.getFirstName();
+            this.lastName = personDTO.getLastName();
+            this.hobbies = updateHobbyDTOToEntity(personDTO.getHobbies());
+            this.phones = updatePhonesDTOToEntity(personDTO.getPhones());
+            this.address = updateAddressDTOToEntity(personDTO.getAddress());
+            }
+        return this;
+        }
+
+    public List<Hobby> updateHobbyDTOToEntity(List<HobbyDTO> hobbiesDTO) {
+        List<Hobby> hobbies = new ArrayList<>();
+        for (HobbyDTO h : hobbiesDTO) {
+            hobbies.add(new Hobby(h));
+        }
+        return hobbies;
+    }
+
+    public List<Phone> updatePhonesDTOToEntity(List<PhoneDTO> phonesDTO) {
+        List<Phone> phones = new ArrayList<>();
+        for (PhoneDTO p : phonesDTO) {
+            phones.add(new Phone(p));
+        }
+        return phones;
+    }
+
+    public Address updateAddressDTOToEntity(AddressDTO addressDTO) {
+        Address address = new Address();
+        address.setId(addressDTO.getId());
+        address.setAddress(addressDTO.getAddress());
+        address.setZip(updateZipDTOToEntity(addressDTO.getZip()));
+
+        return address;
+    }
+
+    public Zip updateZipDTOToEntity(ZipDTO zipDTO) {
+        Zip zip = new Zip();
+        zip.setZip(zipDTO.getZip());
+        zip.setCity(zip.getCity());
+
+        return zip;
+    }
+
 }
