@@ -72,6 +72,10 @@ public class PersonResourceTest {
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
+    
+        Hobby h1 = new Hobby("Skiing", "skiing.com", "General", "Outdoors");
+        Hobby h2 = new Hobby("Polo", "polo.com", "Sport", "Outdoors");
+        Hobby h3 = new Hobby("Jogging", "jogging.com", "General", "Outdoors");
 
         p1 = new Person(
                 new ArrayList<Phone>(Arrays.asList(new Phone[]{new Phone(11111111)})),
@@ -80,6 +84,9 @@ public class PersonResourceTest {
                 "Roberts",
                 new Address("Test street 21",
                         new Zip(6969, "Nice-ville")));
+    
+        p1.addHobby(h1);
+        p1.addHobby(h2);
 
         List<Phone> phones2 = new ArrayList<>();
         phones2.add(new Phone(22222222));
@@ -89,6 +96,9 @@ public class PersonResourceTest {
                 "Allison",
                 new Address("2nd and Hill 34",
                         new Zip(4242, "Cool-town")));
+    
+        p2.addHobby(h2);
+        p2.addHobby(h3);
 
         try {
             em.getTransaction().begin();
