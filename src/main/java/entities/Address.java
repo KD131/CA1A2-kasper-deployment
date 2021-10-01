@@ -1,5 +1,8 @@
 package entities;
 
+import dtos.AddressDTO;
+import dtos.ZipDTO;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,6 +36,20 @@ public class Address implements Serializable {
         this.address = address;
         this.zip = zip;
         this.persons = new ArrayList<>();
+    }
+
+    public Address(AddressDTO addressDTO) {
+        this.id = id;
+        this.address = address;
+        this.zip = updateZipDTOToEntity(addressDTO.getZip());
+    }
+
+    public Zip updateZipDTOToEntity(ZipDTO zipDTO) {
+        Zip zip = new Zip();
+        zip.setZip(zipDTO.getZip());
+        zip.setCity(zip.getCity());
+
+        return zip;
     }
 
     public Long getId() {

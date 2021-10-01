@@ -1,6 +1,7 @@
 package facades;
 
 import dtos.*;
+import entities.Address;
 import entities.Person;
 import facades.inter.PersonFacadeInterface;
 import utils.EMF_Creator;
@@ -14,6 +15,7 @@ public class PersonFacade implements PersonFacadeInterface {
 
     private static PersonFacade instance;
     private static EntityManagerFactory emf;
+    private static AddressFacade addressFacade;
 
     //Private Constructor to ensure Singleton
     private PersonFacade() {
@@ -59,13 +61,35 @@ public class PersonFacade implements PersonFacadeInterface {
         }
     */
     @Override
-    public PersonDTO edit(PersonDTO person) {
-        return null;
+    public PersonDTO edit(PersonDTO personDTO) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Person person = new Person();
+            person = person.person(personDTO);
+            if(personDTO.getId() == getById(personDTO.getId()).getId()) {
+                em.getTransaction().begin();
+                em.merge(person);
+                em.getTransaction().commit();
+            }
+            return personDTO;
+        } finally {
+            em.close();
+        }
     }
 
     @Override
-    public boolean delete(long id) {
-        return false;
+    public void delete(long id) {
+
+        EntityManager em = emf.createEntityManager();
+        try {
+            if(getById(id) != null) {
+                em.getTransaction().begin();
+                em.remove(em.find(Person.class, id));
+                em.getTransaction().commit();
+            }
+        } finally {
+            em.close();
+        }
     }
 
     @Override

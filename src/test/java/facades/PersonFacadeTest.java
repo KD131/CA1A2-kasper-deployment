@@ -29,7 +29,7 @@ class PersonFacadeTest
     
     private static Person p1;
     private static Person p2;
-    
+
     @BeforeAll
     static void beforeAll()
     {
@@ -58,6 +58,7 @@ class PersonFacadeTest
                 "Allison",
                 new Address("2nd and Hill 34",
                         new Zip(4242, "Cool-town")));
+
         try
         {
             em.getTransaction().begin();
@@ -119,13 +120,26 @@ class PersonFacadeTest
     }
     
     @Test
-    void edit()
-    {
+   void edit() {
+        p2.setLastName("Allis");
+        PersonDTO p2DTO = new PersonDTO(p2);
+
+        facade.edit(p2DTO);
+        assertEquals("Allis", facade.getById(p2.getId()).getLastName());
+
+
     }
-    
+
     @Test
-    void delete()
-    {
+    void delete(long id) {
+      /*  try {
+            AddressDTO addressDTO = new AddressDTO(em.find(Address.class, id));
+            if(addressDTO != null) {
+                em.remove(addressDTO);
+            }
+        } finally {
+            em.close();
+        }*/
     }
 
     @Test

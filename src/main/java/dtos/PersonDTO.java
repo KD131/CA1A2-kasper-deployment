@@ -107,4 +107,12 @@ public class PersonDTO {
     public void setHobbies(List<HobbyDTO> hobbies) {
         this.hobbies = hobbies;
     }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 }

@@ -1,6 +1,8 @@
 package facades;
 
+import dtos.PersonDTO;
 import dtos.ZipDTO;
+import entities.Person;
 import entities.Zip;
 import facades.inter.ZipFacadeInterface;
 import utils.EMF_Creator;
@@ -54,8 +56,17 @@ public class ZipFacade implements ZipFacadeInterface {
     }
 
     @Override
-    public boolean delete(int zip) {
-        return false;
+    public void delete(int zip) {
+
+        EntityManager em = emf.createEntityManager();
+        try {
+            ZipDTO zipDTO = new ZipDTO(em.find(Zip.class, zip));
+            if(zipDTO != null) {
+                em.remove(zipDTO);
+            }
+        } finally {
+            em.close();
+        }
     }
 
     @Override

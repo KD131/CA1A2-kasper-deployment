@@ -55,5 +55,13 @@ public class AddressDTO {
     public void setZip(ZipDTO zip) {
         this.zip = zip;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
 
