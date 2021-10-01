@@ -37,6 +37,7 @@ public class Person implements Serializable {
             CascadeType.PERSIST,
             CascadeType.MERGE
     })
+    @JoinTable(name = "PERSON_HOBBY")
     private List<Hobby> hobbies;
 
     @OneToMany(mappedBy = "person",
