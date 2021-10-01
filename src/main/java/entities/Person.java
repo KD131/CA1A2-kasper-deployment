@@ -40,12 +40,12 @@ public class Person implements Serializable {
     @JoinTable(name = "PERSON_HOBBY")
     private List<Hobby> hobbies;
 
-    @OneToMany(mappedBy = "person",
+    @OneToMany(orphanRemoval = true,
             cascade = {
                     CascadeType.PERSIST,
-                    CascadeType.REMOVE,
                     CascadeType.MERGE
             })
+    @JoinTable(name = "PERSON_PHONE")
     private List<Phone> phones;
 
     @ManyToOne(cascade = {
@@ -97,7 +97,6 @@ public class Person implements Serializable {
     public void addPhone(Phone phone) {
         if (phone != null) {
             this.phones.add(phone);
-            phone.setPerson(this);
         }
     }
 
