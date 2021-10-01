@@ -85,6 +85,6 @@ public class PersonResource {
     @Produces({MediaType.APPLICATION_JSON})
     public String getPopulate() {
         String pop = PopulatorPerson.populate();
-        return "{\"Message:\":" + pop + "}";  //Done manually so no need for a DTO
+        return "{\"Message:\":" + pop + "}";
     }
 }

@@ -1,5 +1,7 @@
 package entities;
 
+import dtos.AddressDTO;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -62,5 +64,11 @@ public class Address implements Serializable {
     public List<Person> getPersons()
     {
         return persons;
+    }
+
+    public boolean equals(AddressDTO dto) {
+        if (!getId().equals(dto.getId())) return false;
+        if (!getAddress().equals(dto.getAddress())) return false;
+        return getZip().equals(dto.getZip());
     }
 }

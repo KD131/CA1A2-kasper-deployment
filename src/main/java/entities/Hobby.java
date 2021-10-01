@@ -1,5 +1,7 @@
 package entities;
 
+import dtos.HobbyDTO;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -85,5 +87,13 @@ public class Hobby implements Serializable {
 
     public void setPersons(List<Person> persons) {
         this.persons = persons;
+    }
+
+    public boolean equals(HobbyDTO dto) {
+        if (!getId().equals(dto.getId())) return false;
+        if (!getName().equals(dto.getName())) return false;
+        if (!getLink().equals(dto.getLink())) return false;
+        if (!getCategory().equals(dto.getCategory())) return false;
+        return getType().equals(dto.getType());
     }
 }

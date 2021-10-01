@@ -1,5 +1,7 @@
 package entities;
 
+import dtos.PersonDTO;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -142,5 +144,15 @@ public class Person implements Serializable {
             this.hobbies.remove(hobby);
             hobby.getPersons().remove(this);
         }
+    }
+
+    public boolean equals(PersonDTO dto) {
+        if (!getId().equals(dto.getId())) return false;
+        if (!getEmail().equals(dto.getEmail())) return false;
+        if (!getFirstName().equals(dto.getFirstName())) return false;
+        if (!getLastName().equals(dto.getLastName())) return false;
+        if (!getHobbies().equals(dto.getHobbies())) return false;
+        if (!getPhones().equals(dto.getPhones())) return false;
+        return getAddress().equals(dto.getAddress());
     }
 }
