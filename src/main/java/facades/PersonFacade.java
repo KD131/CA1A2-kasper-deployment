@@ -125,7 +125,7 @@ public class PersonFacade implements PersonFacadeInterface {
     public List<PersonDTO> getByAddress(AddressDTO address) {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.address a where a.zip.zip = :zip AND a.address = :address", Person.class);
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.address a where a.zip.id = :zip AND a.address = :address", Person.class);
             query.setParameter("zip", address.getZip().getId());
             query.setParameter("address", address.getAddress());
             List<Person> persons = query.getResultList();
@@ -147,7 +147,6 @@ public class PersonFacade implements PersonFacadeInterface {
             em.close();
         }
     }
-
 
     @Override
     public List<PersonDTO> getAll() {
