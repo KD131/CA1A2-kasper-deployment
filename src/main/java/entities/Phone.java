@@ -68,6 +68,6 @@ public class Phone implements Serializable {
     public boolean equals(PhoneDTO dto) {
         if (getNumber() != dto.getNumber()) return false;
         if (!getId().equals(dto.getId())) return false;
-        return !getInfo().equals(dto.getInfo());
+        return getInfo().equals(dto.getInfo());
     }
 }

@@ -60,7 +60,7 @@ public class PhoneDTO {
     public boolean equals(Phone entity) {
         if (getNumber() != entity.getNumber()) return false;
         if (!getId().equals(entity.getId())) return false;
-        return !getInfo().equals(entity.getInfo());
+        return getInfo().equals(entity.getInfo());
     }
 
     public void setId(long id) {
