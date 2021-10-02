@@ -35,19 +35,17 @@ public class Address extends Ent implements Serializable {
         this.persons = new ArrayList<>();
     }
 
-    public Address(AddressDTO addressDTO) {
-        this.id = id;
-        this.address = address;
+    public Address address(AddressDTO addressDTO) {
+        if(addressDTO.hasId()) this.id = addressDTO.getId();
+        this.address = addressDTO.getAddress();
         this.zip = updateZipDTOToEntity(addressDTO.getZip());
+        return this;
     }
 
     public Zip updateZipDTOToEntity(ZipDTO zipDTO) {
         return new Zip(zipDTO.getId(), zip.getCity());
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getAddress() {
         return address;
@@ -71,7 +69,7 @@ public class Address extends Ent implements Serializable {
     }
 
     public boolean equals(AddressDTO dto) {
-        if (!(getId() == dto.getId())) return false;
+        if (getId() != dto.getId()) return false;
         if (!getAddress().equals(dto.getAddress())) return false;
         return getZip().equals(dto.getZip());
     }

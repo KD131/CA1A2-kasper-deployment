@@ -137,25 +137,31 @@ public class Person extends Ent implements Serializable {
     }
 
     public boolean equals(PersonDTO dto) {
-        if (!(getId() == dto.getId())) return false;
+        if (getId() != dto.getId()) return false;
         if (!getEmail().equals(dto.getEmail())) return false;
         if (!getFirstName().equals(dto.getFirstName())) return false;
         if (!getLastName().equals(dto.getLastName())) return false;
-        if (!getHobbies().equals(dto.getHobbies())) return false;
-        if (!getPhones().equals(dto.getPhones())) return false;
+        
+        for (int i = 0; i < hobbies.size(); i++) {
+            if (!hobbies.get(i).equals(dto.getHobbies().get(i))) return false;
+        }
+        for (int i = 0; i < phones.size(); i++) {
+            if (!phones.get(i).equals(dto.getPhones().get(i))) return false;
+        }
+        
+//        if (!getHobbies().equals(dto.getHobbies())) return false;
+//        if (!getPhones().equals(dto.getPhones())) return false;
         return getAddress().equals(dto.getAddress());
     }
-
-    public Person person(PersonDTO personDTO) {
-        if (personDTO.getId() != 0) {
-            this.id = personDTO.getId();
-            this.email = personDTO.getEmail();
-            this.firstName = personDTO.getFirstName();
-            this.lastName = personDTO.getLastName();
-            this.hobbies = updateHobbyDTOToEntity(personDTO.getHobbies());
-            this.phones = updatePhonesDTOToEntity(personDTO.getPhones());
-            this.address = updateAddressDTOToEntity(personDTO.getAddress());
-        }
+    
+    public Person person(PersonDTO personDTO){
+        if(personDTO.hasId()) this.id = personDTO.getId();
+        this.email = personDTO.getEmail();
+        this.firstName = personDTO.getFirstName();
+        this.lastName = personDTO.getLastName();
+        this.hobbies = updateHobbyDTOToEntity(personDTO.getHobbies());
+        this.phones = updatePhonesDTOToEntity(personDTO.getPhones());
+        this.address = updateAddressDTOToEntity(personDTO.getAddress());
         return this;
     }
 
@@ -185,10 +191,7 @@ public class Person extends Ent implements Serializable {
     }
 
     public Zip updateZipDTOToEntity(ZipDTO zipDTO) {
-        Zip zip = new Zip();
-        zip.setId(zipDTO.getId());
-        zip.setCity(zip.getCity());
-        return zip;
+        return new Zip(zipDTO.getId(), zipDTO.getCity());
     }
 
 }

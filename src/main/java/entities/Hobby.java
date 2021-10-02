@@ -90,7 +90,7 @@ public class Hobby extends Ent implements Serializable {
     }
 
     public boolean equals(HobbyDTO dto) {
-        if (!(getId() == dto.getId())) return false;
+        if (getId() != dto.getId()) return false;
         if (!getName().equals(dto.getName())) return false;
         if (!getLink().equals(dto.getLink())) return false;
         if (!getCategory().equals(dto.getCategory())) return false;

@@ -23,13 +23,13 @@ public class PhoneDTO extends DTO {
     }
 
     public static List<PhoneDTO> getDtos(List<Phone> phones) {
-        List<PhoneDTO> PhoneDTOs = new ArrayList();
-        phones.forEach(phone -> PhoneDTOs.add(new PhoneDTO(phone)));
-        return PhoneDTOs;
+        List<PhoneDTO> phoneDTOs = new ArrayList();
+        phones.forEach(phone -> phoneDTOs.add(new PhoneDTO(phone)));
+        return phoneDTOs;
     }
 
     public PhoneDTO(Phone phone) {
-        if (phone.getId() != null)
+        if (phone.hasId())
             this.id = phone.getId();
         this.number = phone.getNumber();
         this.info = phone.getInfo();
@@ -53,7 +53,7 @@ public class PhoneDTO extends DTO {
 
     public boolean equals(Phone entity) {
         if (getNumber() != entity.getNumber()) return false;
-        if (!(getId() == entity.getId())) return false;
+        if (getId() != entity.getId()) return false;
         return !getInfo().equals(entity.getInfo());
     }
 }

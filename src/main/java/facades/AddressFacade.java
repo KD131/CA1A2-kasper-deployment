@@ -1,7 +1,9 @@
 package facades;
 
 import dtos.AddressDTO;
+import dtos.PersonDTO;
 import entities.Address;
+import entities.Person;
 import entities.Zip;
 import facades.inter.AddressFacadeInterface;
 import utils.EMF_Creator;
@@ -11,9 +13,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-/**
- * Rename Class to a relevant name Add add relevant facade methods
- */
+
 public class AddressFacade implements AddressFacadeInterface {
 
     private static AddressFacade instance;
@@ -21,11 +21,6 @@ public class AddressFacade implements AddressFacadeInterface {
 
     //Private Constructor to ensure Singleton
     private AddressFacade() {
-    }
-
-    @Override
-    public AddressDTO edit(Address address) {
-        return null;
     }
 
     public static AddressFacade getAddressFacade(EntityManagerFactory _emf) {
@@ -53,6 +48,23 @@ public class AddressFacade implements AddressFacadeInterface {
             em.close();
         }
         return new AddressDTO(addressEntity);
+    }
+
+    @Override
+    public AddressDTO edit(AddressDTO addressDTO) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Address address = new Address();
+            address.address(addressDTO);
+            if (addressDTO.getId() == getById(addressDTO.getId()).getId()) {
+                em.getTransaction().begin();
+                em.merge(address);
+                em.getTransaction().commit();
+            }
+        } finally {
+            em.close();
+            return addressDTO;
+        }
     }
 
     @Override

@@ -47,7 +47,7 @@ public class PersonDTO extends DTO {
 
 
     public PersonDTO(Person person) {
-        if (person.getId() != null)
+        if (person.hasId())
             this.id = person.getId();
         this.phones = PhoneDTO.getDtos(person.getPhones());
         this.email = person.getEmail();
@@ -106,12 +106,20 @@ public class PersonDTO extends DTO {
     }
 
     public boolean equals(Person entity) {
-        if (!(getId() == entity.getId())) return false;
+        if (getId() != entity.getId()) return false;
         if (!getEmail().equals(entity.getEmail())) return false;
         if (!getFirstName().equals(entity.getFirstName())) return false;
         if (!getLastName().equals(entity.getLastName())) return false;
-        if (!getHobbies().equals(entity.getHobbies())) return false;
-        if (!getPhones().equals(entity.getPhones())) return false;
+        
+        for (int i = 0; i < hobbies.size(); i++) {
+            if (!hobbies.get(i).equals(entity.getHobbies().get(i))) return false;
+        }
+        for (int i = 0; i < phones.size(); i++) {
+            if (!phones.get(i).equals(entity.getPhones().get(i))) return false;
+        }
+        
+//        if (!getHobbies().equals(entity.getHobbies())) return false;
+//        if (!getPhones().equals(entity.getPhones())) return false;
         return getAddress().equals(entity.getAddress());
     }
 }

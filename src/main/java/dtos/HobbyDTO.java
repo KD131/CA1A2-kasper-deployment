@@ -33,7 +33,7 @@ public class HobbyDTO extends DTO {
     }
 
     public HobbyDTO(Hobby hobby) {
-        if (hobby.getId() != null)
+        if (hobby.hasId())
             this.id = hobby.getId();
         this.name = hobby.getName();
         this.link = hobby.getLink();
@@ -74,7 +74,7 @@ public class HobbyDTO extends DTO {
     }
 
     public boolean equals(Hobby entity) {
-        if (!(getId() == entity.getId())) return false;
+        if (getId() != entity.getId()) return false;
         if (!getName().equals(entity.getName())) return false;
         if (!getLink().equals(entity.getLink())) return false;
         if (!getCategory().equals(entity.getCategory())) return false;

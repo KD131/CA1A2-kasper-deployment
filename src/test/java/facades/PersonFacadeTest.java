@@ -77,24 +77,26 @@ class PersonFacadeTest {
             em.close();
         }
     }
-//
-//    @AfterEach
-//    void tearDown()
-//    {
-//        EntityManager em = emf.createEntityManager();
-//        try
-//        {
-//            em.remove(p1);
-//            em.remove(p2);
-//        }
-//        finally
-//        {
-//            em.close();
-//        }
-//    }
 
     @Test
     void create() {
+        List<PhoneDTO> phones = new ArrayList<>();
+        phones.add(new PhoneDTO(34343434, "work"));
+        PersonDTO person = new PersonDTO(
+                phones,
+                "lars@larsen.lars",
+                "Lars",
+                "Larsen",
+                new AddressDTO("Lars street",
+                        new ZipDTO(1234, "Lars city")));
+        PersonDTO created = facade.create(person);
+        assertNotNull(created);
+        assertEquals(person.getFirstName(), created.getFirstName());
+        
+        PersonDTO fromDb = facade.getById(created.getId());
+        
+        assertNotNull(fromDb);
+        assertEquals(created.getFirstName(), fromDb.getFirstName());
     }
 
     @Test
@@ -164,14 +166,12 @@ class PersonFacadeTest {
 
     @Test
     void delete() {
-      /*  try {
-            AddressDTO addressDTO = new AddressDTO(em.find(Address.class, id));
-            if(addressDTO != null) {
-                em.remove(addressDTO);
-            }
-        } finally {
-            em.close();
-        }*/
+        facade.delete(p2.getId());
+        List<PersonDTO> persons = facade.getAll();
+        assertEquals(1, persons.size());
+        assertEquals(p1.getFirstName(), persons.get(0).getFirstName());
+        assertTrue(p1.equals(persons.get(0)));
+        assertTrue(persons.get(0).equals(p1));
     }
 
     @Test

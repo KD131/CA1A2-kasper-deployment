@@ -54,7 +54,7 @@ public class Phone extends Ent implements Serializable {
 
     public boolean equals(PhoneDTO dto) {
         if (getNumber() != dto.getNumber()) return false;
-        if (!(getId() == dto.getId())) return false;
+        if (getId() != dto.getId()) return false;
         return !getInfo().equals(dto.getInfo());
     }
 }

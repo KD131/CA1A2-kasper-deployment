@@ -29,6 +29,7 @@ public class Zip extends Ent implements Serializable {
     public Zip(ZipDTO zipDTO) {
         this.id = zipDTO.getId();
         this.city = zipDTO.getCity();
+        this.city = zipDTO.getCity();
     }
 
     public String getCity() {

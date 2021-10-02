@@ -30,7 +30,7 @@ public class AddressDTO extends DTO {
 
 
     public AddressDTO(Address address) {
-        if (address.getId() != null)
+        if (address.hasId())
             this.id = address.getId();
             this.address = address.getAddress();
             this.zip = new ZipDTO(address.getZip());
@@ -53,7 +53,7 @@ public class AddressDTO extends DTO {
     }
 
     public boolean equals(Address entity) {
-        if (!(getId() == entity.getId())) return false;
+        if (getId() != entity.getId()) return false;
         if (!getAddress().equals(entity.getAddress())) return false;
         return getZip().equals(entity.getZip());
 
