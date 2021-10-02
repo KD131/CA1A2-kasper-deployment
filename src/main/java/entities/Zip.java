@@ -17,7 +17,6 @@ public class Zip implements Serializable {
 
     @Id // set manually
     long zip;
-
     private String city;
     
     @OneToMany(mappedBy = "zip")
@@ -59,8 +58,8 @@ public class Zip implements Serializable {
     public long getZip() {
         return zip;
     }
-    public void setZip(long id) {
-        this.zip = id;
+    public void setZip(long zip) {
+        this.zip = zip;
     }
     public boolean hasZip() {
         return zip != 0;

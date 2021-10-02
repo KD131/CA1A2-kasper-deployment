@@ -58,8 +58,9 @@ public class AddressFacade implements AddressFacadeInterface {
                 em.getTransaction().begin();
                 em.merge(address);
                 em.getTransaction().commit();
+                return new AddressDTO(address);
             }
-            return new AddressDTO(address);
+            return null;
         } finally {
             em.close();
         }

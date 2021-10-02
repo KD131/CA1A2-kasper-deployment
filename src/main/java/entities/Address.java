@@ -22,7 +22,7 @@ public class Address extends Ent implements Serializable {
             CascadeType.MERGE
     })
     private Zip zip;
-    
+
     @OneToMany(mappedBy = "address")
     private List<Person> persons;
 
@@ -36,16 +36,15 @@ public class Address extends Ent implements Serializable {
     }
 
     public Address(AddressDTO addressDTO) {
-        if(addressDTO.hasId()) this.id = addressDTO.getId();
+        if (addressDTO.hasId()) this.id = addressDTO.getId();
         this.address = addressDTO.getAddress();
-        this.zip = updateZipDTOToEntity(addressDTO.getZip());
+        setZipFromDTO(addressDTO.getZip());
     }
 
-    public Zip updateZipDTOToEntity(ZipDTO zipDTO) {
-        return new Zip(zipDTO.getId(), zipDTO.getCity());
-        // or use the Zip(ZipDTO) constructor.
-    }
 
+    public void setZipFromDTO(ZipDTO zipDTO) {
+        this.zip = new Zip(zipDTO);
+    }
 
     public String getAddress() {
         return address;
@@ -62,9 +61,8 @@ public class Address extends Ent implements Serializable {
     public void setZip(Zip zip) {
         this.zip = zip;
     }
-    
-    public List<Person> getPersons()
-    {
+
+    public List<Person> getPersons() {
         return persons;
     }
 
