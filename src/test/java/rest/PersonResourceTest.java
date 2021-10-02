@@ -107,6 +107,7 @@ public class PersonResourceTest {
             em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
             em.createNamedQuery("Person.deleteAllRows").executeUpdate();
             em.createNamedQuery("Person.resetPK").executeUpdate();
+            em.createNamedQuery("Hobby.deleteAllRows").executeUpdate();
             em.createNamedQuery("Address.deleteAllRows").executeUpdate();
             em.createNamedQuery("Zip.deleteAllRows").executeUpdate();
             em.persist(p1);
