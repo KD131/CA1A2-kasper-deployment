@@ -11,23 +11,15 @@ import java.util.List;
 
 @Entity
 @NamedQuery(name = "Hobby.deleteAllRows", query = "DELETE FROM Hobby")
-public class Hobby implements Serializable {
+public class Hobby extends Ent implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String name;
     private String link;
     private String category;
-
     private String type;
 
-
-    
     @ManyToMany(mappedBy = "hobbies")
     private List<Person> persons;
-
 
     public Hobby() {
     }
@@ -54,14 +46,6 @@ public class Hobby implements Serializable {
         this.link = hobbyDTO.getLink();
         this.category = hobbyDTO.getCategory();
         this.type = hobbyDTO.getType();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -106,7 +90,7 @@ public class Hobby implements Serializable {
     }
 
     public boolean equals(HobbyDTO dto) {
-        if (!getId().equals(dto.getId())) return false;
+        if (getId() != dto.getId()) return false;
         if (!getName().equals(dto.getName())) return false;
         if (!getLink().equals(dto.getLink())) return false;
         if (!getCategory().equals(dto.getCategory())) return false;

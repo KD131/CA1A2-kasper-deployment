@@ -13,12 +13,8 @@ import java.util.List;
 
 @Entity
 @NamedQuery(name = "Address.deleteAllRows", query = "DELETE FROM Address")
-public class Address implements Serializable {
+public class Address extends Ent implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String address;
 
     @ManyToOne(cascade = {
@@ -40,29 +36,16 @@ public class Address implements Serializable {
     }
 
     public Address address(AddressDTO addressDTO) {
-        if(addressDTO.getId() != null && addressDTO.getId() != 0) {
-            this.id = addressDTO.getId();
-        }
+        if(addressDTO.hasId()) this.id = addressDTO.getId();
         this.address = addressDTO.getAddress();
         this.zip = updateZipDTOToEntity(addressDTO.getZip());
         return this;
     }
 
     public Zip updateZipDTOToEntity(ZipDTO zipDTO) {
-        Zip zip = new Zip();
-        zip.setZip(zipDTO.getZip());
-        zip.setCity(zipDTO.getCity());
-
-        return zip;
+        return new Zip(zipDTO.getId(), zip.getCity());
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getAddress() {
         return address;
@@ -86,7 +69,7 @@ public class Address implements Serializable {
     }
 
     public boolean equals(AddressDTO dto) {
-        if (!getId().equals(dto.getId())) return false;
+        if (getId() != dto.getId()) return false;
         if (!getAddress().equals(dto.getAddress())) return false;
         return getZip().equals(dto.getZip());
     }

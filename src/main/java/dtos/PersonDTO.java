@@ -13,8 +13,7 @@ import java.util.List;
 /**
  * @author tha
  */
-public class PersonDTO {
-    private Long id;
+public class PersonDTO extends DTO {
     private List<PhoneDTO> phones;
     private String email;
     private String firstName;
@@ -48,7 +47,7 @@ public class PersonDTO {
 
 
     public PersonDTO(Person person) {
-        if (person.getId() != null)
+        if (person.hasId())
             this.id = person.getId();
         this.phones = PhoneDTO.getDtos(person.getPhones());
         this.email = person.getEmail();
@@ -56,10 +55,6 @@ public class PersonDTO {
         this.lastName = person.getLastName();
         this.address = new AddressDTO(person.getAddress());
         this.hobbies = HobbyDTO.getDtos(person.getHobbies());
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public List<PhoneDTO> getPhones() {
@@ -110,9 +105,8 @@ public class PersonDTO {
         this.hobbies = hobbies;
     }
 
-
     public boolean equals(Person entity) {
-        if (!getId().equals(entity.getId())) return false;
+        if (getId() != entity.getId()) return false;
         if (!getEmail().equals(entity.getEmail())) return false;
         if (!getFirstName().equals(entity.getFirstName())) return false;
         if (!getLastName().equals(entity.getLastName())) return false;
@@ -127,10 +121,5 @@ public class PersonDTO {
 //        if (!getHobbies().equals(entity.getHobbies())) return false;
 //        if (!getPhones().equals(entity.getPhones())) return false;
         return getAddress().equals(entity.getAddress());
-    }
-
-    public void setId(long id) {
-        this.id = id;
-
     }
 }

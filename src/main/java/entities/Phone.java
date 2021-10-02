@@ -1,9 +1,10 @@
 package entities;
 
 import dtos.PhoneDTO;
-import org.eclipse.persistence.annotations.CascadeOnDelete;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 // TODO see if it fails because of the table name in the query
@@ -11,12 +12,8 @@ import java.io.Serializable;
 
 @Entity
 @NamedQuery(name = "Phone.deleteAllRows", query = "DELETE FROM Phone")
-public class Phone implements Serializable {
+public class Phone extends Ent implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private int number;
     private String info;
 
@@ -39,16 +36,6 @@ public class Phone implements Serializable {
         this.info = phoneDTO.getInfo();
     }
 
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public int getNumber() {
         return number;
     }
@@ -67,7 +54,7 @@ public class Phone implements Serializable {
 
     public boolean equals(PhoneDTO dto) {
         if (getNumber() != dto.getNumber()) return false;
-        if (!getId().equals(dto.getId())) return false;
-        return getInfo().equals(dto.getInfo());
+        if (getId() != dto.getId()) return false;
+        return !getInfo().equals(dto.getInfo());
     }
 }
