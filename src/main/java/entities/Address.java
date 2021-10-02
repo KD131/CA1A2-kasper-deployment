@@ -39,10 +39,11 @@ public class Address implements Serializable {
         this.persons = new ArrayList<>();
     }
 
-    public Address(AddressDTO addressDTO) {
+    public Address address(AddressDTO addressDTO) {
         this.id = id;
         this.address = address;
         this.zip = updateZipDTOToEntity(addressDTO.getZip());
+        return this;
     }
 
     public Zip updateZipDTOToEntity(ZipDTO zipDTO) {

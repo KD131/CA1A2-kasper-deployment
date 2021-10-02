@@ -1,39 +1,38 @@
 package rest;
 
+import dtos.AddressDTO;
 import dtos.PersonDTO;
-import edu.emory.mathcs.backport.java.util.Arrays;
-import entities.*;
-import facades.PersonFacade;
-import io.restassured.http.ContentType;
-import utils.EMF_Creator;
+import entities.Address;
+import entities.Zip;
+import facades.AddressFacade;
 import io.restassured.RestAssured;
-import static io.restassured.RestAssured.given;
+import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.ws.rs.core.UriBuilder;
 import org.glassfish.grizzly.http.server.HttpServer;
-import org.glassfish.grizzly.http.util.HttpStatus;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
-import static org.hamcrest.Matchers.equalTo;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-//Uncomment the line below, to temporarily disable this test
-@Disabled
+import utils.EMF_Creator;
 
-public class PersonResourceTest {
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.ws.rs.core.UriBuilder;
+
+import java.net.URI;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.*;
+
+class AddressResourceTest {
 
     private static final int SERVER_PORT = 7777;
     private static final String SERVER_URL = "http://localhost/api";
-    private static Person p1, p2;
-    private static PersonFacade personFacade;
+    private static Address a1, a2;
+    private static AddressFacade addressFacade;
 
     static final URI BASE_URI = UriBuilder.fromUri(SERVER_URL).port(SERVER_PORT).build();
     private static HttpServer httpServer;
@@ -45,11 +44,11 @@ public class PersonResourceTest {
     }
 
     @BeforeAll
-    public static void setUpClass() {
+    static void beforeAll() {
         //This method must be called before you request the EntityManagerFactory
         EMF_Creator.startREST_TestWithDB();
         emf = EMF_Creator.createEntityManagerFactoryForTest();
-        personFacade = PersonFacade.getPersonFacade(emf);
+        addressFacade = AddressFacade.getAddressFacade(emf);
 
         httpServer = startServer();
         //Setup RestAssured
@@ -70,35 +69,13 @@ public class PersonResourceTest {
     // Setup the DataBase (used by the test-server and this test) in a known state BEFORE EACH TEST
     //TODO -- Make sure to change the EntityClass used below to use YOUR OWN (renamed) Entity class
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         EntityManager em = emf.createEntityManager();
-    
-        Hobby h1 = new Hobby("Skiing", "skiing.com", "General", "Outdoors");
-        Hobby h2 = new Hobby("Polo", "polo.com", "Sport", "Outdoors");
-        Hobby h3 = new Hobby("Jogging", "jogging.com", "General", "Outdoors");
 
-        p1 = new Person(
-                new ArrayList<Phone>(Arrays.asList(new Phone[]{new Phone(11111111)})),
-                "bob@bob.com",
-                "Bob",
-                "Roberts",
-                new Address("Test street 21",
-                        new Zip(6969, "Nice-ville")));
-    
-        p1.addHobby(h1);
-        p1.addHobby(h2);
-
-        List<Phone> phones2 = new ArrayList<>();
-        phones2.add(new Phone(22222222));
-        p2 = new Person(phones2,
-                "alice@alice.com",
-                "Alice",
-                "Allison",
-                new Address("2nd and Hill 34",
-                        new Zip(4242, "Cool-town")));
-    
-        p2.addHobby(h2);
-        p2.addHobby(h3);
+        Address a1 = new Address("Test street 21",
+                new Zip(6969, "Nice-ville"));
+        Address a2 = new Address("2nd and Hill 34",
+                new Zip(4242, "Cool-town"));
 
         try {
             em.getTransaction().begin();
@@ -110,16 +87,12 @@ public class PersonResourceTest {
             em.createNamedQuery("Hobby.deleteAllRows").executeUpdate();
             em.createNamedQuery("Address.deleteAllRows").executeUpdate();
             em.createNamedQuery("Zip.deleteAllRows").executeUpdate();
-            em.persist(p1);
-            em.persist(p2);
+            em.persist(a1);
+            em.persist(a2);
             em.getTransaction().commit();
         } finally {
             em.close();
         }
-    }
-
-    @Test
-    void demo() {
     }
 
     @Test
@@ -131,36 +104,23 @@ public class PersonResourceTest {
     }
 
     @Test
-    void getByPhone() {
+    void getAddressCount() {
     }
 
     @Test
-    void getByZip() {
-    }
-
-    @Test
-    void getPersonCount() {
-    }
-
-    @Test
-    void getPopulate() {
-    }
-
-    @Test
-    void updatePerson() {
-        PersonDTO p2DTO = new PersonDTO(p2);
-        p2DTO.setFirstName("John");
+    void updateAddress() {
+        AddressDTO a2DTO = new AddressDTO(a2);
+        a2DTO.setAddress("Fest street 21");
 
         given()
                 .contentType(ContentType.JSON)
-                .body(p2DTO)
+                .body(a2DTO)
                 .when()
-                .put("person" )
+                .put("address" )
                 .then()
-                .body("email", equalTo("alice@alice.com"))
-                .body("firstName", equalTo("John"))
-                .body("lastName", equalTo("Allison"))
-                .body("address.address", equalTo("2nd and Hill 34"))
-                .body("address.zip.zip", equalTo(4242));
+                .body("address", equalTo("Fest street 21"))
+                .body("address.zip.zip", equalTo(6969))
+                .body("address.zip.city", equalTo("Cool-town"));
+
     }
 }

@@ -35,49 +35,37 @@ public class PersonFacade implements PersonFacadeInterface {
     }
     
     @Override
-    public PersonDTO create(PersonDTO person)
-    {
-        return null;
-    }
-    
-    /*
-        @Override
-        public PersonDTO create(PersonDTO person) {
-            Person personEntity = new Person(
-                    person.getPhones(),
-                    person.getEmail(),
-                    person.getFirstName(),
-                    person.getLastName(),
-                    person.getAddress(),
-                    person.getHobbies());
-            EntityManager em = emf.createEntityManager();
-            try {
-                em.getTransaction().begin();
-                em.persist(personEntity);
-                em.getTransaction().commit();
-                return new PersonDTO(personEntity);
-            } finally {
-                em.close();
-            }
-        }
-    */
-    @Override
-    public PersonDTO edit(PersonDTO personDTO) {
-//        EntityManager em = emf.createEntityManager();
+    public PersonDTO create(PersonDTO personDTO) {
+        EntityManager em = emf.createEntityManager();
         try {
             Person person = new Person();
             person.person(personDTO);
-            /*if(personDTO.getId() == getById(personDTO.getId()).getId()) {
+            if (personDTO.getId() == getById(personDTO.getId()).getId()) {
+                em.getTransaction().begin();
+                em.persist(person);
+                em.getTransaction().commit();
+            }
+        } finally {
+            em.close();
+            return personDTO;
+        }
+    }
+
+    @Override
+    public PersonDTO edit(PersonDTO personDTO) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Person person = new Person();
+            person.person(personDTO);
+            if (personDTO.getId() == getById(personDTO.getId()).getId()) {
                 em.getTransaction().begin();
                 em.merge(person);
                 em.getTransaction().commit();
             }
         } finally {
-            em.close();*/
-        } catch (Exception e) {
-            e.printStackTrace();
+            em.close();
+            return personDTO;
         }
-        return personDTO;
     }
 
     @Override
@@ -96,6 +84,8 @@ public class PersonFacade implements PersonFacadeInterface {
             em.close();
         }
     }
+
+
 
     @Override
     public PersonDTO getById(long id) {
