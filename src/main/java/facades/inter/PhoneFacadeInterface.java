@@ -9,6 +9,8 @@ public interface PhoneFacadeInterface {
 
     PhoneDTO create(PhoneDTO phone);
 
+    PhoneDTO edit(PhoneDTO phoneDTO);
+
     PhoneDTO getById(long id);
 
     public PhoneDTO getByNumber(int number);

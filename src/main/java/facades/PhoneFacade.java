@@ -2,6 +2,7 @@ package facades;
 
 import dtos.PersonDTO;
 import dtos.PhoneDTO;
+import entities.Person;
 import entities.Phone;
 import facades.inter.PhoneFacadeInterface;
 import utils.EMF_Creator;
@@ -46,6 +47,22 @@ public class PhoneFacade implements PhoneFacadeInterface {
             return new PhoneDTO(phoneEntity);
         } finally {
             em.close();
+        }
+    }
+
+    @Override
+    public PhoneDTO edit(PhoneDTO phoneDTO) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Phone phone = new Phone(phoneDTO);
+            if (phoneDTO.getId() == getById(phoneDTO.getId()).getId()) {
+                em.getTransaction().begin();
+                em.merge(phone);
+                em.getTransaction().commit();
+            }
+        } finally {
+            em.close();
+            return phoneDTO;
         }
     }
 

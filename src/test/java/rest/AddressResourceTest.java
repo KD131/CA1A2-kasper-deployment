@@ -72,9 +72,9 @@ class AddressResourceTest {
     void setUp() {
         EntityManager em = emf.createEntityManager();
 
-        Address a1 = new Address("Test street 21",
+        a1 = new Address("Test street 21",
                 new Zip(6969, "Nice-ville"));
-        Address a2 = new Address("2nd and Hill 34",
+        a2 = new Address("2nd and Hill 34",
                 new Zip(4242, "Cool-town"));
 
         try {
@@ -119,8 +119,8 @@ class AddressResourceTest {
                 .put("address" )
                 .then()
                 .body("address", equalTo("Fest street 21"))
-                .body("address.zip.zip", equalTo(6969))
-                .body("address.zip.city", equalTo("Cool-town"));
+                .body("zip.zip", equalTo(4242))
+                .body("zip.city", equalTo("Cool-town"));
 
     }
 }

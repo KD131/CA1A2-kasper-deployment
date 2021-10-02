@@ -2,15 +2,13 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dtos.PersonDTO;
 import dtos.PhoneDTO;
 import facades.PhoneFacade;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManagerFactory;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -19,7 +17,7 @@ import java.util.List;
 public class PhoneResource {
 
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
-    
+
     private static final PhoneFacade FACADE = PhoneFacade.getPhoneFacade(EMF);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
@@ -69,5 +67,14 @@ public class PhoneResource {
         long count = FACADE.getPhoneCount();
         //System.out.println("--------------->"+count);
         return "{\"count\":" + count + "}";  //Done manually so no need for a DTO
+    }
+
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String updatePhone(String phone) {
+        PhoneDTO pDTO = GSON.fromJson(phone, PhoneDTO.class);
+        PhoneDTO pNew = FACADE.edit(pDTO);
+        return GSON.toJson(pNew);
     }
 }
