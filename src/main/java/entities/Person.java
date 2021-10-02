@@ -136,22 +136,32 @@ public class Person extends Ent implements Serializable {
         }
     }
 
-    public boolean equals(PersonDTO dto) {
-        if (getId() != dto.getId()) return false;
-        if (!getEmail().equals(dto.getEmail())) return false;
-        if (!getFirstName().equals(dto.getFirstName())) return false;
-        if (!getLastName().equals(dto.getLastName())) return false;
-        
-        for (int i = 0; i < hobbies.size(); i++) {
-            if (!hobbies.get(i).equals(dto.getHobbies().get(i))) return false;
+    public boolean equals(PersonDTO personDTO) {
+        if (getId() != personDTO.getId()) return false;
+        if (!getEmail().equals(personDTO.getEmail())) return false;
+        if (!getFirstName().equals(personDTO.getFirstName())) return false;
+        if (!getLastName().equals(personDTO.getLastName())) return false;
+        for (Ent ent : hobbies) {
+            boolean hasEqual = false;
+            for (HobbyDTO dto : personDTO.getHobbies()) {
+                if (ent.equals(dto)) {
+                    hasEqual = true;
+                    break;
+                }
+            }
+            if (!hasEqual) return false;
         }
-        for (int i = 0; i < phones.size(); i++) {
-            if (!phones.get(i).equals(dto.getPhones().get(i))) return false;
+        for (Ent ent : phones) {
+            boolean hasEqual = false;
+            for (PhoneDTO dto : personDTO.getPhones()) {
+                if (ent.equals(dto)) {
+                    hasEqual = true;
+                    break;
+                }
+            }
+            if (!hasEqual) return false;
         }
-        
-//        if (!getHobbies().equals(dto.getHobbies())) return false;
-//        if (!getPhones().equals(dto.getPhones())) return false;
-        return getAddress().equals(dto.getAddress());
+        return getAddress().equals(personDTO.getAddress());
     }
     
     public Person person(PersonDTO personDTO){
