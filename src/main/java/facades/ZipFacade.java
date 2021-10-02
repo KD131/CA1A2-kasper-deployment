@@ -1,8 +1,6 @@
 package facades;
 
-import dtos.PersonDTO;
 import dtos.ZipDTO;
-import entities.Person;
 import entities.Zip;
 import facades.inter.ZipFacadeInterface;
 import utils.EMF_Creator;
@@ -40,7 +38,7 @@ public class ZipFacade implements ZipFacadeInterface {
     public ZipDTO create(ZipDTO zip) {
         EntityManager em = emf.createEntityManager();
         try {
-            Zip zipEntity = new Zip(zip.getZip(), zip.getCity());
+            Zip zipEntity = new Zip(zip.getId(), zip.getCity());
             em.getTransaction().begin();
             em.persist(zipEntity);
             em.getTransaction().commit();

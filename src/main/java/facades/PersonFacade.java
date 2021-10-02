@@ -2,7 +2,6 @@ package facades;
 
 import dtos.*;
 import entities.Hobby;
-import entities.Address;
 import entities.Person;
 import facades.inter.PersonFacadeInterface;
 import utils.EMF_Creator;
@@ -127,7 +126,7 @@ public class PersonFacade implements PersonFacadeInterface {
         EntityManager em = emf.createEntityManager();
         try {
             TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.address a where a.zip.zip = :zip AND a.address = :address", Person.class);
-            query.setParameter("zip", address.getZip().getZip());
+            query.setParameter("zip", address.getZip().getId());
             query.setParameter("address", address.getAddress());
             List<Person> persons = query.getResultList();
             return PersonDTO.getDtos(persons);
@@ -140,8 +139,8 @@ public class PersonFacade implements PersonFacadeInterface {
     public List<PersonDTO> getByZip(ZipDTO zip) {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.address.zip z where z.zip = :zip", Person.class);
-            query.setParameter("zip", zip.getZip());
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.address.zip z where z.id = :zip", Person.class);
+            query.setParameter("zip", zip.getId());
             List<Person> persons = query.getResultList();
             return PersonDTO.getDtos(persons);
         } finally {
