@@ -51,7 +51,7 @@ public class Address implements Serializable {
     public Zip updateZipDTOToEntity(ZipDTO zipDTO) {
         Zip zip = new Zip();
         zip.setZip(zipDTO.getZip());
-        zip.setCity(zip.getCity());
+        zip.setCity(zipDTO.getCity());
 
         return zip;
     }
