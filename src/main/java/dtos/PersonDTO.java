@@ -112,7 +112,7 @@ public class PersonDTO extends DTO {
         if (!getEmail().equals(entity.getEmail())) return false;
         if (!getFirstName().equals(entity.getFirstName())) return false;
         if (!getLastName().equals(entity.getLastName())) return false;
-        for (DTO dto : hobbies) {
+        for (HobbyDTO dto : hobbies) {
             boolean hasEqual = false;
             for (Hobby ent : entity.getHobbies()) {
                 if (ent.equals(dto)) {
@@ -122,7 +122,7 @@ public class PersonDTO extends DTO {
             }
             if (!hasEqual) return false;
         }
-        for (DTO dto : phones) {
+        for (PhoneDTO dto : phones) {
             boolean hasEqual = false;
             for (Phone ent : entity.getPhones()) {
                 if (ent.equals(dto)) {

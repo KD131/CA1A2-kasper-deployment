@@ -151,7 +151,7 @@ public class Person extends Ent implements Serializable {
         if (!getEmail().equals(personDTO.getEmail())) return false;
         if (!getFirstName().equals(personDTO.getFirstName())) return false;
         if (!getLastName().equals(personDTO.getLastName())) return false;
-        for (Ent ent : hobbies) {
+        for (Hobby ent : hobbies) {
             boolean hasEqual = false;
             for (HobbyDTO dto : personDTO.getHobbies()) {
                 if (ent.equals(dto)) {
@@ -161,7 +161,7 @@ public class Person extends Ent implements Serializable {
             }
             if (!hasEqual) return false;
         }
-        for (Ent ent : phones) {
+        for (Phone ent : phones) {
             boolean hasEqual = false;
             for (PhoneDTO dto : personDTO.getPhones()) {
                 if (ent.equals(dto)) {
