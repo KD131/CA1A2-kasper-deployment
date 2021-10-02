@@ -42,7 +42,8 @@ public class Address extends Ent implements Serializable {
     }
 
     public Zip updateZipDTOToEntity(ZipDTO zipDTO) {
-        return new Zip(zipDTO.getId(), zip.getCity());
+        return new Zip(zipDTO.getId(), zipDTO.getCity());
+        // or use the Zip(ZipDTO) constructor.
     }
 
 

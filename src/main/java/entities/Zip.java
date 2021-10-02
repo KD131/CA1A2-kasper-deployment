@@ -35,7 +35,6 @@ public class Zip implements Serializable {
     public Zip(ZipDTO zipDTO) {
         this.zip = zipDTO.getId();
         this.city = zipDTO.getCity();
-        this.city = zipDTO.getCity();
     }
 
     public String getCity() {
