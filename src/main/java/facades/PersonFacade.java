@@ -16,7 +16,6 @@ public class PersonFacade implements PersonFacadeInterface {
 
     private static PersonFacade instance;
     private static EntityManagerFactory emf;
-    private static AddressFacade addressFacade;
 
     //Private Constructor to ensure Singleton
     private PersonFacade() {

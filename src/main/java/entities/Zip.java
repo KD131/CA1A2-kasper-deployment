@@ -29,8 +29,8 @@ public class Zip implements Serializable {
     }
 
     public Zip(ZipDTO zipDTO) {
-        this.zip = zip;
-        this.city = city;
+        this.zip = zipDTO.getZip();
+        this.city = zipDTO.getCity();
     }
 
     public int getZip() {

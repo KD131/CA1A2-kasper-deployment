@@ -13,9 +13,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-/**
- * Rename Class to a relevant name Add add relevant facade methods
- */
+
 public class AddressFacade implements AddressFacadeInterface {
 
     private static AddressFacade instance;

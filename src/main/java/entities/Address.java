@@ -40,9 +40,11 @@ public class Address implements Serializable {
     }
 
     public Address address(AddressDTO addressDTO) {
-        this.id = id;
-        this.address = address;
-        this.zip = updateZipDTOToEntity(addressDTO.getZip());
+        if(addressDTO.getId() != 0) {
+            this.id = addressDTO.getId();
+            this.address = addressDTO.getAddress();
+            this.zip = updateZipDTOToEntity(addressDTO.getZip());
+        }
         return this;
     }
 
