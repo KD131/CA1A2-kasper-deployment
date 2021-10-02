@@ -87,8 +87,10 @@ public class PersonFacade implements PersonFacadeInterface {
         try {
             if(getById(id) != null) {
                 em.getTransaction().begin();
-                em.remove(em.find(Person.class, id));
+                Person p = em.find(Person.class, id);
+                em.remove(p);
                 em.getTransaction().commit();
+                em.clear();
             }
         } finally {
             em.close();

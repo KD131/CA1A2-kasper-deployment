@@ -110,7 +110,8 @@ public class PopulatorPerson {
                     zips, hobbies));
 
             em.getTransaction().begin();
-            // needs either cascading delete or more delete queries to take out the other tables
+            // hopefully there's a better way than use a native query to wipe out the join table
+            em.createNativeQuery("DELETE FROM PERSON_PHONE").executeUpdate();
             em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
             em.createNamedQuery("Person.deleteAllRows").executeUpdate();
             em.createNamedQuery("Person.resetPK").executeUpdate();

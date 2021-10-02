@@ -62,7 +62,8 @@ class PersonFacadeTest {
         
         try {
             em.getTransaction().begin();
-            // needs either cascading delete or more delete queries to take out the other tables
+            // hopefully there's a better way than use a native query to wipe out the join table
+            em.createNativeQuery("DELETE FROM PERSON_PHONE").executeUpdate();
             em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
             em.createNamedQuery("Person.deleteAllRows").executeUpdate();
             em.createNamedQuery("Person.resetPK").executeUpdate();
@@ -122,9 +123,46 @@ class PersonFacadeTest {
         facade.edit(p2DTO);
         assertEquals("Allis", facade.getById(p2.getId()).getLastName());
     }
+    
+    // if a person is deleted, their address cascade deletes
+    // oddly, the Zip's city name is null regardless of whether we delete anything
+    @Test
+    void editAddressOnOneAndRemovePerson() {
+        Address address = new Address("Test street", new Zip(2323, "Test city"));
+        p1.setAddress(address);
+        PersonDTO p1DTO = new PersonDTO(p1);
+
+        facade.edit(p1DTO);
+        assertEquals(p1.getAddress().getAddress(), facade.getById(p1.getId()).getAddress().getAddress());
+        
+        facade.delete(p1.getId());
+        
+        AddressFacade af = AddressFacade.getAddressFacade(emf);
+        assertEquals(2, af.getAll().size());
+    }
+    
+    // if two persons have same address, and one is deleted, the address is not deleted
+    @Test
+    void editAddressOnTwoAndRemovePerson() {
+        Address address = new Address("Test street", new Zip(2323, "Test city"));
+        p1.setAddress(address);
+        p2.setAddress(address);
+        PersonDTO p1DTO = new PersonDTO(p1);
+        PersonDTO p2DTO = new PersonDTO(p2);
+
+        facade.edit(p1DTO);
+        assertEquals(p1.getAddress().getAddress(), facade.getById(p1.getId()).getAddress().getAddress());
+        facade.edit(p2DTO);
+        assertEquals(p2.getAddress().getAddress(), facade.getById(p2.getId()).getAddress().getAddress());
+        
+        facade.delete(p1.getId());
+    
+        AddressFacade af = AddressFacade.getAddressFacade(emf);
+        assertEquals(3, af.getAll().size());
+    }
 
     @Test
-    void delete(long id) {
+    void delete() {
       /*  try {
             AddressDTO addressDTO = new AddressDTO(em.find(Address.class, id));
             if(addressDTO != null) {
