@@ -38,13 +38,12 @@ public class Address extends Ent implements Serializable {
     public Address(AddressDTO addressDTO) {
         if(addressDTO.hasId()) this.id = addressDTO.getId();
         this.address = addressDTO.getAddress();
-        this.zip = updateZipDTOToEntity(addressDTO.getZip());
+        setZipFromDTO(addressDTO.getZip());
     }
 
-    public Zip updateZipDTOToEntity(ZipDTO zipDTO) {
-        return new Zip(zipDTO.getId(), zip.getCity());
+    public void setZipFromDTO(ZipDTO zipDTO) {
+        this.zip = new Zip(zipDTO);
     }
-
 
     public String getAddress() {
         return address;
