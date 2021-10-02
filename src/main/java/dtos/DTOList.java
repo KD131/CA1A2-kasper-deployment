@@ -1,25 +1,31 @@
 package dtos;
 
 import entities.Ent;
-import entities.EntWrapper;
+import entities.EntList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public class DTOWrapper {
+public class DTOList {
     private List<DTO> list;
 
-    public DTOWrapper() {
+    public DTOList() {
         list = new ArrayList<>();
     }
 
-    public DTOWrapper(List<DTO> list) {
+    public DTOList(List<DTO> list) {
         this.list = new ArrayList<>();
         this.list.addAll(list);
     }
 
-    public boolean equals(EntWrapper w) {
+    public DTOList(DTO... dtos) {
+        this.list = new ArrayList<>();
+        this.list.addAll(Arrays.asList(dtos));
+    }
+
+    public boolean equals(EntList w) {
         return equals(w.getList());
     }
 

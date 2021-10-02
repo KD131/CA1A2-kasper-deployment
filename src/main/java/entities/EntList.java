@@ -1,25 +1,31 @@
 package entities;
 
 import dtos.DTO;
-import dtos.DTOWrapper;
+import dtos.DTOList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public class EntWrapper {
+public class EntList {
     private List<Ent> list;
 
-    public EntWrapper() {
+    public EntList() {
         list = new ArrayList<>();
     }
 
-    public EntWrapper(List<Ent> list) {
+    public EntList(List<Ent> list) {
         this.list = new ArrayList<>();
         this.list.addAll(list);
     }
 
-    public boolean equals(DTOWrapper w) {
+    public EntList(Ent... ents) {
+        this.list = new ArrayList<>();
+        this.list.addAll(Arrays.asList(ents));
+    }
+
+    public boolean equals(DTOList w) {
         return equals(w.getList());
     }
 

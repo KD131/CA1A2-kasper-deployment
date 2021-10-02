@@ -1,9 +1,7 @@
 package facades;
 
 import dtos.AddressDTO;
-import dtos.PersonDTO;
 import entities.Address;
-import entities.Person;
 import entities.Zip;
 import facades.inter.AddressFacadeInterface;
 import utils.EMF_Creator;

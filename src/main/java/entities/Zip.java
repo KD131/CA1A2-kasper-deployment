@@ -11,7 +11,13 @@ import java.util.List;
 
 @Entity
 @NamedQuery(name = "Zip.deleteAllRows", query = "DELETE FROM Zip")
-public class Zip extends Ent implements Serializable {
+public class Zip implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id // set manually
+    long id;
+
     private String city;
     
     @OneToMany(mappedBy = "zip")
@@ -50,4 +56,14 @@ public class Zip extends Ent implements Serializable {
         return getCity().equals(dto.getCity());
     }
 
+    // Ent methods (pseudo-superclass)
+    public long getId() {
+        return id;
+    }
+    public void setId(long id) {
+        this.id = id;
+    }
+    public boolean hasId() {
+        return id != 0;
+    }
 }

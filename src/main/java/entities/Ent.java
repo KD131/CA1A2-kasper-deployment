@@ -4,9 +4,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 
 @MappedSuperclass
-abstract public class Ent {
+abstract public class Ent implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
