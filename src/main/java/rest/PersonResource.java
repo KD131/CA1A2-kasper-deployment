@@ -86,7 +86,7 @@ public class PersonResource {
         return "{\"Message:\":" + pop + "}";
     }
 
-    @Path("")
+    /*@Path("id")
     @PUT
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
@@ -94,8 +94,17 @@ public class PersonResource {
         PersonDTO p = GSON.fromJson(person, PersonDTO.class);
         PersonDTO pEdited = PERSON_FACADE.edit(p);
         return "[\"Message:\":" + GSON.toJson(pEdited) + "}";
+        }*/
 
-
-        }
+    @PUT
+    @Path("id/{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String updatePerson(@PathParam("id") long id,  String person) {
+        PersonDTO pDTO = GSON.fromJson(person, PersonDTO.class);
+        pDTO.setId(id);
+        PersonDTO pNew = PERSON_FACADE.edit(pDTO);
+        return GSON.toJson(pNew);
+    }
 
 }
