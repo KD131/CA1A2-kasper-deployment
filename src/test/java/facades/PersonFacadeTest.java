@@ -77,21 +77,6 @@ class PersonFacadeTest {
             em.close();
         }
     }
-//
-//    @AfterEach
-//    void tearDown()
-//    {
-//        EntityManager em = emf.createEntityManager();
-//        try
-//        {
-//            em.remove(p1);
-//            em.remove(p2);
-//        }
-//        finally
-//        {
-//            em.close();
-//        }
-//    }
 
     @Test
     void create() {
@@ -164,14 +149,12 @@ class PersonFacadeTest {
 
     @Test
     void delete() {
-      /*  try {
-            AddressDTO addressDTO = new AddressDTO(em.find(Address.class, id));
-            if(addressDTO != null) {
-                em.remove(addressDTO);
-            }
-        } finally {
-            em.close();
-        }*/
+        facade.delete(p2.getId());
+        List<PersonDTO> persons = facade.getAll();
+        assertEquals(1, persons.size());
+        assertEquals(p1.getFirstName(), persons.get(0).getFirstName());
+        assertTrue(p1.equals(persons.get(0)));
+        assertTrue(persons.get(0).equals(p1));
     }
 
     @Test
