@@ -176,15 +176,15 @@ public class Person implements Serializable {
     }
 
     public Person person(PersonDTO personDTO){
-        if(personDTO.getId() != 0) {
+        if(personDTO.getId() != null && personDTO.getId() != 0) {
             this.id = personDTO.getId();
-            this.email = personDTO.getEmail();
-            this.firstName = personDTO.getFirstName();
-            this.lastName = personDTO.getLastName();
-            this.hobbies = updateHobbyDTOToEntity(personDTO.getHobbies());
-            this.phones = updatePhonesDTOToEntity(personDTO.getPhones());
-            this.address = updateAddressDTOToEntity(personDTO.getAddress());
-            }
+        }
+        this.email = personDTO.getEmail();
+        this.firstName = personDTO.getFirstName();
+        this.lastName = personDTO.getLastName();
+        this.hobbies = updateHobbyDTOToEntity(personDTO.getHobbies());
+        this.phones = updatePhonesDTOToEntity(personDTO.getPhones());
+        this.address = updateAddressDTOToEntity(personDTO.getAddress());
         return this;
         }
 
@@ -216,7 +216,7 @@ public class Person implements Serializable {
     public Zip updateZipDTOToEntity(ZipDTO zipDTO) {
         Zip zip = new Zip();
         zip.setZip(zipDTO.getZip());
-        zip.setCity(zip.getCity());
+        zip.setCity(zipDTO.getCity());
 
         return zip;
     }

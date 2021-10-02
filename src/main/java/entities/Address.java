@@ -40,18 +40,18 @@ public class Address implements Serializable {
     }
 
     public Address address(AddressDTO addressDTO) {
-        if(addressDTO.getId() != 0) {
+        if(addressDTO.getId() != null && addressDTO.getId() != 0) {
             this.id = addressDTO.getId();
-            this.address = addressDTO.getAddress();
-            this.zip = updateZipDTOToEntity(addressDTO.getZip());
         }
+        this.address = addressDTO.getAddress();
+        this.zip = updateZipDTOToEntity(addressDTO.getZip());
         return this;
     }
 
     public Zip updateZipDTOToEntity(ZipDTO zipDTO) {
         Zip zip = new Zip();
         zip.setZip(zipDTO.getZip());
-        zip.setCity(zip.getCity());
+        zip.setCity(zipDTO.getCity());
 
         return zip;
     }

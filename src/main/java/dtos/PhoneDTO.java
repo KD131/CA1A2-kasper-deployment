@@ -24,9 +24,9 @@ public class PhoneDTO {
     }
 
     public static List<PhoneDTO> getDtos(List<Phone> phones) {
-        List<PhoneDTO> PhoneDTOs = new ArrayList();
-        phones.forEach(phone -> PhoneDTOs.add(new PhoneDTO(phone)));
-        return PhoneDTOs;
+        List<PhoneDTO> phoneDTOs = new ArrayList();
+        phones.forEach(phone -> phoneDTOs.add(new PhoneDTO(phone)));
+        return phoneDTOs;
     }
 
     public PhoneDTO(Phone phone) {

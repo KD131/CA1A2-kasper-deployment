@@ -36,18 +36,17 @@ public class PersonFacade implements PersonFacadeInterface {
     @Override
     public PersonDTO create(PersonDTO personDTO) {
         EntityManager em = emf.createEntityManager();
+        Person person = new Person();
         try {
-            Person person = new Person();
             person.person(personDTO);
-            if (personDTO.getId() == getById(personDTO.getId()).getId()) {
-                em.getTransaction().begin();
-                em.persist(person);
-                em.getTransaction().commit();
-            }
+            
+            em.getTransaction().begin();
+            em.persist(person);
+            em.getTransaction().commit();
         } finally {
             em.close();
-            return personDTO;
         }
+        return new PersonDTO(person);
     }
 
     @Override
