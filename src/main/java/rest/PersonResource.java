@@ -5,24 +5,20 @@ import com.google.gson.GsonBuilder;
 import dtos.PersonDTO;
 import dtos.PhoneDTO;
 import dtos.ZipDTO;
-import entities.Person;
 import facades.PersonFacade;
 import facades.PhoneFacade;
 import facades.PopulatorPerson;
 import facades.ZipFacade;
 import utils.EMF_Creator;
-
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-//Todo Remove or change relevant parts before ACTUAL use
 @Path("person")
 public class PersonResource {
 
     private final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
-
     private final PersonFacade PERSON_FACADE = PersonFacade.getPersonFacade(EMF);
     private final PhoneFacade PHONE_FACADE = PhoneFacade.getPhoneFacade(EMF);
     private final ZipFacade ZIP_FACADE = ZipFacade.getZipFacade(EMF);

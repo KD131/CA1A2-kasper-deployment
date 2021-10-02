@@ -32,8 +32,8 @@ public class AddressDTO extends DTO {
     public AddressDTO(Address address) {
         if (address.hasId())
             this.id = address.getId();
-            this.address = address.getAddress();
-            this.zip = new ZipDTO(address.getZip());
+        this.address = address.getAddress();
+        this.zip = new ZipDTO(address.getZip());
     }
 
     public String getAddress() {

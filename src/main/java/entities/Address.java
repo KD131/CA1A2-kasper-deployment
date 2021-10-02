@@ -35,11 +35,10 @@ public class Address extends Ent implements Serializable {
         this.persons = new ArrayList<>();
     }
 
-    public Address address(AddressDTO addressDTO) {
+    public Address(AddressDTO addressDTO) {
         if(addressDTO.hasId()) this.id = addressDTO.getId();
         this.address = addressDTO.getAddress();
         this.zip = updateZipDTOToEntity(addressDTO.getZip());
-        return this;
     }
 
     public Zip updateZipDTOToEntity(ZipDTO zipDTO) {

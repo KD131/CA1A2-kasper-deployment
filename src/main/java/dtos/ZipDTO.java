@@ -29,7 +29,7 @@ public class ZipDTO extends DTO {
     }
 
     public ZipDTO(Zip zip) {
-            this.id = zip.getId();
+            this.id = zip.getZip();
             this.city = zip.getCity();
     }
 
@@ -42,7 +42,7 @@ public class ZipDTO extends DTO {
     }
 
     public boolean equals(Zip entity) {
-        if (getId() != entity.getId()) return false;
+        if (getId() != entity.getZip()) return false;
         return getCity().equals(entity.getCity());
     }
 }

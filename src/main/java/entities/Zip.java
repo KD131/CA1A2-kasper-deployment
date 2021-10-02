@@ -16,7 +16,7 @@ public class Zip implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id // set manually
-    long id;
+    long zip;
 
     private String city;
     
@@ -27,13 +27,13 @@ public class Zip implements Serializable {
     }
 
     public Zip(long zip, String city) {
-        this.id = zip;
+        this.zip = zip;
         this.city = city;
         this.addresses = new ArrayList<>();
     }
 
     public Zip(ZipDTO zipDTO) {
-        this.id = zipDTO.getId();
+        this.zip = zipDTO.getId();
         this.city = zipDTO.getCity();
         this.city = zipDTO.getCity();
     }
@@ -52,18 +52,18 @@ public class Zip implements Serializable {
     }
 
     public boolean equals(ZipDTO dto) {
-        if (getId() != dto.getId()) return false;
+        if (getZip() != dto.getId()) return false;
         return getCity().equals(dto.getCity());
     }
 
     // Ent methods (pseudo-superclass)
-    public long getId() {
-        return id;
+    public long getZip() {
+        return zip;
     }
-    public void setId(long id) {
-        this.id = id;
+    public void setZip(long id) {
+        this.zip = id;
     }
-    public boolean hasId() {
-        return id != 0;
+    public boolean hasZip() {
+        return zip != 0;
     }
 }

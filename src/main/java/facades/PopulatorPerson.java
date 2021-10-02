@@ -111,11 +111,15 @@ public class PopulatorPerson {
 
             em.getTransaction().begin();
             // hopefully there's a better way than use a native query to wipe out the join table
-            em.createNativeQuery("DELETE FROM PERSON_PHONE").executeUpdate();
-            em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
-            em.createNamedQuery("Person.deleteAllRows").executeUpdate();
-            em.createNamedQuery("Person.resetPK").executeUpdate();
-            em.createNamedQuery("Address.deleteAllRows").executeUpdate();
+            try {
+                em.createNativeQuery("DELETE FROM PERSON_PHONE").executeUpdate();
+                em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
+                em.createNamedQuery("Person.deleteAllRows").executeUpdate();
+                em.createNamedQuery("Person.resetPK").executeUpdate();
+                em.createNamedQuery("Address.deleteAllRows").executeUpdate();
+            } catch(Exception e) {
+                System.out.println("Some delete queries failed to execute");
+            }
             for (Person person : persons) {
                 em.persist(person);
             }
@@ -129,6 +133,6 @@ public class PopulatorPerson {
     }
 
     public static void main(String[] args) {
-        String popped = populate();
+        populate();
     }
 }

@@ -42,26 +42,26 @@ public class AddressFacade implements AddressFacadeInterface {
             em.getTransaction().begin();
             em.persist(addressEntity);
             em.getTransaction().commit();
+            return new AddressDTO(addressEntity);
         } finally {
             em.close();
         }
-        return new AddressDTO(addressEntity);
+
     }
 
     @Override
     public AddressDTO edit(AddressDTO addressDTO) {
         EntityManager em = emf.createEntityManager();
         try {
-            Address address = new Address();
-            address.address(addressDTO);
+            Address address = new Address(addressDTO);
             if (addressDTO.getId() == getById(addressDTO.getId()).getId()) {
                 em.getTransaction().begin();
                 em.merge(address);
                 em.getTransaction().commit();
             }
+            return new AddressDTO(address);
         } finally {
             em.close();
-            return addressDTO;
         }
     }
 
@@ -70,7 +70,7 @@ public class AddressFacade implements AddressFacadeInterface {
         EntityManager em = emf.createEntityManager();
         try {
             AddressDTO addressDTO = new AddressDTO(em.find(Address.class, id));
-            if(addressDTO != null) {
+            if (addressDTO != null) {
                 em.remove(addressDTO);
             }
         } finally {

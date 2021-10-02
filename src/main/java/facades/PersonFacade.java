@@ -31,37 +31,34 @@ public class PersonFacade implements PersonFacadeInterface {
     private EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-    
+
     @Override
     public PersonDTO create(PersonDTO personDTO) {
         EntityManager em = emf.createEntityManager();
-        Person person = new Person();
         try {
-            person.person(personDTO);
-            
+            Person person = new Person(personDTO);
             em.getTransaction().begin();
             em.persist(person);
             em.getTransaction().commit();
+            return new PersonDTO(person);
         } finally {
             em.close();
         }
-        return new PersonDTO(person);
     }
 
     @Override
     public PersonDTO edit(PersonDTO personDTO) {
         EntityManager em = emf.createEntityManager();
         try {
-            Person person = new Person();
-            person.person(personDTO);
+            Person person = new Person(personDTO);
             if (personDTO.getId() == getById(personDTO.getId()).getId()) {
                 em.getTransaction().begin();
                 em.merge(person);
                 em.getTransaction().commit();
             }
+            return personDTO;
         } finally {
             em.close();
-            return personDTO;
         }
     }
 
@@ -70,7 +67,7 @@ public class PersonFacade implements PersonFacadeInterface {
 
         EntityManager em = emf.createEntityManager();
         try {
-            if(getById(id) != null) {
+            if (getById(id) != null) {
                 em.getTransaction().begin();
                 Person p = em.find(Person.class, id);
                 em.remove(p);
@@ -81,7 +78,6 @@ public class PersonFacade implements PersonFacadeInterface {
             em.close();
         }
     }
-
 
 
     @Override
@@ -125,7 +121,7 @@ public class PersonFacade implements PersonFacadeInterface {
     public List<PersonDTO> getByAddress(AddressDTO address) {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.address a where a.zip.id = :zip AND a.address = :address", Person.class);
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.address a where a.zip.zip = :zip AND a.address = :address", Person.class);
             query.setParameter("zip", address.getZip().getId());
             query.setParameter("address", address.getAddress());
             List<Person> persons = query.getResultList();
@@ -139,7 +135,7 @@ public class PersonFacade implements PersonFacadeInterface {
     public List<PersonDTO> getByZip(ZipDTO zip) {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.address.zip z where z.id = :zip", Person.class);
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.address.zip z where z.zip = :zip", Person.class);
             query.setParameter("zip", zip.getId());
             List<Person> persons = query.getResultList();
             return PersonDTO.getDtos(persons);
