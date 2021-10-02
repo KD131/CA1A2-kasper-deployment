@@ -9,7 +9,7 @@ public interface AddressFacadeInterface {
 
     AddressDTO create(AddressDTO address);
 
-    AddressDTO edit(Address address);
+    AddressDTO edit(AddressDTO addressDTO);
 
     void delete(long id);
 
