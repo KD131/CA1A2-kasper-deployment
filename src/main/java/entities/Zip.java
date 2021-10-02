@@ -11,9 +11,7 @@ import java.util.List;
 
 @Entity
 @NamedQuery(name = "Zip.deleteAllRows", query = "DELETE FROM Zip")
-public class Zip implements Serializable {
-    @Id
-    private int zip;
+public class Zip extends Ent implements Serializable {
     private String city;
     
     @OneToMany(mappedBy = "zip")
@@ -22,23 +20,15 @@ public class Zip implements Serializable {
     public Zip() {
     }
 
-    public Zip(int zip, String city) {
-        this.zip = zip;
+    public Zip(long zip, String city) {
+        this.id = zip;
         this.city = city;
         this.addresses = new ArrayList<>();
     }
 
     public Zip(ZipDTO zipDTO) {
-        this.zip = zip;
-        this.city = city;
-    }
-
-    public int getZip() {
-        return zip;
-    }
-
-    public void setZip(int zip) {
-        this.zip = zip;
+        this.id = zipDTO.getId();
+        this.city = zipDTO.getCity();
     }
 
     public String getCity() {
@@ -55,7 +45,7 @@ public class Zip implements Serializable {
     }
 
     public boolean equals(ZipDTO dto) {
-        if (getZip() != dto.getZip()) return false;
+        if (getId() != dto.getId()) return false;
         return getCity().equals(dto.getCity());
     }
 

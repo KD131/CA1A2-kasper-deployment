@@ -13,8 +13,7 @@ import java.util.List;
 /**
  * @author tha
  */
-public class HobbyDTO {
-    private Long id;
+public class HobbyDTO extends DTO {
     private String name;
     private String link;
     private String category;
@@ -42,9 +41,6 @@ public class HobbyDTO {
         this.type = hobby.getType();
     }
 
-    public Long getId() {
-        return id;
-    }
     public String getName() {
         return name;
     }
@@ -77,18 +73,12 @@ public class HobbyDTO {
         this.type = type;
     }
 
-
     public boolean equals(Hobby entity) {
-        if (!getId().equals(entity.getId())) return false;
+        if (!(getId() == entity.getId())) return false;
         if (!getName().equals(entity.getName())) return false;
         if (!getLink().equals(entity.getLink())) return false;
         if (!getCategory().equals(entity.getCategory())) return false;
         return getType().equals(entity.getType());
-
-    }
-
-    public void setId(long id) {
-        this.id = id;
 
     }
 }

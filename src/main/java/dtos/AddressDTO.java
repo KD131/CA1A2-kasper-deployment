@@ -13,10 +13,8 @@ import java.util.List;
 /**
  * @author tha
  */
-public class AddressDTO {
-    private Long id;
+public class AddressDTO extends DTO {
     private String address;
-
     private ZipDTO zip;
 
     public AddressDTO(String address, ZipDTO zip) {
@@ -38,10 +36,6 @@ public class AddressDTO {
             this.zip = new ZipDTO(address.getZip());
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public String getAddress() {
         return address;
     }
@@ -59,14 +53,9 @@ public class AddressDTO {
     }
 
     public boolean equals(Address entity) {
-        if (!getId().equals(entity.getId())) return false;
+        if (!(getId() == entity.getId())) return false;
         if (!getAddress().equals(entity.getAddress())) return false;
         return getZip().equals(entity.getZip());
-
-    }
-
-    public void setId(Long id) {
-        this.id = id;
 
     }
 }

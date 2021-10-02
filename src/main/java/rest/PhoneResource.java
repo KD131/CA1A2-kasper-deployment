@@ -53,7 +53,7 @@ public class PhoneResource {
         return GSON.toJson(phone);
     }
 
-    @Path("person/id/{id}")
+    @Path("person/{id}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String getByPhone(@PathParam("id") long personId) {
@@ -65,7 +65,6 @@ public class PhoneResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String getPhoneCount() {
-
         long count = FACADE.getPhoneCount();
         //System.out.println("--------------->"+count);
         return "{\"count\":" + count + "}";  //Done manually so no need for a DTO

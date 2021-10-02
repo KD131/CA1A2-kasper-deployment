@@ -13,8 +13,7 @@ import java.util.List;
 /**
  * @author tha
  */
-public class PhoneDTO {
-    private Long id;
+public class PhoneDTO extends DTO {
     private int number;
     private String info;
 
@@ -36,10 +35,6 @@ public class PhoneDTO {
         this.info = phone.getInfo();
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public int getNumber() {
         return number;
     }
@@ -56,15 +51,9 @@ public class PhoneDTO {
         this.info = info;
     }
 
-
     public boolean equals(Phone entity) {
         if (getNumber() != entity.getNumber()) return false;
-        if (!getId().equals(entity.getId())) return false;
+        if (!(getId() == entity.getId())) return false;
         return !getInfo().equals(entity.getInfo());
-    }
-
-    public void setId(long id) {
-        this.id = id;
-
     }
 }

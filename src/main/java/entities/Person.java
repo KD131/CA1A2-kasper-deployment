@@ -13,22 +13,8 @@ import java.util.List;
 @NamedQuery(name = "Person.deleteAllRows", query = "DELETE FROM Person")
 @NamedNativeQuery(name = "Person.resetPK", query = "ALTER TABLE PERSON AUTO_INCREMENT = 1")
 
-@SqlResultSetMapping(name="updateResult", columns = { @ColumnResult(name = "count")})
+public class Person extends Ent implements Serializable {
 
-@NamedNativeQueries({
-        @NamedNativeQuery(
-                name    =   "updatePerson",
-                query   =   "UPDATE Person SET email = ?, firstName = ?, lastName = ?, hobbies = ?, phones = ?, address = ? WHERE id = ?"
-                ,resultSetMapping = "updateResult"
-        )
-})
-
-public class Person implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String email;
     private String firstName;
     private String lastName;
@@ -37,6 +23,7 @@ public class Person implements Serializable {
             CascadeType.PERSIST,
             CascadeType.MERGE
     })
+
     @JoinTable(name = "PERSON_HOBBY")
     private List<Hobby> hobbies;
 
@@ -76,14 +63,6 @@ public class Person implements Serializable {
         this.lastName = lastName;
         this.address = address;
         this.hobbies = new ArrayList<>();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public List<Phone> getPhones() {
@@ -158,7 +137,7 @@ public class Person implements Serializable {
     }
 
     public boolean equals(PersonDTO dto) {
-        if (!getId().equals(dto.getId())) return false;
+        if (!(getId() == dto.getId())) return false;
         if (!getEmail().equals(dto.getEmail())) return false;
         if (!getFirstName().equals(dto.getFirstName())) return false;
         if (!getLastName().equals(dto.getLastName())) return false;
@@ -167,8 +146,8 @@ public class Person implements Serializable {
         return getAddress().equals(dto.getAddress());
     }
 
-    public Person person(PersonDTO personDTO){
-        if(personDTO.getId() != 0) {
+    public Person person(PersonDTO personDTO) {
+        if (personDTO.getId() != 0) {
             this.id = personDTO.getId();
             this.email = personDTO.getEmail();
             this.firstName = personDTO.getFirstName();
@@ -176,9 +155,9 @@ public class Person implements Serializable {
             this.hobbies = updateHobbyDTOToEntity(personDTO.getHobbies());
             this.phones = updatePhonesDTOToEntity(personDTO.getPhones());
             this.address = updateAddressDTOToEntity(personDTO.getAddress());
-            }
-        return this;
         }
+        return this;
+    }
 
     public List<Hobby> updateHobbyDTOToEntity(List<HobbyDTO> hobbiesDTO) {
         List<Hobby> hobbies = new ArrayList<>();
@@ -207,9 +186,8 @@ public class Person implements Serializable {
 
     public Zip updateZipDTOToEntity(ZipDTO zipDTO) {
         Zip zip = new Zip();
-        zip.setZip(zipDTO.getZip());
+        zip.setId(zipDTO.getId());
         zip.setCity(zip.getCity());
-
         return zip;
     }
 
