@@ -67,6 +67,23 @@ public class PhoneFacade implements PhoneFacadeInterface {
     }
 
     @Override
+    public void delete(long id) {
+
+        EntityManager em = emf.createEntityManager();
+        try {
+            if(getById(id) != null) {
+                em.getTransaction().begin();
+                Phone p = em.find(Phone.class, id);
+                em.remove(p);
+                em.getTransaction().commit();
+                em.clear();
+            }
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
     public PhoneDTO getById(long id) {
         EntityManager em = emf.createEntityManager();
         try {

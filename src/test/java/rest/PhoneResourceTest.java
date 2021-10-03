@@ -1,9 +1,11 @@
 package rest;
 
+import dtos.PersonDTO;
 import dtos.PhoneDTO;
 import entities.*;
 import facades.PhoneFacade;
 import io.restassured.http.ContentType;
+import org.glassfish.grizzly.http.util.HttpStatus;
 import utils.EMF_Creator;
 import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
@@ -123,5 +125,17 @@ public class PhoneResourceTest {
                 .then()
                 .body("number", equalTo(66666666))
                 .body("info", equalTo("Pleasure"));
+    }
+
+    @Test
+    void deletePerson() {
+        new PhoneDTO(p2);
+
+        given()
+                .contentType("application/json")
+                .delete("phone" )
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode());
     }
 }

@@ -9,6 +9,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
 import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.grizzly.http.util.HttpStatus;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.jupiter.api.AfterAll;
@@ -119,8 +120,20 @@ class AddressResourceTest {
                 .put("address" )
                 .then()
                 .body("address", equalTo("Fest street 21"))
-                .body("zip.zip", equalTo(4242))
+                .body("zip.id", equalTo(4242))
                 .body("zip.city", equalTo("Cool-town"));
 
+    }
+
+    @Test
+    void deleteAddress() {
+        AddressDTO a2DTO = addressFacade.getById(a2.getId());
+
+        given()
+                .contentType("application/json")
+                .delete("address" + a2DTO.getId())
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode());
     }
 }

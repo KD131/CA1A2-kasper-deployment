@@ -11,6 +11,8 @@ public interface PhoneFacadeInterface {
 
     PhoneDTO edit(PhoneDTO phoneDTO);
 
+    void delete(long id);
+
     PhoneDTO getById(long id);
 
     public PhoneDTO getByNumber(int number);

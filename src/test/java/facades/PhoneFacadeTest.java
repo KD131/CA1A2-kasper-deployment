@@ -1,5 +1,6 @@
 package facades;
 
+import dtos.AddressDTO;
 import dtos.PhoneDTO;
 import entities.*;
 import org.junit.jupiter.api.BeforeAll;
@@ -8,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import utils.EMF_Creator;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class PhoneFacadeTest {
@@ -58,6 +61,14 @@ class PhoneFacadeTest {
 
         facade.edit(p1DTO);
         assertEquals("Bees knees", facade.getById(p1.getId()).getInfo());
+    }
+
+    @Test
+    void delete() {
+        facade.delete(p2.getId());
+        List<PhoneDTO> phones = facade.getAll();
+        assertEquals(1, phones.size());
+        assertEquals(p1.getInfo(), phones.get(0).getInfo());
     }
 
     @Test

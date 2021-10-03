@@ -163,4 +163,16 @@ public class PersonResourceTest {
                 .body("address.address", equalTo("2nd and Hill 34"))
                 .body("address.zip.zip", equalTo(4242));
     }
+
+    @Test
+    void deletePerson() {
+        new PersonDTO(p2);
+
+        given()
+                .contentType("application/json")
+                .put("person" )
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode());
+    }
 }

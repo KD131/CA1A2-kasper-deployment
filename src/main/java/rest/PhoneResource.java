@@ -76,4 +76,13 @@ public class PhoneResource {
         PhoneDTO pNew = FACADE.edit(pDTO);
         return GSON.toJson(pNew);
     }
+
+    @DELETE
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String deletePerson(long id) {
+        PhoneDTO pDeleted = FACADE.getById(id);
+        FACADE.delete(id);
+        return GSON.toJson(pDeleted);
+    }
 }

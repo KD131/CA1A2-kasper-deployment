@@ -71,9 +71,12 @@ public class AddressFacade implements AddressFacadeInterface {
     public void delete(long id) {
         EntityManager em = emf.createEntityManager();
         try {
-            AddressDTO addressDTO = new AddressDTO(em.find(Address.class, id));
-            if(addressDTO != null) {
-                em.remove(addressDTO);
+            if(getById(id) != null) {
+                em.getTransaction().begin();
+                Address a = em.find(Address.class, id);
+                em.remove(a);
+                em.getTransaction().commit();
+                em.clear();
             }
         } finally {
             em.close();
