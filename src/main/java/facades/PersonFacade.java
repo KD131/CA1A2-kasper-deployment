@@ -46,7 +46,7 @@ public class PersonFacade implements PersonFacadeInterface {
     }
 
     @Override
-    public PersonDTO edit(PersonDTO personDTO) {
+    public PersonDTO update(PersonDTO personDTO) {
         EntityManager em = emf.createEntityManager();
         try {
             Person person = new Person(personDTO);

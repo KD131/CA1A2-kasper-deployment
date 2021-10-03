@@ -8,7 +8,7 @@ public interface HobbyFacadeInterface {
 
     HobbyDTO create(HobbyDTO Hobby);
 
-    HobbyDTO edit(HobbyDTO Hobby);
+    HobbyDTO update(HobbyDTO Hobby);
 
     void delete(long id);
 

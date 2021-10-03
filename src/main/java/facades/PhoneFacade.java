@@ -51,7 +51,7 @@ public class PhoneFacade implements PhoneFacadeInterface {
     }
 
     @Override
-    public PhoneDTO edit(PhoneDTO phoneDTO) {
+    public PhoneDTO update(PhoneDTO phoneDTO) {
         EntityManager em = emf.createEntityManager();
         try {
             Phone phone = new Phone(phoneDTO);

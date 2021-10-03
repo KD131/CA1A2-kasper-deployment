@@ -54,7 +54,7 @@ public class HobbyFacade implements HobbyFacadeInterface {
     }
 
     @Override
-    public HobbyDTO edit(HobbyDTO Hobby) {
+    public HobbyDTO update(HobbyDTO Hobby) {
         return null;
     }
 

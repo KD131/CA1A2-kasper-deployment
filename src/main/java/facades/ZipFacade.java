@@ -53,7 +53,7 @@ public class ZipFacade implements ZipFacadeInterface {
     }
 
     @Override
-    public ZipDTO edit(ZipDTO Zip) {
+    public ZipDTO update(ZipDTO Zip) {
         return null;
     }
 
