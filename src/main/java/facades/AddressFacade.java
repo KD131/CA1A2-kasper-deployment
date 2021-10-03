@@ -54,7 +54,7 @@ public class AddressFacade implements AddressFacadeInterface {
     }
 
     @Override
-    public AddressDTO edit(AddressDTO addressDTO) {
+    public AddressDTO update(AddressDTO addressDTO) {
         EntityManager em = emf.createEntityManager();
         try {
             Address address = new Address(addressDTO);

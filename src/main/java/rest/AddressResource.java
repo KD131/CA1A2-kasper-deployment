@@ -79,7 +79,7 @@ public class AddressResource {
     @Consumes({MediaType.APPLICATION_JSON})
     public String updateAddress(String address) {
         AddressDTO aDTO = GSON.fromJson(address, AddressDTO.class);
-        AddressDTO aNew = ADDRESS_FACADE.edit(aDTO);
+        AddressDTO aNew = ADDRESS_FACADE.update(aDTO);
         return GSON.toJson(aNew);
     }
 

@@ -3,7 +3,6 @@ package facades;
 import dtos.AddressDTO;
 import edu.emory.mathcs.backport.java.util.Arrays;
 import entities.*;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -89,7 +88,7 @@ class AddressFacadeTest {
         a1.setAddress("Fest street 21");
         AddressDTO a1DTO = new AddressDTO(a1);
 
-        facade.edit(a1DTO);
+        facade.update(a1DTO);
         assertEquals("Fest street 21", facade.getById(a1.getId()).getAddress());
     }
 
