@@ -124,7 +124,7 @@ class AddressResourceTest {
 
         given()
                 .contentType("application/json")
-                .delete("address" + a2DTO.getId())
+                .delete("address/" + a2DTO.getId())
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode());
