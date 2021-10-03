@@ -141,6 +141,21 @@ class HobbyResourceTest {
 
     @Test
     void updateHobby() {
+        h1.setName("Snowboarding");
+        HobbyDTO hobbyDTO = new HobbyDTO(h1);
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(hobbyDTO)
+                .when()
+                .put("hobby")
+                .then()
+                .statusCode(200)
+                .body("id", equalTo((int)hobbyDTO.getId()))
+                .body("name", equalTo(hobbyDTO.getName()))
+                .body("link", equalTo(hobbyDTO.getLink()))
+                .body("category", equalTo(hobbyDTO.getCategory()))
+                .body("type", equalTo(hobbyDTO.getType()));
     }
 
     @Test
