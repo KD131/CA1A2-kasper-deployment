@@ -7,10 +7,7 @@ import facades.*;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManagerFactory;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -29,6 +26,15 @@ public class HobbyResource {
     @Produces({MediaType.APPLICATION_JSON})
     public String demo() {
         return "{\"msg\":\"Hello World\"}";
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String createHobby(String hobby) {
+        HobbyDTO toCreate = GSON.fromJson(hobby, HobbyDTO.class);
+        HobbyDTO created = HOBBY_FACADE.create(toCreate);
+        return GSON.toJson(created);
     }
 
     @Path("list")
