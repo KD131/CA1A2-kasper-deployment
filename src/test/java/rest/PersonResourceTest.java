@@ -1,6 +1,6 @@
 package rest;
 
-import dtos.PersonDTO;
+import dtos.*;
 import edu.emory.mathcs.backport.java.util.Arrays;
 import entities.*;
 import facades.PersonFacade;
@@ -262,5 +262,36 @@ public class PersonResourceTest {
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode());
+    }
+    
+    @Test
+    void createPerson()
+    {
+        List<PhoneDTO> phones = new ArrayList<>();
+        phones.add(new PhoneDTO(12341234, "personal"));
+        List<HobbyDTO> hobbies = new ArrayList<>();
+        hobbies.add(new HobbyDTO("Testing", "testing.com", "general", "indoors"));
+        PersonDTO person = new PersonDTO(
+                phones,
+                "testing@testing.com",
+                "Charles",
+                "Testing",
+                new AddressDTO("Street Street 78",
+                        new ZipDTO(5656, "Test city, baby")),
+                hobbies);
+        
+        given()
+                .contentType(ContentType.JSON)
+                .body(person)
+                .when()
+                .post("person")
+                .then()
+                .statusCode(200)
+                .body("id", not(0))
+                .body("email", equalTo(person.getEmail()))
+                .body("firstName", equalTo(person.getFirstName()))
+                .body("lastName", equalTo(person.getLastName()))
+                .body("address.address", equalTo(person.getAddress().getAddress()))
+                .body("address.zip.id", equalTo((int)person.getAddress().getZip().getId()));
     }
 }
