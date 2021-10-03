@@ -100,7 +100,7 @@ class AddressResourceTest {
     @Test
     void getAddressCount() {
     }
-    @Disabled //fails
+
     @Test
     void updateAddress() {
         AddressDTO a2DTO = new AddressDTO(a2);

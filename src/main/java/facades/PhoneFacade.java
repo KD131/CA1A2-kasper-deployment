@@ -67,20 +67,21 @@ public class PhoneFacade implements PhoneFacadeInterface {
     }
 
     @Override
-    public void delete(long id) {
+    public PhoneDTO delete(long id) {
         EntityManager em = emf.createEntityManager();
         try {
+            Phone p = em.find(Phone.class, id);
+            PhoneDTO pDTO = new PhoneDTO(p);
             if(getById(id) != null) {
                 em.getTransaction().begin();
-                Phone p = em.find(Phone.class, id);
                 Person person = em.createQuery("SELECT p FROM Person p WHERE :phone MEMBER OF p.phones", Person.class)
                         .setParameter("phone", p)
                         .getSingleResult();
                 person.removePhone(p);
                 em.remove(p);
                 em.getTransaction().commit();
-                em.clear();
             }
+            return pDTO;
         } finally {
             em.close();
         }
