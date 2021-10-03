@@ -10,7 +10,7 @@ public interface ZipFacadeInterface {
 
     ZipDTO create(ZipDTO Zip);
 
-    ZipDTO edit(ZipDTO Zip);
+    ZipDTO update(ZipDTO Zip);
 
     void delete(long zip);
 

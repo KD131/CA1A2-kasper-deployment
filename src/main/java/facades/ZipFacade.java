@@ -39,21 +39,21 @@ public class ZipFacade implements ZipFacadeInterface {
     }
 
     @Override
-    public ZipDTO create(ZipDTO zip) {
+    public ZipDTO create(ZipDTO zipDTO) {
         EntityManager em = emf.createEntityManager();
         try {
-            Zip zipEntity = new Zip(zip.getId(), zip.getCity());
+            Zip zip = new Zip(zipDTO);
             em.getTransaction().begin();
-            em.persist(zipEntity);
+            em.persist(zip);
             em.getTransaction().commit();
-            return new ZipDTO(zipEntity);
+            return new ZipDTO(zip);
         } finally {
             em.close();
         }
     }
 
     @Override
-    public ZipDTO edit(ZipDTO Zip) {
+    public ZipDTO update(ZipDTO Zip) {
         return null;
     }
 

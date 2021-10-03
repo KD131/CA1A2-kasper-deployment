@@ -31,6 +31,24 @@ public class PhoneResource {
         return "{\"msg\":\"Hello World\"}";
     }
 
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String updatePhone(String phone) {
+        PhoneDTO pDTO = GSON.fromJson(phone, PhoneDTO.class);
+        PhoneDTO pNew = PHONE_FACADE.update(pDTO);
+        return GSON.toJson(pNew);
+    }
+
+    @DELETE
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String deletePerson(long id) {
+        PhoneDTO pDeleted = PHONE_FACADE.getById(id);
+        PHONE_FACADE.delete(id);
+        return GSON.toJson(pDeleted);
+    }
+
     @Path("list")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
@@ -71,23 +89,5 @@ public class PhoneResource {
         long count = PHONE_FACADE.getPhoneCount();
         //System.out.println("--------------->"+count);
         return "{\"count\":" + count + "}";  //Done manually so no need for a DTO
-    }
-
-    @PUT
-    @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
-    public String updatePhone(String phone) {
-        PhoneDTO pDTO = GSON.fromJson(phone, PhoneDTO.class);
-        PhoneDTO pNew = PHONE_FACADE.edit(pDTO);
-        return GSON.toJson(pNew);
-    }
-
-    @DELETE
-    @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
-    public String deletePerson(long id) {
-        PhoneDTO pDeleted = PHONE_FACADE.getById(id);
-        PHONE_FACADE.delete(id);
-        return GSON.toJson(pDeleted);
     }
 }

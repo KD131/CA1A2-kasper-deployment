@@ -123,7 +123,7 @@ class PersonFacadeTest {
         p2.setLastName("Allis");
         PersonDTO p2DTO = new PersonDTO(p2);
 
-        facade.edit(p2DTO);
+        facade.update(p2DTO);
         assertEquals("Allis", facade.getById(p2.getId()).getLastName());
     }
     
@@ -135,7 +135,7 @@ class PersonFacadeTest {
         p1.setAddress(address);
         PersonDTO p1DTO = new PersonDTO(p1);
 
-        facade.edit(p1DTO);
+        facade.update(p1DTO);
         assertEquals(p1.getAddress().getAddress(), facade.getById(p1.getId()).getAddress().getAddress());
         
         facade.delete(p1.getId());
@@ -153,9 +153,9 @@ class PersonFacadeTest {
         PersonDTO p1DTO = new PersonDTO(p1);
         PersonDTO p2DTO = new PersonDTO(p2);
 
-        facade.edit(p1DTO);
+        facade.update(p1DTO);
         assertEquals(p1.getAddress().getAddress(), facade.getById(p1.getId()).getAddress().getAddress());
-        facade.edit(p2DTO);
+        facade.update(p2DTO);
         assertEquals(p2.getAddress().getAddress(), facade.getById(p2.getId()).getAddress().getAddress());
         
         facade.delete(p1.getId());

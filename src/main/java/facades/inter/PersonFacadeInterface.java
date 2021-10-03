@@ -9,7 +9,7 @@ public interface PersonFacadeInterface {
 
     PersonDTO create(PersonDTO person);
 
-    PersonDTO edit(PersonDTO person);
+    PersonDTO update(PersonDTO person);
 
     PersonDTO delete(long id);
 

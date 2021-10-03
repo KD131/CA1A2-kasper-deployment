@@ -40,6 +40,24 @@ public class PersonResource {
         return GSON.toJson(pCreated);
     }
 
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String update(String person) {
+        PersonDTO pDTO = GSON.fromJson(person, PersonDTO.class);
+        PersonDTO pNew = PERSON_FACADE.update(pDTO);
+        return GSON.toJson(pNew);
+    }
+
+    @DELETE
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String delete(long id) {
+        PersonDTO pDeleted = PERSON_FACADE.getById(id);
+        PERSON_FACADE.delete(id);
+        return GSON.toJson(pDeleted);
+    }
+
     @Path("list")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
@@ -87,7 +105,6 @@ public class PersonResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String getPersonCount() {
-
         long count = PERSON_FACADE.getPersonCount();
         //System.out.println("--------------->"+count);
         return "{\"count\":" + count + "}";  //Done manually so no need for a DTO
@@ -99,23 +116,5 @@ public class PersonResource {
     public String getPopulate() {
         String pop = PopulatorPerson.populate();
         return "{\"Message:\":" + pop + "}";
-    }
-
-    @PUT
-    @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
-    public String updatePerson(String person) {
-        PersonDTO pDTO = GSON.fromJson(person, PersonDTO.class);
-        PersonDTO pNew = PERSON_FACADE.edit(pDTO);
-        return GSON.toJson(pNew);
-    }
-
-    @DELETE
-    @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
-    public String deletePerson(long id) {
-        PersonDTO pDeleted = PERSON_FACADE.getById(id);
-        PERSON_FACADE.delete(id);
-        return GSON.toJson(pDeleted);
     }
 }

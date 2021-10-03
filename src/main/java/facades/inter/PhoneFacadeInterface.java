@@ -9,7 +9,7 @@ public interface PhoneFacadeInterface {
 
     PhoneDTO create(PhoneDTO phone);
 
-    PhoneDTO edit(PhoneDTO phoneDTO);
+    PhoneDTO update(PhoneDTO phoneDTO);
 
     PhoneDTO delete(long id);
 

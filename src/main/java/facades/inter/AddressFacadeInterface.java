@@ -10,7 +10,7 @@ public interface AddressFacadeInterface {
 
     AddressDTO create(AddressDTO address);
 
-    AddressDTO edit(AddressDTO addressDTO);
+    AddressDTO update(AddressDTO addressDTO);
 
     AddressDTO delete(long id);
 

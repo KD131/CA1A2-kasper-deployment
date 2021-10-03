@@ -84,7 +84,7 @@ class PhoneFacadeTest {
         p1.setInfo("Bees knees");
         PhoneDTO p1DTO = new PhoneDTO(p1);
 
-        facade.edit(p1DTO);
+        facade.update(p1DTO);
         assertEquals("Bees knees", facade.getById(p1.getId()).getInfo());
     }
 
