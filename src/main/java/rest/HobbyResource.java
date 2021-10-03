@@ -42,7 +42,7 @@ public class HobbyResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String updateHobby(String hobby) {
         HobbyDTO toUpdate = GSON.fromJson(hobby, HobbyDTO.class);
-        HobbyDTO updated = HOBBY_FACADE.create(toUpdate);
+        HobbyDTO updated = HOBBY_FACADE.update(toUpdate);
         return GSON.toJson(updated);
     }
 
