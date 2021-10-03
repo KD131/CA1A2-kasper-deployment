@@ -94,7 +94,10 @@ class PhoneFacadeTest {
         List<PhoneDTO> phones = facade.getAll();
         assertEquals(1, phones.size());
         assertEquals(p1.getInfo(), phones.get(0).getInfo());
-        assertEquals(0, pe1.getPhones().size());
+        
+        PersonFacade personFacade = PersonFacade.getPersonFacade(emf);
+        PersonDTO newPe2 = personFacade.getById(pe2.getId());
+        assertEquals(0, newPe2.getPhones().size());
     }
 
     @Test

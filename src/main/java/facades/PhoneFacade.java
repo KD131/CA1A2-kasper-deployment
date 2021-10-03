@@ -79,8 +79,10 @@ public class PhoneFacade implements PhoneFacadeInterface {
                 Person person = em.createQuery("SELECT p FROM Person p WHERE :phone MEMBER OF p.phones", Person.class)
                         .setParameter("phone", p)
                         .getSingleResult();
-                person.removePhone(p);
-                em.remove(p);
+                if (person != null) {   // person should never be null because a phone should never be orphaned, but just in case
+                    person.removePhone(p);
+                }
+                em.remove(p);   // orphan removal also takes care of this so explicitly removing the phone is unneeded.
                 em.getTransaction().commit();
             }
             return pDTO;
