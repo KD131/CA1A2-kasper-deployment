@@ -58,7 +58,7 @@ public class AddressResource {
     @Path("person/{id}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String getByPersonId(@PathParam("id") long id) {
+    public String getByPerson(@PathParam("id") long id) {
         PersonDTO person = PERSON_FACADE.getById(id);
         AddressDTO addressDTO = ADDRESS_FACADE.getByPerson(person);
         return GSON.toJson(addressDTO);
