@@ -50,7 +50,7 @@ public class HobbyResource {
     @Path("type/{type}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String getByype(@PathParam("type") String type) {
+    public String getByType(@PathParam("type") String type) {
         List<HobbyDTO> hobbies = HOBBY_FACADE.getByCategory(type);
         return GSON.toJson(hobbies);
     }
