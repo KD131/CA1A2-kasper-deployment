@@ -46,6 +46,15 @@ public class HobbyResource {
         return GSON.toJson(updated);
     }
 
+    @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String deleteHobby(String hobby) throws Exception {
+        HobbyDTO toDelete = GSON.fromJson(hobby, HobbyDTO.class);
+        HobbyDTO deleted = HOBBY_FACADE.delete(toDelete.getId());
+        return GSON.toJson(deleted);
+    }
+
     @Path("list")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
