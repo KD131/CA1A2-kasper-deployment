@@ -1,19 +1,23 @@
 package facades;
 
-import dtos.AddressDTO;
 import dtos.PersonDTO;
 import dtos.PhoneDTO;
-import entities.*;
+import entities.Address;
+import entities.Person;
+import entities.Phone;
+import entities.Zip;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.EMF_Creator;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PhoneFacadeTest {
     private static EntityManagerFactory emf;
@@ -109,13 +113,6 @@ class PhoneFacadeTest {
         List<PhoneDTO> phones = facade.getByPerson(new PersonDTO(pe2));
         assertEquals(1, phones.size());
         assertTrue(p2.equals(phones.get(0)));
-    }
-
-    @Test
-    void getByPersonId() {
-        List<PhoneDTO> phones = facade.getByPersonId(pe1.getId());
-        assertEquals(1, phones.size());
-        assertTrue(p1.equals(phones.get(0)));
     }
 
     @Test
