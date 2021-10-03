@@ -11,10 +11,7 @@ import io.restassured.parsing.Parser;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
@@ -175,8 +172,18 @@ class HobbyResourceTest {
                 .body("type", equalTo(hobbyDTO.getType()));
     }
 
+    @Disabled
     @Test
     void deleteHobby_badId() {
+        long id = 666;
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .delete("hobby/" + id)
+                .then()
+                .body("code", equalTo(500))
+                .body("message", equalTo("No hobby with id: " + id));
     }
 
     @Test
