@@ -5,7 +5,9 @@
  */
 package dtos;
 
+import entities.Hobby;
 import entities.Person;
+import entities.Phone;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,16 +112,26 @@ public class PersonDTO extends DTO {
         if (!getEmail().equals(entity.getEmail())) return false;
         if (!getFirstName().equals(entity.getFirstName())) return false;
         if (!getLastName().equals(entity.getLastName())) return false;
-        
-        for (int i = 0; i < hobbies.size(); i++) {
-            if (!hobbies.get(i).equals(entity.getHobbies().get(i))) return false;
+        for (HobbyDTO dto : hobbies) {
+            boolean hasEqual = false;
+            for (Hobby ent : entity.getHobbies()) {
+                if (ent.equals(dto)) {
+                    hasEqual = true;
+                    break;
+                }
+            }
+            if (!hasEqual) return false;
         }
-        for (int i = 0; i < phones.size(); i++) {
-            if (!phones.get(i).equals(entity.getPhones().get(i))) return false;
+        for (PhoneDTO dto : phones) {
+            boolean hasEqual = false;
+            for (Phone ent : entity.getPhones()) {
+                if (ent.equals(dto)) {
+                    hasEqual = true;
+                    break;
+                }
+            }
+            if (!hasEqual) return false;
         }
-        
-//        if (!getHobbies().equals(entity.getHobbies())) return false;
-//        if (!getPhones().equals(entity.getPhones())) return false;
         return getAddress().equals(entity.getAddress());
     }
 }

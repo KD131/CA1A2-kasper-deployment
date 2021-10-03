@@ -45,6 +45,16 @@ public class Person extends Ent implements Serializable {
     public Person() {
     }
 
+    public Person(PersonDTO personDTO){
+        if(personDTO.hasId()) this.id = personDTO.getId();
+        this.email = personDTO.getEmail();
+        this.firstName = personDTO.getFirstName();
+        this.lastName = personDTO.getLastName();
+        setHobbiesFromDtoList(personDTO.getHobbies());
+        setPhonesFromDtoList(personDTO.getPhones());
+        setAddressFromDTO(personDTO.getAddress());
+    }
+
     public Person(List<Phone> phones, String email, String firstName, String lastName, Address address, List<Hobby> hobbies) {
         this.phones = new ArrayList<>();
         phones.forEach(this::addPhone);
@@ -136,62 +146,45 @@ public class Person extends Ent implements Serializable {
         }
     }
 
-    public boolean equals(PersonDTO dto) {
-        if (getId() != dto.getId()) return false;
-        if (!getEmail().equals(dto.getEmail())) return false;
-        if (!getFirstName().equals(dto.getFirstName())) return false;
-        if (!getLastName().equals(dto.getLastName())) return false;
-        
-        for (int i = 0; i < hobbies.size(); i++) {
-            if (!hobbies.get(i).equals(dto.getHobbies().get(i))) return false;
+    public boolean equals(PersonDTO personDTO) {
+        if (getId() != personDTO.getId()) return false;
+        if (!getEmail().equals(personDTO.getEmail())) return false;
+        if (!getFirstName().equals(personDTO.getFirstName())) return false;
+        if (!getLastName().equals(personDTO.getLastName())) return false;
+        for (Hobby ent : hobbies) {
+            boolean hasEqual = false;
+            for (HobbyDTO dto : personDTO.getHobbies()) {
+                if (ent.equals(dto)) {
+                    hasEqual = true;
+                    break;
+                }
+            }
+            if (!hasEqual) return false;
         }
-        for (int i = 0; i < phones.size(); i++) {
-            if (!phones.get(i).equals(dto.getPhones().get(i))) return false;
+        for (Phone ent : phones) {
+            boolean hasEqual = false;
+            for (PhoneDTO dto : personDTO.getPhones()) {
+                if (ent.equals(dto)) {
+                    hasEqual = true;
+                    break;
+                }
+            }
+            if (!hasEqual) return false;
         }
-        
-//        if (!getHobbies().equals(dto.getHobbies())) return false;
-//        if (!getPhones().equals(dto.getPhones())) return false;
-        return getAddress().equals(dto.getAddress());
-    }
-    
-    public Person person(PersonDTO personDTO){
-        if(personDTO.hasId()) this.id = personDTO.getId();
-        this.email = personDTO.getEmail();
-        this.firstName = personDTO.getFirstName();
-        this.lastName = personDTO.getLastName();
-        this.hobbies = updateHobbyDTOToEntity(personDTO.getHobbies());
-        this.phones = updatePhonesDTOToEntity(personDTO.getPhones());
-        this.address = updateAddressDTOToEntity(personDTO.getAddress());
-        return this;
+        return getAddress().equals(personDTO.getAddress());
     }
 
-    public List<Hobby> updateHobbyDTOToEntity(List<HobbyDTO> hobbiesDTO) {
-        List<Hobby> hobbies = new ArrayList<>();
-        for (HobbyDTO h : hobbiesDTO) {
-            hobbies.add(new Hobby(h));
-        }
-        return hobbies;
+    public void setHobbiesFromDtoList(List<HobbyDTO> hobbyList) {
+        hobbies = new ArrayList<>();
+        for (HobbyDTO dto : hobbyList) hobbies.add(new Hobby(dto));
     }
 
-    public List<Phone> updatePhonesDTOToEntity(List<PhoneDTO> phonesDTO) {
-        List<Phone> phones = new ArrayList<>();
-        for (PhoneDTO p : phonesDTO) {
-            phones.add(new Phone(p));
-        }
-        return phones;
+    public void setPhonesFromDtoList(List<PhoneDTO> phoneList) {
+        phones = new ArrayList<>();
+        for (PhoneDTO dto : phoneList) phones.add(new Phone(dto));
     }
 
-    public Address updateAddressDTOToEntity(AddressDTO addressDTO) {
-        Address address = new Address();
-        address.setId(addressDTO.getId());
-        address.setAddress(addressDTO.getAddress());
-        address.setZip(updateZipDTOToEntity(addressDTO.getZip()));
-
-        return address;
+    public void setAddressFromDTO(AddressDTO addressDTO) {
+        this.address = new Address(addressDTO);
     }
-
-    public Zip updateZipDTOToEntity(ZipDTO zipDTO) {
-        return new Zip(zipDTO.getId(), zipDTO.getCity());
-    }
-
 }

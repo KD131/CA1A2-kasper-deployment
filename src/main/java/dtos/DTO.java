@@ -1,6 +1,8 @@
 package dtos;
 
-abstract public class DTO {
+import java.io.Serializable;
+
+abstract public class DTO implements Serializable {
     long id;
 
     public long getId() {

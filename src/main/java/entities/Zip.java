@@ -11,7 +11,12 @@ import java.util.List;
 
 @Entity
 @NamedQuery(name = "Zip.deleteAllRows", query = "DELETE FROM Zip")
-public class Zip extends Ent implements Serializable {
+public class Zip implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id // set manually
+    long zip;
     private String city;
     
     @OneToMany(mappedBy = "zip")
@@ -21,14 +26,13 @@ public class Zip extends Ent implements Serializable {
     }
 
     public Zip(long zip, String city) {
-        this.id = zip;
+        this.zip = zip;
         this.city = city;
         this.addresses = new ArrayList<>();
     }
 
     public Zip(ZipDTO zipDTO) {
-        this.id = zipDTO.getId();
-        this.city = zipDTO.getCity();
+        this.zip = zipDTO.getId();
         this.city = zipDTO.getCity();
     }
 
@@ -46,8 +50,18 @@ public class Zip extends Ent implements Serializable {
     }
 
     public boolean equals(ZipDTO dto) {
-        if (getId() != dto.getId()) return false;
+        if (getZip() != dto.getId()) return false;
         return getCity().equals(dto.getCity());
     }
 
+    // Ent methods (pseudo-superclass)
+    public long getZip() {
+        return zip;
+    }
+    public void setZip(long zip) {
+        this.zip = zip;
+    }
+    public boolean hasZip() {
+        return zip != 0;
+    }
 }

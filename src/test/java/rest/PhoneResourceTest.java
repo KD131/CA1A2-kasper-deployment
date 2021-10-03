@@ -1,31 +1,28 @@
 package rest;
 
-import dtos.PersonDTO;
 import dtos.PhoneDTO;
-import entities.*;
+import entities.Phone;
 import facades.PhoneFacade;
 import io.restassured.http.ContentType;
 import org.glassfish.grizzly.http.util.HttpStatus;
 import utils.EMF_Creator;
 import io.restassured.RestAssured;
-import static io.restassured.RestAssured.given;
 import io.restassured.parsing.Parser;
-import java.net.URI;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.ws.rs.core.UriBuilder;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
-import static org.hamcrest.Matchers.equalTo;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-//Uncomment the line below, to temporarily disable this test
-@Disabled
+import org.junit.jupiter.api.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.ws.rs.core.UriBuilder;
+import java.net.URI;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+//Uncomment the line below, to temporarily disable this test
+
+@Disabled
 public class PhoneResourceTest {
 
     private static final int SERVER_PORT = 7777;
@@ -66,7 +63,6 @@ public class PhoneResourceTest {
     }
 
     // Setup the DataBase (used by the test-server and this test) in a known state BEFORE EACH TEST
-    //TODO -- Make sure to change the EntityClass used below to use YOUR OWN (renamed) Entity class
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
