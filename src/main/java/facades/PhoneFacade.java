@@ -37,14 +37,14 @@ public class PhoneFacade implements PhoneFacadeInterface {
     }
 
     @Override
-    public PhoneDTO create(PhoneDTO phone) {
+    public PhoneDTO create(PhoneDTO phoneDTO) {
         EntityManager em = emf.createEntityManager();
         try {
-            Phone phoneEntity = new Phone(phone.getNumber(), phone.getInfo());
+            Phone phone = new Phone(phoneDTO);
             em.getTransaction().begin();
-            em.persist(phoneEntity);
+            em.persist(phone);
             em.getTransaction().commit();
-            return new PhoneDTO(phoneEntity);
+            return new PhoneDTO(phone);
         } finally {
             em.close();
         }
@@ -59,11 +59,12 @@ public class PhoneFacade implements PhoneFacadeInterface {
                 em.getTransaction().begin();
                 em.merge(phone);
                 em.getTransaction().commit();
+                return new PhoneDTO(phone);
             }
         } finally {
             em.close();
-            return phoneDTO;
         }
+        return null;
     }
 
     @Override
