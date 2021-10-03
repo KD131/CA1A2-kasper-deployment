@@ -100,7 +100,11 @@ class HobbyFacadeTest
         assertTrue(h1.equals(fromDb));
     
         PersonDTO p1DTO = PERSON_FACADE.getById(p1.getId());    // gets fresh from DB
-        assertEquals(h1.getName(), p1DTO.getHobbies().get(0).getName());
+        p1DTO.getHobbies().forEach(h -> {
+            if (h1.getId() == h.getId()) {
+                assertEquals(h1.getName(), h.getName());
+            }
+        });
     }
     
     @Test
