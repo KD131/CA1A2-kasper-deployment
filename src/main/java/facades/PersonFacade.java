@@ -54,8 +54,9 @@ public class PersonFacade implements PersonFacadeInterface {
                 em.getTransaction().begin();
                 em.merge(person);
                 em.getTransaction().commit();
+                return new PersonDTO(person);
             }
-            return personDTO;
+            return null;
         } finally {
             em.close();
         }

@@ -61,10 +61,11 @@ public class PhoneFacade implements PhoneFacadeInterface {
                 em.getTransaction().commit();
                 return new PhoneDTO(phone);
             }
+            return null;
         } finally {
             em.close();
         }
-        return null;
+
     }
 
     @Override
@@ -73,7 +74,7 @@ public class PhoneFacade implements PhoneFacadeInterface {
         try {
             Phone p = em.find(Phone.class, id);
             PhoneDTO pDTO = new PhoneDTO(p);
-            if(getById(id) != null) {
+            if (getById(id) != null) {
                 em.getTransaction().begin();
                 Person person = em.createQuery("SELECT p FROM Person p WHERE :phone MEMBER OF p.phones", Person.class)
                         .setParameter("phone", p)
