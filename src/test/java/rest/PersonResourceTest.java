@@ -249,6 +249,6 @@ public class PersonResourceTest {
                 .body("firstName", equalTo("John"))
                 .body("lastName", equalTo("Allison"))
                 .body("address.address", equalTo("2nd and Hill 34"))
-                .body("address.zip.zip", equalTo(4242));
+                .body("address.zip.id", equalTo(4242));
     }
 }
