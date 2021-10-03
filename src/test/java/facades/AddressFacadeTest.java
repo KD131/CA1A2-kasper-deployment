@@ -20,7 +20,7 @@ class AddressFacadeTest {
     private static EntityManagerFactory emf;
     private static AddressFacade facade;
 
-    private static Address a1, a2;
+    private static Address a1, a2, a3;
     private static Person p1, p2;
 
     @BeforeAll
@@ -37,6 +37,9 @@ class AddressFacadeTest {
                 new Zip(6969, "Nice-ville"));
         a2 = new Address("2nd and Hill 34",
                 new Zip(4242, "Cool-town"));
+        a3 = new Address("Test street",
+                new Zip(2323, "Test city"));
+        // a3 has no persons by design
 
         Hobby h1 = new Hobby("Skiing", "skiing.com", "General", "Outdoors");
         Hobby h2 = new Hobby("Polo", "polo.com", "Sport", "Outdoors");
@@ -73,6 +76,9 @@ class AddressFacadeTest {
             em.createNamedQuery("Zip.deleteAllRows").executeUpdate();
             em.persist(a1);
             em.persist(a2);
+            em.persist(a3);
+            em.persist(p1);
+            em.persist(p2);
             em.getTransaction().commit();
         } finally {
             em.close();
@@ -91,13 +97,20 @@ class AddressFacadeTest {
         facade.update(a1DTO);
         assertEquals("Fest street 21", facade.getById(a1.getId()).getAddress());
     }
-
+    
     @Test
-    void delete() {
-        facade.delete(a2.getId());
+    void delete() throws Exception
+    {
+        facade.delete(a3.getId());
         List<AddressDTO> addresses = facade.getAll();
-        assertEquals(1, addresses.size());
-        assertEquals(a1.getZip().getCity(), addresses.get(0).getZip().getCity());
+        assertEquals(2, addresses.size());
+    }
+    
+    @Test
+    void delete_addressHasPerson()
+    {
+        assertThrows(Exception.class, () ->
+                facade.delete(a2.getId()));
     }
 
     @Test

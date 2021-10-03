@@ -7,6 +7,7 @@ import dtos.ZipDTO;
 import entities.Address;
 import entities.Person;
 import entities.Zip;
+import errorhandling.ExceptionDTO;
 import facades.inter.AddressFacadeInterface;
 import utils.EMF_Creator;
 
@@ -71,16 +72,19 @@ public class AddressFacade implements AddressFacadeInterface {
     }
 
     @Override
-    public AddressDTO delete(long id) {
+    public AddressDTO delete(long id) throws Exception
+    {
         EntityManager em = emf.createEntityManager();
+        Address a = em.find(Address.class, id);
         try {
-            Address a = em.find(Address.class, id);
             AddressDTO aDTO = new AddressDTO(a);
             if(getById(id) != null) {
+                if (!a.getPersons().isEmpty()) {
+                    throw new Exception("Address has persons.");
+                }
                 em.getTransaction().begin();
                 em.remove(a);
                 em.getTransaction().commit();
-                em.clear();
             }
             return aDTO;
         } finally {

@@ -12,7 +12,7 @@ public interface AddressFacadeInterface {
 
     AddressDTO update(AddressDTO addressDTO);
 
-    AddressDTO delete(long id);
+    AddressDTO delete(long id) throws Exception;
 
     AddressDTO getById(long id);
 

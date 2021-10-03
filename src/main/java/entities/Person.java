@@ -61,8 +61,8 @@ public class Person extends Ent implements Serializable {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.address = address;
-        this.hobbies = hobbies;
+        setAddress(address);
+        hobbies.forEach(this::addHobby);
     }
 
     public Person(List<Phone> phones, String email, String firstName, String lastName, Address address) {
@@ -71,7 +71,7 @@ public class Person extends Ent implements Serializable {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.address = address;
+        setAddress(address);
         this.hobbies = new ArrayList<>();
     }
 
@@ -125,6 +125,9 @@ public class Person extends Ent implements Serializable {
 
     public void setAddress(Address address) {
         if (address != null) {
+            if (this.address != null) {
+                this.address.getPersons().remove(this);
+            }
             this.address = address;
             address.getPersons().add(this);
         }

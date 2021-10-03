@@ -87,7 +87,8 @@ public class AddressResource {
     @Path("{id}")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public String deletePerson(@PathParam("id") long id) {
+    public String deletePerson(@PathParam("id") long id) throws Exception
+    {
         AddressDTO aDeleted = ADDRESS_FACADE.getById(id);
         ADDRESS_FACADE.delete(id);
         return GSON.toJson(aDeleted);
