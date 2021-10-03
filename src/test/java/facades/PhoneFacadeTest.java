@@ -1,6 +1,7 @@
 package facades;
 
 import dtos.AddressDTO;
+import dtos.PersonDTO;
 import dtos.PhoneDTO;
 import entities.*;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import utils.EMF_Creator;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,6 +20,7 @@ class PhoneFacadeTest {
     private static PhoneFacade facade;
 
     private static Phone p1, p2;
+    private static Person pe1, pe2;
 
     @BeforeAll
     static void beforeAll() {
@@ -31,6 +34,22 @@ class PhoneFacadeTest {
 
         p1 = new Phone(11111111, "Business");
         p2 = new Phone(22222222, "Pleasure");
+        
+        pe1 = new Person(
+                Arrays.asList(p1),
+                "bob@bob.com",
+                "Bob",
+                "Roberts",
+                new Address("Test street 21",
+                        new Zip(6969, "Nice-ville")));
+    
+        pe2 = new Person(
+                Arrays.asList(p2),
+                "alice@alice.com",
+                "Alice",
+                "Allison",
+                new Address("2nd and Hill 34",
+                        new Zip(4242, "Cool-town")));
 
         try {
             em.getTransaction().begin();
@@ -44,6 +63,8 @@ class PhoneFacadeTest {
             em.createNamedQuery("Zip.deleteAllRows").executeUpdate();
             em.persist(p1);
             em.persist(p2);
+            em.persist(pe1);
+            em.persist(pe2);
             em.getTransaction().commit();
         } finally {
             em.close();
@@ -73,25 +94,51 @@ class PhoneFacadeTest {
 
     @Test
     void getById() {
+        PhoneDTO phone = facade.getById(p1.getId());
+        assertTrue(phone.equals(p1));
     }
 
     @Test
     void getByNumber() {
+        PhoneDTO phone = facade.getByNumber(p2.getNumber());
+        assertTrue(phone.equals(p2));
     }
 
     @Test
     void getByPerson() {
+        List<PhoneDTO> phones = facade.getByPerson(new PersonDTO(pe2));
+        assertEquals(1, phones.size());
+        assertTrue(p2.equals(phones.get(0)));
     }
 
     @Test
     void getByPersonId() {
+        List<PhoneDTO> phones = facade.getByPersonId(pe1.getId());
+        assertEquals(1, phones.size());
+        assertTrue(p1.equals(phones.get(0)));
     }
 
     @Test
     void getAll() {
+        List<PhoneDTO> phones = facade.getAll();
+        assertEquals(2, phones.size());
+        
+        // clunky way of checking if it contains equivalent phones
+        for (PhoneDTO dto : phones)
+        {
+            if (dto.getId() == p1.getId())
+            {
+                assertTrue(dto.equals(p1));
+            }
+            else if (dto.getId() == p2.getId())
+            {
+                assertTrue(dto.equals(p2));
+            }
+        }
     }
 
     @Test
     void getPhoneCount() {
+        assertEquals(2, facade.getPhoneCount());
     }
 }
