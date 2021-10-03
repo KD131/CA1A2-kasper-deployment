@@ -54,6 +54,6 @@ public class PhoneDTO extends DTO {
     public boolean equals(Phone entity) {
         if (getNumber() != entity.getNumber()) return false;
         if (getId() != entity.getId()) return false;
-        return !getInfo().equals(entity.getInfo());
+        return getInfo().equals(entity.getInfo());
     }
 }

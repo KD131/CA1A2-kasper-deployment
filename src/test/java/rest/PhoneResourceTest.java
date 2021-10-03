@@ -3,14 +3,15 @@ package rest;
 import dtos.PhoneDTO;
 import entities.Phone;
 import facades.PhoneFacade;
-import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.glassfish.grizzly.http.util.HttpStatus;
+import utils.EMF_Creator;
+import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.jupiter.api.*;
-import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -120,5 +121,17 @@ public class PhoneResourceTest {
                 .then()
                 .body("number", equalTo(66666666))
                 .body("info", equalTo("Pleasure"));
+    }
+@Disabled
+    @Test
+    void deletePhone() { // Shall one or the other way be reprogrammed so that it works @Disabled
+        new PhoneDTO(p2);
+
+        given()
+                .contentType("application/json")
+                .delete("phone/id/" + p2.getId())
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode());
     }
 }

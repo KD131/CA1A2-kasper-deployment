@@ -100,4 +100,12 @@ public class PersonResource {
         return GSON.toJson(pNew);
     }
 
+    @DELETE
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String deletePerson(long id) {
+        PersonDTO pDeleted = PERSON_FACADE.getById(id);
+        PERSON_FACADE.delete(id);
+        return GSON.toJson(pDeleted);
+    }
 }

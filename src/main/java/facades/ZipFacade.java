@@ -54,7 +54,7 @@ public class ZipFacade implements ZipFacadeInterface {
     }
 
     @Override
-    public void delete(int zip) {
+    public void delete(long zip) {
 
         EntityManager em = emf.createEntityManager();
         try {
@@ -68,7 +68,7 @@ public class ZipFacade implements ZipFacadeInterface {
     }
 
     @Override
-    public ZipDTO getByZip(int zip) {
+    public ZipDTO getByZip(long zip) {
         EntityManager em = emf.createEntityManager();
         try {
             return new ZipDTO(em.find(Zip.class, zip));

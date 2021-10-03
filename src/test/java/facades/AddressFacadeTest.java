@@ -71,6 +71,10 @@ class AddressFacadeTest {
 
     @Test
     void delete() {
+        facade.delete(a2.getId());
+        List<AddressDTO> addresses = facade.getAll();
+        assertEquals(1, addresses.size());
+        assertEquals(a1.getZip().getCity(), addresses.get(0).getZip().getCity());
     }
 
     @Test

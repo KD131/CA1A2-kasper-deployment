@@ -10,9 +10,9 @@ public interface ZipFacadeInterface {
 
     ZipDTO edit(ZipDTO Zip);
 
-    void delete(int zip);
+    void delete(long zip);
 
-    ZipDTO getByZip(int zip);
+    ZipDTO getByZip(long zip);
 
     List<ZipDTO> getAll();
 

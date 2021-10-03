@@ -16,7 +16,7 @@ public interface AddressFacadeInterface {
 
     List<AddressDTO> getAll();
 
-    List<AddressDTO> getByZip(int zip);
+    List<AddressDTO> getByZip(long zip);
 
     List<AddressDTO> getByPerson(long id);
 

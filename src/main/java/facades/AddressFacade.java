@@ -70,9 +70,12 @@ public class AddressFacade implements AddressFacadeInterface {
     public void delete(long id) {
         EntityManager em = emf.createEntityManager();
         try {
-            AddressDTO addressDTO = new AddressDTO(em.find(Address.class, id));
-            if (addressDTO != null) {
-                em.remove(addressDTO);
+            if(getById(id) != null) {
+                em.getTransaction().begin();
+                Address a = em.find(Address.class, id);
+                em.remove(a);
+                em.getTransaction().commit();
+                em.clear();
             }
         } finally {
             em.close();
@@ -90,7 +93,7 @@ public class AddressFacade implements AddressFacadeInterface {
     }
 
     @Override
-    public List<AddressDTO> getByZip(int zip) {
+    public List<AddressDTO> getByZip(long zip) {
         EntityManager em = emf.createEntityManager();
         try {
             TypedQuery<Address> query = em.createQuery("SELECT a FROM Address a WHERE a.zip.zip = :zip", Address.class);

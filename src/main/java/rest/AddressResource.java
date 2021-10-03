@@ -75,4 +75,14 @@ public class AddressResource {
         AddressDTO aNew = FACADE.edit(aDTO);
         return GSON.toJson(aNew);
     }
+
+    @DELETE
+    @Path("{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String deletePerson(@PathParam("id") long id) {
+        AddressDTO aDeleted = FACADE.getById(id);
+        FACADE.delete(id);
+        return GSON.toJson(aDeleted);
+    }
 }
