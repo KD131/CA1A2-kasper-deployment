@@ -9,6 +9,7 @@ import utils.EMF_Creator;
 import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasItem;
 
 import io.restassured.parsing.Parser;
 import java.net.URI;
@@ -175,7 +176,39 @@ public class PersonResourceTest {
     }
 
     @Test
+    void getByAddressId() {
+        long addressId = p1.getAddress().getId();
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("person/address/" + addressId)
+                .then()
+                .statusCode(200)
+                .body("size", equalTo(1))
+                .body("id", hasItem((int)p1.getId()))
+                .body("email", hasItem(p1.getEmail()))
+                .body("firstName", hasItem(p1.getFirstName()))
+                .body("lastName", hasItem(p1.getLastName()))
+                .body("address.address", hasItem(p1.getAddress().getAddress()))
+                .body("address.zip.id", hasItem((int)p1.getAddress().getZip().getZip()));
+    }
+
+    @Test
     void getByZip() {
+        long zip = p1.getAddress().getZip().getZip();
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("person/zip/" + zip)
+                .then()
+                .statusCode(200)
+                .body("size", equalTo(1))
+                .body("id", hasItem((int)p1.getId()))
+                .body("email", hasItem(p1.getEmail()))
+                .body("firstName", hasItem(p1.getFirstName()))
+                .body("lastName", hasItem(p1.getLastName()))
+                .body("address.address", hasItem(p1.getAddress().getAddress()))
+                .body("address.zip.id", hasItem((int)p1.getAddress().getZip().getZip()));
     }
 
     @Test
