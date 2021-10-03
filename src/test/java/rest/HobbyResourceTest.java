@@ -160,6 +160,19 @@ class HobbyResourceTest {
 
     @Test
     void deleteHobby() {
+        HobbyDTO hobbyDTO = new HobbyDTO(h2);
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .delete("hobby/" + hobbyDTO.getId())
+                .then()
+                .statusCode(200)
+                .body("id", equalTo((int)hobbyDTO.getId()))
+                .body("name", equalTo(hobbyDTO.getName()))
+                .body("link", equalTo(hobbyDTO.getLink()))
+                .body("category", equalTo(hobbyDTO.getCategory()))
+                .body("type", equalTo(hobbyDTO.getType()));
     }
 
     @Test
