@@ -199,8 +199,7 @@ class PersonFacadeTest {
 
     @Test
     void getByAddress() {
-        AddressDTO address = new AddressDTO("Test street 21",
-                new ZipDTO(6969, "Nice-ville"));
+        AddressDTO address = new AddressDTO(p1.getAddress());
         List<PersonDTO> persons = facade.getByAddress(address);
         assertNotNull(persons);
         assertEquals(1, persons.size());
