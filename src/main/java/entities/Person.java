@@ -89,6 +89,12 @@ public class Person extends Ent implements Serializable {
         }
     }
 
+    public void removePhone(Phone phone) {
+        if (phone != null) {
+            this.phones.remove(phone);
+        }
+    }
+
     public String getEmail() {
         return email;
     }
