@@ -10,7 +10,7 @@ public interface HobbyFacadeInterface {
 
     HobbyDTO update(HobbyDTO Hobby);
 
-    void delete(long id);
+    HobbyDTO delete(long id) throws Exception;
 
     HobbyDTO getById(long id);
 

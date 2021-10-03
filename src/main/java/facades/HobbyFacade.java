@@ -40,8 +40,8 @@ public class HobbyFacade implements HobbyFacadeInterface {
     }
 
     @Override
-    public HobbyDTO create(HobbyDTO hobby) {
-        Hobby hobbyEntity = new Hobby(hobby.getName(), hobby.getLink(), hobby.getCategory(), hobby.getType());
+    public HobbyDTO create(HobbyDTO hobbyDTO) {
+        Hobby hobbyEntity = new Hobby(hobbyDTO);
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
@@ -54,18 +54,36 @@ public class HobbyFacade implements HobbyFacadeInterface {
     }
 
     @Override
-    public HobbyDTO update(HobbyDTO Hobby) {
-        return null;
+    public HobbyDTO update(HobbyDTO hobbyDTO) {
+        EntityManager em = emf.createEntityManager();
+        Hobby hobbyEntity = new Hobby(hobbyDTO);
+        try {
+            if (em.find(Hobby.class, hobbyDTO.getId()) != null) {
+                em.getTransaction().begin();
+                em.merge(hobbyEntity);
+                em.getTransaction().commit();
+            }
+            return new HobbyDTO(hobbyEntity);
+        }
+        finally {
+            em.close();
+        }
     }
 
     @Override
-    public void delete(long id) {
+    public HobbyDTO delete(long id) throws Exception
+    {
         EntityManager em = emf.createEntityManager();
         try {
-            HobbyDTO hobbyDTO = new HobbyDTO(em.find(Hobby.class, id));
-            if (hobbyDTO != null) {
-                em.remove(hobbyDTO);
+            Hobby h = em.find(Hobby.class, id);
+            if (h != null) {
+                em.getTransaction().begin();
+                h.removeAllPersons();
+                em.remove(h);
+                em.getTransaction().commit();
+                return new HobbyDTO(h);
             }
+            else throw new Exception("No hobby with id: " + id);
         } finally {
             em.close();
         }

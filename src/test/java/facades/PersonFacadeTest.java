@@ -1,7 +1,6 @@
 package facades;
 
 import dtos.*;
-import edu.emory.mathcs.backport.java.util.Arrays;
 import entities.*;
 import org.junit.jupiter.api.*;
 import utils.EMF_Creator;
@@ -9,6 +8,7 @@ import utils.EMF_Creator;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,7 +18,7 @@ class PersonFacadeTest {
     private static PersonFacade facade;
 
     private static Person p1, p2;
-
+    
     @BeforeAll
     static void beforeAll() {
         emf = EMF_Creator.createEntityManagerFactoryForTest();
@@ -36,9 +36,9 @@ class PersonFacadeTest {
         Hobby h1 = new Hobby("Skiing", "skiing.com", "General", "Outdoors");
         Hobby h2 = new Hobby("Polo", "polo.com", "Sport", "Outdoors");
         Hobby h3 = new Hobby("Jogging", "jogging.com", "General", "Outdoors");
-
+    
         p1 = new Person(
-                new ArrayList<Phone>(Arrays.asList(new Phone[]{new Phone(11111111)})),
+                Arrays.asList(new Phone(11111111)),
                 "bob@bob.com",
                 "Bob",
                 "Roberts",
@@ -48,9 +48,8 @@ class PersonFacadeTest {
         p1.addHobby(h1);
         p1.addHobby(h2);
         
-        List<Phone> phones2 = new ArrayList<>();
-        phones2.add(new Phone(22222222));
-        p2 = new Person(phones2,
+        p2 = new Person(
+                Arrays.asList(new Phone(22222222)),
                 "alice@alice.com",
                 "Alice",
                 "Allison",

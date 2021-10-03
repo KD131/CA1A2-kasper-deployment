@@ -5,6 +5,7 @@ import dtos.HobbyDTO;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Table(name = "HOBBY")
@@ -83,6 +84,31 @@ public class Hobby extends Ent implements Serializable {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+    
+    public void addPerson(Person person) {
+        if (person != null) {
+            this.persons.add(person);
+            person.getHobbies().add(this);
+        }
+    }
+    
+    public void removePerson(Person person) {
+        if (person != null) {
+            this.persons.remove(person);
+            person.getHobbies().remove(this);
+        }
+    }
+    
+    public void removeAllPersons() {
+        Iterator<Person> iterator = persons.iterator();
+        while (iterator.hasNext()) {
+            Person person = iterator.next();
+            if (person != null) {
+                iterator.remove();
+                person.getHobbies().remove(this);
+            }
+        }
     }
 
     public void setPersons(List<Person> persons) {

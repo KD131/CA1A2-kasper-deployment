@@ -23,7 +23,6 @@ public class Person extends Ent implements Serializable {
             CascadeType.PERSIST,
             CascadeType.MERGE
     })
-
     @JoinTable(name = "PERSON_HOBBY")
     private List<Hobby> hobbies;
 
@@ -62,6 +61,7 @@ public class Person extends Ent implements Serializable {
         this.firstName = firstName;
         this.lastName = lastName;
         setAddress(address);
+        this.hobbies = new ArrayList<>();
         hobbies.forEach(this::addHobby);
     }
 
