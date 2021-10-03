@@ -27,7 +27,7 @@ public class HobbyResource {
     public String demo() {
         return "{\"msg\":\"Hello World\"}";
     }
-
+    
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -35,6 +35,15 @@ public class HobbyResource {
         HobbyDTO toCreate = GSON.fromJson(hobby, HobbyDTO.class);
         HobbyDTO created = HOBBY_FACADE.create(toCreate);
         return GSON.toJson(created);
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String updateHobby(String hobby) {
+        HobbyDTO toUpdate = GSON.fromJson(hobby, HobbyDTO.class);
+        HobbyDTO updated = HOBBY_FACADE.create(toUpdate);
+        return GSON.toJson(updated);
     }
 
     @Path("list")
