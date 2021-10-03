@@ -62,17 +62,19 @@ public class PersonFacade implements PersonFacadeInterface {
     }
 
     @Override
-    public void delete(long id) {
+    public PersonDTO delete(long id) {
 
         EntityManager em = emf.createEntityManager();
         try {
+            Person p = em.find(Person.class, id);
+            PersonDTO pDTO = new PersonDTO(p);
             if (getById(id) != null) {
                 em.getTransaction().begin();
-                Person p = em.find(Person.class, id);
                 em.remove(p);
                 em.getTransaction().commit();
                 em.clear();
             }
+            return pDTO;
         } finally {
             em.close();
         }

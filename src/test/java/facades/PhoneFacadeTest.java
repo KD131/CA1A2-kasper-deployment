@@ -94,6 +94,7 @@ class PhoneFacadeTest {
         List<PhoneDTO> phones = facade.getAll();
         assertEquals(1, phones.size());
         assertEquals(p1.getInfo(), phones.get(0).getInfo());
+        assertEquals(0, pe1.getPhones().size());
     }
 
     @Test

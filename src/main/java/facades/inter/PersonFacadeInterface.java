@@ -11,7 +11,7 @@ public interface PersonFacadeInterface {
 
     PersonDTO edit(PersonDTO person);
 
-    void delete(long id);
+    PersonDTO delete(long id);
 
     PersonDTO getById(long id);
 

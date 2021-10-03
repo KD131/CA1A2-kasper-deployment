@@ -17,16 +17,16 @@ public class Address extends Ent implements Serializable {
 
     private String address;
 
-    @ManyToOne(cascade = {
+    @ManyToOne(cascade = {           // Shouldn't this be OneToOne
             CascadeType.PERSIST,
             CascadeType.MERGE
     })
     private Zip zip;
 
-    @OneToMany(mappedBy = "address")
-    private List<Person> persons;
+    @OneToMany(mappedBy = "address") // Isn't it this we need in phone
+    private List<Person> persons;    //            --||--
 
-    public Address() {
+    public Address() {               //            --||--
     }
 
     public Address(String address, Zip zip) {

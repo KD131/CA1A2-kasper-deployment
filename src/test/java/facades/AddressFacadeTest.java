@@ -22,6 +22,7 @@ class AddressFacadeTest {
     private static AddressFacade facade;
 
     private static Address a1, a2;
+    private static Person p1, p2;
 
     @BeforeAll
     static void beforeAll() {
@@ -37,6 +38,29 @@ class AddressFacadeTest {
                 new Zip(6969, "Nice-ville"));
         a2 = new Address("2nd and Hill 34",
                 new Zip(4242, "Cool-town"));
+
+        Hobby h1 = new Hobby("Skiing", "skiing.com", "General", "Outdoors");
+        Hobby h2 = new Hobby("Polo", "polo.com", "Sport", "Outdoors");
+        Hobby h3 = new Hobby("Jogging", "jogging.com", "General", "Outdoors");
+
+        p1 = new Person(
+                new ArrayList<Phone>(Arrays.asList(new Phone[]{new Phone(11111111)})),
+                "bob@bob.com",
+                "Bob",
+                "Roberts", a1);
+
+        p1.addHobby(h1);
+        p1.addHobby(h2);
+
+        List<Phone> phones2 = new ArrayList<>();
+        phones2.add(new Phone(22222222));
+        p2 = new Person(phones2,
+                "alice@alice.com",
+                "Alice",
+                "Allison", a2);
+
+        p2.addHobby(h2);
+        p2.addHobby(h3);
 
         try {
             em.getTransaction().begin();

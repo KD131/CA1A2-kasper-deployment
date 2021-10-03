@@ -1,6 +1,7 @@
 package facades;
 
 import dtos.AddressDTO;
+
 import dtos.PersonDTO;
 import dtos.ZipDTO;
 import entities.Address;
@@ -70,16 +71,18 @@ public class AddressFacade implements AddressFacadeInterface {
     }
 
     @Override
-    public void delete(long id) {
+    public AddressDTO delete(long id) {
         EntityManager em = emf.createEntityManager();
         try {
+            Address a = em.find(Address.class, id);
+            AddressDTO aDTO = new AddressDTO(a);
             if(getById(id) != null) {
                 em.getTransaction().begin();
-                Address a = em.find(Address.class, id);
                 em.remove(a);
                 em.getTransaction().commit();
                 em.clear();
             }
+            return aDTO;
         } finally {
             em.close();
         }
