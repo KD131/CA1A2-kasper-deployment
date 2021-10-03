@@ -3,7 +3,11 @@ package rest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dtos.AddressDTO;
+import dtos.PersonDTO;
+import dtos.ZipDTO;
 import facades.AddressFacade;
+import facades.PersonFacade;
+import facades.ZipFacade;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManagerFactory;
@@ -15,8 +19,9 @@ import java.util.List;
 public class AddressResource {
 
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
-
-    private static final AddressFacade FACADE = AddressFacade.getAddressFacade(EMF);
+    private static final PersonFacade PERSON_FACADE = PersonFacade.getPersonFacade(EMF);
+    private static final ZipFacade ZIP_FACADE = ZipFacade.getZipFacade(EMF);
+    private static final AddressFacade ADDRESS_FACADE = AddressFacade.getAddressFacade(EMF);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     @GET
@@ -29,7 +34,7 @@ public class AddressResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String getAll() {
-        List<AddressDTO> addresses = FACADE.getAll();
+        List<AddressDTO> addresses = ADDRESS_FACADE.getAll();
         return GSON.toJson(addresses);
     }
 
@@ -37,15 +42,16 @@ public class AddressResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String getById(@PathParam("id") long id) {
-        AddressDTO addressDTO = FACADE.getById(id);
+        AddressDTO addressDTO = ADDRESS_FACADE.getById(id);
         return GSON.toJson(addressDTO);
     }
 
     @Path("zip/{zip}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String getById(@PathParam("zip") int zip) {
-        List<AddressDTO> addressDTOs = FACADE.getByZip(zip);
+    public String getById(@PathParam("zip") int zipcode) {
+        ZipDTO zip = ZIP_FACADE.getByZip(zipcode);
+        List<AddressDTO> addressDTOs = ADDRESS_FACADE.getByZip(zip);
         return GSON.toJson(addressDTOs);
     }
 
@@ -53,8 +59,9 @@ public class AddressResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String getByPersonId(@PathParam("id") long id) {
-        List<AddressDTO> addressDTOs = FACADE.getByPerson(id);
-        return GSON.toJson(addressDTOs);
+        PersonDTO person = PERSON_FACADE.getById(id);
+        AddressDTO addressDTO = ADDRESS_FACADE.getByPerson(person);
+        return GSON.toJson(addressDTO);
     }
 
     @Path("count")
@@ -62,7 +69,7 @@ public class AddressResource {
     @Produces({MediaType.APPLICATION_JSON})
     public String getAddressCount() {
 
-        long count = FACADE.getAddressCount();
+        long count = ADDRESS_FACADE.getAddressCount();
         //System.out.println("--------------->"+count);
         return "{\"count\":" + count + "}";  //Done manually so no need for a DTO
     }
@@ -72,7 +79,7 @@ public class AddressResource {
     @Consumes({MediaType.APPLICATION_JSON})
     public String updateAddress(String address) {
         AddressDTO aDTO = GSON.fromJson(address, AddressDTO.class);
-        AddressDTO aNew = FACADE.edit(aDTO);
+        AddressDTO aNew = ADDRESS_FACADE.edit(aDTO);
         return GSON.toJson(aNew);
     }
 
@@ -81,8 +88,8 @@ public class AddressResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     public String deletePerson(@PathParam("id") long id) {
-        AddressDTO aDeleted = FACADE.getById(id);
-        FACADE.delete(id);
+        AddressDTO aDeleted = ADDRESS_FACADE.getById(id);
+        ADDRESS_FACADE.delete(id);
         return GSON.toJson(aDeleted);
     }
 }

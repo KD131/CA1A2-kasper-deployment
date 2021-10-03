@@ -1,7 +1,10 @@
 package facades;
 
 import dtos.AddressDTO;
+import dtos.PersonDTO;
+import dtos.ZipDTO;
 import entities.Address;
+import entities.Person;
 import entities.Zip;
 import facades.inter.AddressFacadeInterface;
 import utils.EMF_Creator;
@@ -93,10 +96,11 @@ public class AddressFacade implements AddressFacadeInterface {
     }
 
     @Override
-    public List<AddressDTO> getByZip(long zip) {
+    public List<AddressDTO> getByZip(ZipDTO zipDTO) {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Address> query = em.createQuery("SELECT a FROM Address a WHERE a.zip.zip = :zip", Address.class);
+            Zip zip = new Zip(zipDTO);
+            TypedQuery<Address> query = em.createQuery("SELECT a FROM Address a WHERE a.zip = :zip", Address.class);
             query.setParameter("zip", zip);
             List<Address> addresses = query.getResultList();
             return AddressDTO.getDtos(addresses);
@@ -106,13 +110,14 @@ public class AddressFacade implements AddressFacadeInterface {
     }
 
     @Override
-    public List<AddressDTO> getByPerson(long id) {
+    public AddressDTO getByPerson(PersonDTO personDTO) {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Address> query = em.createQuery("SELECT a FROM Address a JOIN Person p WHERE a = p.address AND p.id = :id", Address.class);
-            query.setParameter("id", id);
-            List<Address> addresses = query.getResultList();
-            return AddressDTO.getDtos(addresses);
+            Person person = new Person(personDTO);
+            TypedQuery<Address> query = em.createQuery("SELECT a FROM Address a JOIN Person p WHERE a = p.address AND p = :person", Address.class);
+            query.setParameter("person", person);
+            Address address = query.getSingleResult();
+            return new AddressDTO(address);
         } finally {
             em.close();
         }

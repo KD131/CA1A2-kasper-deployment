@@ -1,6 +1,8 @@
 package facades.inter;
 
 import dtos.AddressDTO;
+import dtos.PersonDTO;
+import dtos.ZipDTO;
 
 import java.util.List;
 
@@ -16,9 +18,9 @@ public interface AddressFacadeInterface {
 
     List<AddressDTO> getAll();
 
-    List<AddressDTO> getByZip(long zip);
+    List<AddressDTO> getByZip(ZipDTO zipDTO);
 
-    List<AddressDTO> getByPerson(long id);
+    AddressDTO getByPerson(PersonDTO personDTO);
 
     long getAddressCount();
 }

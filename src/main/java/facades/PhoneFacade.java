@@ -111,31 +111,12 @@ public class PhoneFacade implements PhoneFacadeInterface {
     }
 
     @Override
-    public List<PhoneDTO> getByPerson(PersonDTO person) {
+    public List<PhoneDTO> getByPerson(PersonDTO personDTO) {
         EntityManager em = emf.createEntityManager();
         try {
-            /* requires bidirectionality, I think
-            TypedQuery<Phone> query = em.createQuery("SELECT p FROM Phone p WHERE p.person.id = :personId", Phone.class);
-            */
-            // unidirectional from Person to their Phones
-            TypedQuery<Phone> query = em.createQuery("SELECT pe.phones FROM Person pe WHERE pe.id = :personId", Phone.class);
-            query.setParameter("personId", person.getId());
-            List<Phone> phones = query.getResultList();
-            return PhoneDTO.getDtos(phones);
-        } finally {
-            em.close();
-        }
-    }
-
-    public List<PhoneDTO> getByPersonId(long personId) {
-        EntityManager em = emf.createEntityManager();
-        try {
-            /* requires bidirectionality, I think
-            TypedQuery<Phone> query = em.createQuery("SELECT p FROM Phone p WHERE p.person.id = :personId", Phone.class);
-            */
-            // unidirectional from Person to their Phones
-            TypedQuery<Phone> query = em.createQuery("SELECT pe.phones FROM Person pe WHERE pe.id = :personId", Phone.class);
-            query.setParameter("personId", personId);
+            Person person = new Person(personDTO);
+            TypedQuery<Phone> query = em.createQuery("SELECT pho FROM Phone pho JOIN Person pers WHERE pers = :person and pho MEMBER OF pers.phones", Phone.class);
+            query.setParameter("person", person);
             List<Phone> phones = query.getResultList();
             return PhoneDTO.getDtos(phones);
         } finally {
