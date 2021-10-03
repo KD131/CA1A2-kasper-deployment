@@ -1,8 +1,6 @@
 package facades.inter;
 
-import dtos.HobbyDTO;
-import dtos.PersonDTO;
-import dtos.ZipDTO;
+import dtos.*;
 
 import java.util.List;
 
@@ -20,9 +18,13 @@ public interface HobbyFacadeInterface {
 
     List<HobbyDTO> getByType(String type);
 
-    List<HobbyDTO> getByPerson(PersonDTO person);
+    List<HobbyDTO> getByPerson(PersonDTO personDTO);
 
-    List<HobbyDTO> getByZip(ZipDTO Zip);
+    List<HobbyDTO> getByPhone(PhoneDTO phoneDTO);
+
+    List<HobbyDTO> getByAddress(AddressDTO addressDTO);
+
+    List<HobbyDTO> getByZip(ZipDTO zipDTO);
 
     List<HobbyDTO> getAll();
 

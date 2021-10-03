@@ -1,9 +1,7 @@
 package facades;
 
-import dtos.HobbyDTO;
-import dtos.PersonDTO;
-import dtos.ZipDTO;
-import entities.Hobby;
+import dtos.*;
+import entities.*;
 import facades.inter.HobbyFacadeInterface;
 import utils.EMF_Creator;
 
@@ -16,6 +14,7 @@ import java.util.List;
  * Rename Class to a relevant name Add add relevant facade methods
  */
 public class HobbyFacade implements HobbyFacadeInterface {
+
 
     private static HobbyFacade instance;
     private static EntityManagerFactory emf;
@@ -93,13 +92,59 @@ public class HobbyFacade implements HobbyFacadeInterface {
     }
 
     @Override
-    public List<HobbyDTO> getByPerson(PersonDTO person) {
-        return null;
+    public List<HobbyDTO> getByPerson(PersonDTO personDTO) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Person person = new Person(personDTO);
+            TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h JOIN Person p WHERE p = :p AND h MEMBER OF p.hobbies", Hobby.class);
+            query.setParameter("p", person);
+            List<Hobby> hobbies = query.getResultList();
+            return HobbyDTO.getDtos(hobbies);
+        } finally {
+            em.close();
+        }
     }
 
     @Override
-    public List<HobbyDTO> getByZip(ZipDTO Zip) {
-        return null;
+    public List<HobbyDTO> getByPhone(PhoneDTO phoneDTO) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Phone phone = new Phone(phoneDTO);
+            TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h JOIN Person p WHERE h MEMBER OF p.hobbies AND :phone MEMBER OF p.phones", Hobby.class);
+            query.setParameter("phone", phone);
+            List<Hobby> hobbies = query.getResultList();
+            return HobbyDTO.getDtos(hobbies);
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public List<HobbyDTO> getByZip(ZipDTO zipDTO) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Zip zip = new Zip(zipDTO);
+            TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h JOIN Person p WHERE h MEMBER OF p.hobbies AND p.address.zip = :zip", Hobby.class);
+            query.setParameter("zip", zip);
+            List<Hobby> hobbies = query.getResultList();
+            return HobbyDTO.getDtos(hobbies);
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public List<HobbyDTO> getByAddress(AddressDTO addressDTO) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Address address = new Address(addressDTO);
+            TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h JOIN Person p WHERE h MEMBER OF p.hobbies AND p.address = :address", Hobby.class);
+            query.setParameter("address", address);
+            List<Hobby> hobbies = query.getResultList();
+            return HobbyDTO.getDtos(hobbies);
+        } finally {
+            em.close();
+        }
     }
 
     @Override

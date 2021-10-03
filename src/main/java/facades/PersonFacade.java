@@ -1,8 +1,7 @@
 package facades;
 
 import dtos.*;
-import entities.Hobby;
-import entities.Person;
+import entities.*;
 import facades.inter.PersonFacadeInterface;
 import utils.EMF_Creator;
 
@@ -90,11 +89,12 @@ public class PersonFacade implements PersonFacadeInterface {
     }
 
     @Override
-    public PersonDTO getByPhone(PhoneDTO phone) {
+    public PersonDTO getByPhone(PhoneDTO phoneDTO) {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.phones ph WHERE ph.number = :phone", Person.class); // IN / MEMBER OF ?
-            query.setParameter("phone", phone.getNumber());
+            Phone phone = new Phone(phoneDTO);
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE :phone MEMBER OF p.phones", Person.class);
+            query.setParameter("phone", phone);
             Person person = query.getSingleResult();
             return new PersonDTO(person);
         } finally {
@@ -103,12 +103,12 @@ public class PersonFacade implements PersonFacadeInterface {
     }
 
     @Override
-    public List<PersonDTO> getByHobby(HobbyDTO hobby) {
+    public List<PersonDTO> getByHobby(HobbyDTO hobbyDTO) {
         EntityManager em = emf.createEntityManager();
         try {
-            Hobby hobbyEntity = em.find(Hobby.class, hobby.getId());
-            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE :hobby MEMBER OF p.hobbies", Person.class); // IN / MEMBER OF ?
-            query.setParameter("hobby", hobbyEntity);
+            Hobby hobby = new Hobby(hobbyDTO);
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE :hobby MEMBER OF p.hobbies", Person.class);
+            query.setParameter("hobby", hobby);
             List<Person> persons = query.getResultList();
             return PersonDTO.getDtos(persons);
         } finally {
@@ -117,12 +117,12 @@ public class PersonFacade implements PersonFacadeInterface {
     }
 
     @Override
-    public List<PersonDTO> getByAddress(AddressDTO address) {
+    public List<PersonDTO> getByAddress(AddressDTO addressDTO) {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.address a where a.zip.zip = :zip AND a.address = :address", Person.class);
-            query.setParameter("zip", address.getZip().getId());
-            query.setParameter("address", address.getAddress());
+            Address address = new Address(addressDTO);
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE p.address = :address", Person.class);
+            query.setParameter("address", address);
             List<Person> persons = query.getResultList();
             return PersonDTO.getDtos(persons);
         } finally {
@@ -131,11 +131,12 @@ public class PersonFacade implements PersonFacadeInterface {
     }
 
     @Override
-    public List<PersonDTO> getByZip(ZipDTO zip) {
+    public List<PersonDTO> getByZip(ZipDTO zipDTO) {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.address.zip z where z.zip = :zip", Person.class);
-            query.setParameter("zip", zip.getId());
+            Zip zip = new Zip(zipDTO);
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE p.address.zip = :zip", Person.class);
+            query.setParameter("zip", zip);
             List<Person> persons = query.getResultList();
             return PersonDTO.getDtos(persons);
         } finally {

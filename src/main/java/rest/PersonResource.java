@@ -67,9 +67,9 @@ public class PersonResource {
     @Path("zip/{zip}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String getByZip(@PathParam("zip") int zipNumber) {
-        ZipDTO zip = ZIP_FACADE.getByZip(zipNumber);
-        List<PersonDTO> persons = PERSON_FACADE.getByZip(zip);
+    public String getByZip(@PathParam("zip") int zip) {
+        ZipDTO zipDTO = ZIP_FACADE.getByZip(zip);
+        List<PersonDTO> persons = PERSON_FACADE.getByZip(zipDTO);
         return GSON.toJson(persons);
     }
 
