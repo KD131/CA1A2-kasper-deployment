@@ -33,7 +33,7 @@ public class PersonResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String createPerson(String person)
+    public String create(String person)
     {
         PersonDTO pToCreate = GSON.fromJson(person, PersonDTO.class);
         PersonDTO pCreated = PERSON_FACADE.create(pToCreate);

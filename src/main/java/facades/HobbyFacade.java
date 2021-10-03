@@ -83,12 +83,28 @@ public class HobbyFacade implements HobbyFacadeInterface {
 
     @Override
     public List<HobbyDTO> getByCategory(String category) {
-        return null;
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h WHERE h.category = :category", Hobby.class);
+            query.setParameter("category", category);
+            List<Hobby> hobbies = query.getResultList();
+            return HobbyDTO.getDtos(hobbies);
+        } finally {
+            em.close();
+        }
     }
 
     @Override
     public List<HobbyDTO> getByType(String type) {
-        return null;
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h WHERE h.type = :type", Hobby.class);
+            query.setParameter("type", type);
+            List<Hobby> hobbies = query.getResultList();
+            return HobbyDTO.getDtos(hobbies);
+        } finally {
+            em.close();
+        }
     }
 
     @Override

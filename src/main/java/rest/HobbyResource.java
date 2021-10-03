@@ -39,6 +39,23 @@ public class HobbyResource {
         return GSON.toJson(hobbies);
     }
 
+    @Path("category/{category}")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getByCategory(@PathParam("category") String category) {
+        List<HobbyDTO> hobbies = HOBBY_FACADE.getByCategory(category);
+        return GSON.toJson(hobbies);
+    }
+
+    @Path("type/{type}")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getByype(@PathParam("type") String type) {
+        List<HobbyDTO> hobbies = HOBBY_FACADE.getByCategory(type);
+        return GSON.toJson(hobbies);
+    }
+
+
     @Path("zip/{zip}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
