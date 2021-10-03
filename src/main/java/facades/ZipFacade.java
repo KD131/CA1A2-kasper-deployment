@@ -1,6 +1,10 @@
 package facades;
 
+import dtos.AddressDTO;
+import dtos.PersonDTO;
 import dtos.ZipDTO;
+import entities.Address;
+import entities.Person;
 import entities.Zip;
 import facades.inter.ZipFacadeInterface;
 import utils.EMF_Creator;
@@ -59,7 +63,7 @@ public class ZipFacade implements ZipFacadeInterface {
         EntityManager em = emf.createEntityManager();
         try {
             ZipDTO zipDTO = new ZipDTO(em.find(Zip.class, zip));
-            if(zipDTO != null) {
+            if (zipDTO != null) {
                 em.remove(zipDTO);
             }
         } finally {
@@ -72,6 +76,34 @@ public class ZipFacade implements ZipFacadeInterface {
         EntityManager em = emf.createEntityManager();
         try {
             return new ZipDTO(em.find(Zip.class, zip));
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public ZipDTO getByPerson(PersonDTO personDTO) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Person person = new Person(personDTO);
+            TypedQuery<Zip> query = em.createQuery("SELECT z FROM Zip z JOIN Person p WHERE p.address.zip = z AND p = :person", Zip.class);
+            query.setParameter("person", person);
+            Zip zip = query.getSingleResult();
+            return new ZipDTO(zip);
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public ZipDTO getByAddress(AddressDTO addressDTO) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Address address = new Address(addressDTO);
+            TypedQuery<Zip> query = em.createQuery("SELECT z FROM Zip z JOIN Address a WHERE a.zip = z AND a = :address", Zip.class);
+            query.setParameter("address", address);
+            Zip zip = query.getSingleResult();
+            return new ZipDTO(zip);
         } finally {
             em.close();
         }

@@ -2,7 +2,11 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dtos.AddressDTO;
+import dtos.PersonDTO;
 import dtos.ZipDTO;
+import facades.AddressFacade;
+import facades.PersonFacade;
 import facades.ZipFacade;
 import utils.EMF_Creator;
 
@@ -18,8 +22,9 @@ import java.util.List;
 public class ZipResource {
 
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
-
-    private static final ZipFacade FACADE = ZipFacade.getZipFacade(EMF);
+    private final PersonFacade PERSON_FACADE = PersonFacade.getPersonFacade(EMF);
+    private final AddressFacade ADDRESS_FACADE = AddressFacade.getAddressFacade(EMF);
+    private static final ZipFacade ZIP_FACADE = ZipFacade.getZipFacade(EMF);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     @GET
@@ -32,15 +37,25 @@ public class ZipResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String getAll() {
-        List<ZipDTO> zips = FACADE.getAll();
+        List<ZipDTO> zips = ZIP_FACADE.getAll();
         return GSON.toJson(zips);
     }
 
-    @Path("{zip}")
+    @Path("address/{id}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String getById(@PathParam("zip") int zip) {
-        ZipDTO zipDTO = FACADE.getByZip(zip);
+    public String getByAddress(@PathParam("id") long id) {
+        AddressDTO addressDTO = ADDRESS_FACADE.getById(id);
+        ZipDTO zipDTO = ZIP_FACADE.getByAddress(addressDTO);
+        return GSON.toJson(zipDTO);
+    }
+
+    @Path("person/{id}")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getByPerson(@PathParam("id") long id) {
+        PersonDTO personDTO = PERSON_FACADE.getById(id);
+        ZipDTO zipDTO = ZIP_FACADE.getByPerson(personDTO);
         return GSON.toJson(zipDTO);
     }
 
@@ -49,7 +64,7 @@ public class ZipResource {
     @Produces({MediaType.APPLICATION_JSON})
     public String getZipCount() {
 
-        long count = FACADE.getZipCount();
+        long count = ZIP_FACADE.getZipCount();
         //System.out.println("--------------->"+count);
         return "{\"count\":" + count + "}";  //Done manually so no need for a DTO
     }
