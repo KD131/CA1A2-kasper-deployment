@@ -2,7 +2,6 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import dtos.PersonDTO;
 import dtos.PhoneDTO;
 import facades.PhoneFacade;
 import utils.EMF_Creator;
@@ -12,7 +11,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-//Todo Remove or change relevant parts before ACTUAL use
 @Path("phone")
 public class PhoneResource {
 

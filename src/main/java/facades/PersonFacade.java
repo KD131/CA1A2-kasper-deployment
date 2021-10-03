@@ -79,7 +79,6 @@ public class PersonFacade implements PersonFacadeInterface {
         }
     }
 
-
     @Override
     public PersonDTO getById(long id) {
         EntityManager em = emf.createEntityManager();

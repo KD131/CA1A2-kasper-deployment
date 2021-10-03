@@ -90,8 +90,29 @@ public class AddressFacade implements AddressFacadeInterface {
     }
 
     @Override
-    public List<AddressDTO> getByZip() {
-        return null;
+    public List<AddressDTO> getByZip(int zip) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<Address> query = em.createQuery("SELECT a FROM Address a WHERE a.zip.zip = :zip", Address.class);
+            query.setParameter("zip", zip);
+            List<Address> addresses = query.getResultList();
+            return AddressDTO.getDtos(addresses);
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public List<AddressDTO> getByPerson(long id) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<Address> query = em.createQuery("SELECT a FROM Address a JOIN Person p WHERE a = p.address AND p.id = :id", Address.class);
+            query.setParameter("id", id);
+            List<Address> addresses = query.getResultList();
+            return AddressDTO.getDtos(addresses);
+        } finally {
+            em.close();
+        }
     }
 
     @Override

@@ -13,7 +13,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-//Todo Remove or change relevant parts before ACTUAL use
 @Path("hobby")
 public class HobbyResource {
 

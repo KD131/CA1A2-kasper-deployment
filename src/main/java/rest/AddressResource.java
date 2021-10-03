@@ -3,7 +3,6 @@ package rest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dtos.AddressDTO;
-import dtos.PersonDTO;
 import facades.AddressFacade;
 import utils.EMF_Creator;
 
@@ -40,6 +39,22 @@ public class AddressResource {
     public String getById(@PathParam("id") long id) {
         AddressDTO addressDTO = FACADE.getById(id);
         return GSON.toJson(addressDTO);
+    }
+
+    @Path("zip/{zip}")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getById(@PathParam("zip") int zip) {
+        List<AddressDTO> addressDTOs = FACADE.getByZip(zip);
+        return GSON.toJson(addressDTOs);
+    }
+
+    @Path("person/{id}")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getByPersonId(@PathParam("id") long id) {
+        List<AddressDTO> addressDTOs = FACADE.getByPerson(id);
+        return GSON.toJson(addressDTOs);
     }
 
     @Path("count")

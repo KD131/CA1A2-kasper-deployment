@@ -2,14 +2,13 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dtos.AddressDTO;
 import dtos.PersonDTO;
 import dtos.PhoneDTO;
 import dtos.ZipDTO;
-import facades.PersonFacade;
-import facades.PhoneFacade;
-import facades.PopulatorPerson;
-import facades.ZipFacade;
+import facades.*;
 import utils.EMF_Creator;
+
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -22,6 +21,7 @@ public class PersonResource {
     private final PersonFacade PERSON_FACADE = PersonFacade.getPersonFacade(EMF);
     private final PhoneFacade PHONE_FACADE = PhoneFacade.getPhoneFacade(EMF);
     private final ZipFacade ZIP_FACADE = ZipFacade.getZipFacade(EMF);
+    private final AddressFacade ADDRESS_FACADE = AddressFacade.getAddressFacade(EMF);
     private final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     @GET
@@ -53,6 +53,15 @@ public class PersonResource {
         PhoneDTO phone = PHONE_FACADE.getByNumber(number);
         PersonDTO person = PERSON_FACADE.getByPhone(phone);
         return GSON.toJson(person);
+    }
+
+    @Path("address/{id}")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getByZip(@PathParam("id") long id) {
+        AddressDTO address = ADDRESS_FACADE.getById(id);
+        List<PersonDTO> persons = PERSON_FACADE.getByAddress(address);
+        return GSON.toJson(persons);
     }
 
     @Path("zip/{zip}")
