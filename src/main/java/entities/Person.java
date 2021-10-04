@@ -37,7 +37,6 @@ public class Person extends Ent implements Serializable {
 
     @ManyToOne(cascade = {
             CascadeType.PERSIST,
-            CascadeType.REMOVE,
             CascadeType.MERGE
     })
     private Address address;
