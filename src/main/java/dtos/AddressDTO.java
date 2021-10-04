@@ -28,7 +28,6 @@ public class AddressDTO extends DTO {
         return addressDTOs;
     }
 
-
     public AddressDTO(Address address) {
         if (address.hasId())
             this.id = address.getId();

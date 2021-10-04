@@ -7,7 +7,9 @@ import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.WebApplicationException;
 import java.util.List;
 
 public class PersonFacade implements PersonFacadeInterface {
@@ -66,8 +68,9 @@ public class PersonFacade implements PersonFacadeInterface {
                 em.merge(person);
                 em.getTransaction().commit();
                 return new PersonDTO(person);
-            }
-            return null;
+            } else throw new WebApplicationException("Person not found", 404);
+        } catch (Exception e) {
+            throw new WebApplicationException("Transaction failed", 500);
         } finally {
             em.close();
         }
@@ -78,15 +81,16 @@ public class PersonFacade implements PersonFacadeInterface {
 
         EntityManager em = emf.createEntityManager();
         try {
-            Person p = em.find(Person.class, id);
-            PersonDTO pDTO = new PersonDTO(p);
-            if (getById(id) != null) {
-                em.getTransaction().begin();
-                em.remove(p);
-                em.getTransaction().commit();
-                em.clear();
-            }
-            return pDTO;
+            Person person = em.find(Person.class, id);
+            if (person == null) throw new WebApplicationException("Person not found", 404);
+            PersonDTO personDTO = new PersonDTO(person);
+            em.getTransaction().begin();
+            em.remove(person);
+            em.getTransaction().commit();
+            em.clear();
+            return personDTO;
+        } catch (Exception e) {
+            throw new WebApplicationException("Transaction failed", 500);
         } finally {
             em.close();
         }
@@ -96,7 +100,9 @@ public class PersonFacade implements PersonFacadeInterface {
     public PersonDTO getById(long id) {
         EntityManager em = emf.createEntityManager();
         try {
-            return new PersonDTO(em.find(Person.class, id));
+            Person person = em.find(Person.class, id);
+            if (person == null) throw new WebApplicationException("Person not found", 404);
+            return new PersonDTO(person);
         } finally {
             em.close();
         }
@@ -111,6 +117,9 @@ public class PersonFacade implements PersonFacadeInterface {
             query.setParameter("phone", phone);
             Person person = query.getSingleResult();
             return new PersonDTO(person);
+        } catch (Exception e) {
+            if (e instanceof NoResultException) throw new WebApplicationException("Person not found", 404);
+            else throw new WebApplicationException("Request failed", 500);
         } finally {
             em.close();
         }
@@ -124,7 +133,10 @@ public class PersonFacade implements PersonFacadeInterface {
             TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE :hobby MEMBER OF p.hobbies", Person.class);
             query.setParameter("hobby", hobby);
             List<Person> persons = query.getResultList();
+            if (persons.size() == 0) throw new WebApplicationException("Persons not found", 404);
             return PersonDTO.getDtos(persons);
+        } catch (Exception e) {
+            throw new WebApplicationException("Request failed", 500);
         } finally {
             em.close();
         }
@@ -138,7 +150,10 @@ public class PersonFacade implements PersonFacadeInterface {
             TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE p.address = :address", Person.class);
             query.setParameter("address", address);
             List<Person> persons = query.getResultList();
+            if (persons.size() == 0) throw new WebApplicationException("Persons not found", 404);
             return PersonDTO.getDtos(persons);
+        } catch (Exception e) {
+            throw new WebApplicationException("Request failed", 500);
         } finally {
             em.close();
         }
@@ -152,7 +167,10 @@ public class PersonFacade implements PersonFacadeInterface {
             TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE p.address.zip = :zip", Person.class);
             query.setParameter("zip", zip);
             List<Person> persons = query.getResultList();
+            if (persons.size() == 0) throw new WebApplicationException("Persons not found", 404);
             return PersonDTO.getDtos(persons);
+        } catch (Exception e) {
+            throw new WebApplicationException("Request failed", 500);
         } finally {
             em.close();
         }
@@ -164,7 +182,10 @@ public class PersonFacade implements PersonFacadeInterface {
         try {
             TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p", Person.class);
             List<Person> persons = query.getResultList();
+            if (persons.size() == 0) throw new WebApplicationException("Persons not found", 404);
             return PersonDTO.getDtos(persons);
+        } catch (Exception e) {
+            throw new WebApplicationException("Request failed", 500);
         } finally {
             em.close();
         }
@@ -176,6 +197,8 @@ public class PersonFacade implements PersonFacadeInterface {
         try {
             long personCount = (long) em.createQuery("SELECT COUNT(p) FROM Person p").getSingleResult();
             return personCount;
+        } catch (Exception e) {
+            throw new WebApplicationException("Request failed", 500);
         } finally {
             em.close();
         }
