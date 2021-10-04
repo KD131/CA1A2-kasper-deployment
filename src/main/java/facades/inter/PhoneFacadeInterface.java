@@ -15,7 +15,7 @@ public interface PhoneFacadeInterface {
 
     PhoneDTO getById(long id);
 
-    public PhoneDTO getByNumber(int number);
+    public PhoneDTO getByNumber(Integer number);
 
     List<PhoneDTO> getByPerson(PersonDTO person);
 

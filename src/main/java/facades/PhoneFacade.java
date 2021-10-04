@@ -102,7 +102,7 @@ public class PhoneFacade implements PhoneFacadeInterface {
     }
 
     @Override
-    public PhoneDTO getByNumber(int number) {
+    public PhoneDTO getByNumber(Integer number) {
         EntityManager em = emf.createEntityManager();
         try {
             TypedQuery<Phone> query = em.createQuery("SELECT p FROM Phone p WHERE p.number = :number", Phone.class);
