@@ -256,6 +256,7 @@ public class PersonResourceTest {
     void deletePerson() {
         given()
                 .contentType("application/json")
+                .when()
                 .delete("person/" + p2.getId())
                 .then()
                 .assertThat()
