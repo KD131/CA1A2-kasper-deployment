@@ -1350,3 +1350,4 @@ INSERT INTO ZIP VALUES ('928','Vikarbyrgi');
 INSERT INTO ZIP VALUES ('950','Porkeri');
 INSERT INTO ZIP VALUES ('960','Hov');
 INSERT INTO ZIP VALUES ('970','Sumba');
+alter table ZIP modify ZIP bigint(4) zerofill not null;

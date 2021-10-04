@@ -20,6 +20,11 @@ import java.util.Random;
  * MANUALLY DROP TABLE ADDRESS, PERSON, PERSON_HOBBY & PHONE BEFORE RUNNING (KEEP HOBBY & ZIP)
  */
 public class PopulatorPerson {
+
+    public static void main(String[] args) {
+        populate();
+    }
+
     private static List<Hobby> getHobbies(EntityManager em) {
         TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h", Hobby.class);
         return (List<Hobby>) query.getResultList();
@@ -108,17 +113,153 @@ public class PopulatorPerson {
                     "Svendsen",
                     "Teglvej 5",
                     zips, hobbies));
+            persons.add(buildPerson(
+                    "mjensen@bejensen.dk",
+                    "Marie",
+                    "Jensen",
+                    "Vigevej 12, 2. t.v.",
+                    zips, hobbies));
+            persons.add(buildPerson(
+                    "pnpnpn9@gmail.com",
+                    "Peter",
+                    "Nielsen",
+                    "Vinkelvej 201B",
+                    zips, hobbies));
+            persons.add(buildPerson(
+                    "christian@thansen.dk",
+                    "Christian",
+                    "Hansen",
+                    "Engvej 76 st. t.h.",
+                    zips, hobbies));
+            persons.add(buildPerson(
+                    "ap@net.dk",
+                    "Anna",
+                    "Pedersen",
+                    "Tværvej 16",
+                    zips, hobbies));
+            persons.add(buildPerson(
+                    "erik@degulesider.dk",
+                    "Erik",
+                    "Andersen",
+                    "Skovvej 33",
+                    zips, hobbies));
+            persons.add(buildPerson(
+                    "jensc81@gmail.com",
+                    "Jens",
+                    "Christensen",
+                    "Drosselvej 2",
+                    zips, hobbies));
+            persons.add(buildPerson(
+                    "hans@hanslarsen.dk",
+                    "Hans",
+                    "Larsen",
+                    "Mågevej 21 2 t.h.",
+                    zips, hobbies));
+            persons.add(buildPerson(
+                    "maggiv61@gmail.com",
+                    "Margrethe",
+                    "Vestergaard",
+                    "Toftevej 50",
+                    zips, hobbies));
+            persons.add(buildPerson(
+                    "nb@borgen.dk",
+                    "Niels",
+                    "Bach",
+                    "Kastanievej 4",
+                    zips, hobbies));
+            persons.add(buildPerson(
+                    "klauritsen@irma.dk",
+                    "Karen",
+                    "Lauritsen",
+                    "Violvej 13",
+                    zips, hobbies));
+            persons.add(buildPerson(
+                    "kriskro5@gmail.com",
+                    "Kristian",
+                    "Krogh",
+                    "Plantagevej 21",
+                    zips, hobbies));
+            persons.add(buildPerson(
+                    "jm@cphpost.dk",
+                    "Johanne",
+                    "Mathiasen",
+                    "Rosenvænget 17B",
+                    zips, hobbies));
+            persons.add(buildPerson(
+                    "familienpulsen@hotmail.dk",
+                    "Henrik",
+                    "Paulsen",
+                    "Toften 6",
+                    zips, hobbies));
+            persons.add(buildPerson(
+                    "aageovergaard01@gmail.com",
+                    "Aage",
+                    "Overgaard",
+                    "Grønningen 44",
+                    zips, hobbies));
+            persons.add(buildPerson(
+                    "es@schouit.dk",
+                    "Else",
+                    "Schou",
+                    "Kirkebakken 9",
+                    zips, hobbies));
+            persons.add(buildPerson(
+                    "lb@dmi.dk",
+                    "Lars",
+                    "Berg",
+                    "Grønnegade 12, 4. t.v.",
+                    zips, hobbies));
+            persons.add(buildPerson(
+                    "anders@bentsenbusiness.dk",
+                    "Anders",
+                    "Bendtsen",
+                    "Søvej 16",
+                    zips, hobbies));
+            persons.add(buildPerson(
+                    "tomheat12@gmail.com",
+                    "Thomas",
+                    "Hedegaard",
+                    "Smedevej 36",
+                    zips, hobbies));
+            persons.add(buildPerson(
+                    "masterthygger@hotmail.com",
+                    "Knud",
+                    "Thygesen",
+                    "Rønnevej 1",
+                    zips, hobbies));
+            persons.add(buildPerson(
+                    "hanne@hannekruse.dk",
+                    "Hanne",
+                    "Kruse",
+                    "Vestervang 87",
+                    zips, hobbies));
+            persons.add(buildPerson(
+                    "sobjer9@hotmail.com",
+                    "Sofie",
+                    "Bjerregaard",
+                    "Kirkegade 11B",
+                    zips, hobbies));
+            persons.add(buildPerson(
+                    "jsjan72@gmail.com",
+                    "Jan",
+                    "Svensson",
+                    "Præstegårdsvej 3",
+                    zips, hobbies));
 
             em.getTransaction().begin();
             // hopefully there's a better way than use a native query to wipe out the join table
             try {
+                /*
                 em.createNativeQuery("DELETE FROM PERSON_PHONE").executeUpdate();
+                em.createNativeQuery("DELETE FROM PERSON_HOBBY").executeUpdate();
                 em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
                 em.createNamedQuery("Person.deleteAllRows").executeUpdate();
                 em.createNamedQuery("Person.resetPK").executeUpdate();
                 em.createNamedQuery("Address.deleteAllRows").executeUpdate();
+                */
             } catch(Exception e) {
                 System.out.println("Some delete queries failed to execute");
+                e.printStackTrace();
             }
             for (Person person : persons) {
                 em.persist(person);
@@ -130,9 +271,5 @@ public class PopulatorPerson {
             em.close();
         }
         return "Succes";
-    }
-
-    public static void main(String[] args) {
-        populate();
     }
 }
