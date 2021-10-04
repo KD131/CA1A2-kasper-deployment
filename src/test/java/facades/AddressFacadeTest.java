@@ -177,6 +177,7 @@ class AddressFacadeTest {
 
     @Test
     void getAddressCount() {
+        assertEquals(3, facade.getAddressCount());
     }
 
     @Test
