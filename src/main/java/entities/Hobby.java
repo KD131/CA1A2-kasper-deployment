@@ -19,7 +19,8 @@ public class Hobby extends Ent implements Serializable {
     private String category;
     private String type;
 
-    @ManyToMany(mappedBy = "hobbies")
+    @ManyToMany(mappedBy = "hobbies",
+        cascade = CascadeType.MERGE)
     private List<Person> persons;
 
     public Hobby() {
