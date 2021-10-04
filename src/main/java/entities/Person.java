@@ -5,6 +5,7 @@ import dtos.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Table(name = "PERSON")
@@ -138,7 +139,8 @@ public class Person extends Ent implements Serializable {
     }
 
     public void setHobbies(List<Hobby> hobbies) {
-        this.hobbies = hobbies;
+        removeAllHobbies();
+        hobbies.forEach(this::addHobby);
     }
 
     public void addHobby(Hobby hobby) {
@@ -152,6 +154,17 @@ public class Person extends Ent implements Serializable {
         if (hobby != null) {
             this.hobbies.remove(hobby);
             hobby.getPersons().remove(this);
+        }
+    }
+
+    public void removeAllHobbies() {
+        Iterator<Hobby> iterator = hobbies.iterator();
+        while (iterator.hasNext()) {
+            Hobby hobby = iterator.next();
+            if (hobby != null) {
+                iterator.remove();
+                hobby.getPersons().remove(this);
+            }
         }
     }
 

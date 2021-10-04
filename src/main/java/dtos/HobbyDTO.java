@@ -81,4 +81,9 @@ public class HobbyDTO extends DTO {
         return getType().equals(entity.getType());
 
     }
+
+    @Override
+    public String toString() {
+        return "id: " + id + " | name:" + name;
+    }
 }

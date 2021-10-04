@@ -10,6 +10,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.WebApplicationException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PersonFacade implements PersonFacadeInterface {
@@ -40,15 +41,19 @@ public class PersonFacade implements PersonFacadeInterface {
 
         // check if address already exist. If it doesn't, create new address and get managed entity.
         AddressDTO aDto = ADDRESS_FACADE.getByFields(personDTO.getAddress());
-        Address aEntity = null;
         if (aDto == null) {
             aDto = ADDRESS_FACADE.create(personDTO.getAddress());
         }
-        aEntity = em.find(Address.class, aDto.getId());
+        Address aEntity = em.find(Address.class, aDto.getId());
+
+        // gets managed entity for each hobby in the DTO
+        List<Hobby> hobbyEnts = getHobbiesFromDtos(em, personDTO.getHobbies());
+
+        Person person = new Person(personDTO);
+        person.setAddress(aEntity);
+        person.setHobbies(hobbyEnts);
 
         try {
-            Person person = new Person(personDTO);
-            person.setAddress(aEntity);
             em.getTransaction().begin();
             em.persist(person);
             em.getTransaction().commit();
@@ -58,12 +63,28 @@ public class PersonFacade implements PersonFacadeInterface {
         }
     }
 
+    private List<Hobby> getHobbiesFromDtos(EntityManager em, List<HobbyDTO> dtos) {
+        List<Hobby> ents = new ArrayList<>();
+        dtos.forEach(h -> {
+            Hobby hEnt = em.find(Hobby.class, h.getId());
+            if (hEnt != null) {
+                ents.add(hEnt);
+            }
+        });
+        return ents;
+    }
+
     @Override
     public PersonDTO update(PersonDTO personDTO) {
         EntityManager em = emf.createEntityManager();
         try {
+            Person original = em.find(Person.class, personDTO.getId());
             Person person = new Person(personDTO);
-            if (personDTO.getId() == getById(personDTO.getId()).getId()) {
+            if (original != null) {
+                original.removeAllHobbies();
+                List<Hobby> hobbies = getHobbiesFromDtos(em, personDTO.getHobbies());
+                person.setHobbies(hobbies);
+
                 em.getTransaction().begin();
                 em.merge(person);
                 em.getTransaction().commit();

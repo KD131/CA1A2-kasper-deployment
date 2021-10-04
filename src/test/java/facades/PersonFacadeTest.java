@@ -16,13 +16,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class PersonFacadeTest {
     private static EntityManagerFactory emf;
     private static PersonFacade facade;
+    private static HobbyFacade HOBBY_FACADE;
 
     private static Person p1, p2;
+    private static Hobby h1, h2, h3;
     
     @BeforeAll
     static void beforeAll() {
         emf = EMF_Creator.createEntityManagerFactoryForTest();
         facade = PersonFacade.getPersonFacade(emf);
+        HOBBY_FACADE = HobbyFacade.getHobbyFacade(emf);
     }
 
     @AfterAll
@@ -33,9 +36,9 @@ class PersonFacadeTest {
     void setUp() {
         EntityManager em = emf.createEntityManager();
         
-        Hobby h1 = new Hobby("Skiing", "skiing.com", "General", "Outdoors");
-        Hobby h2 = new Hobby("Polo", "polo.com", "Sport", "Outdoors");
-        Hobby h3 = new Hobby("Jogging", "jogging.com", "General", "Outdoors");
+        h1 = new Hobby("Skiing", "skiing.com", "General", "Outdoors");
+        h2 = new Hobby("Polo", "polo.com", "Sport", "Outdoors");
+        h3 = new Hobby("Jogging", "jogging.com", "General", "Outdoors");
     
         p1 = new Person(
                 Arrays.asList(new Phone(11111111)),
@@ -133,6 +136,21 @@ class PersonFacadeTest {
     }
 
     @Test
+    void create_withHobbies() throws Exception {
+        PersonDTO person = new PersonDTO(
+                Arrays.asList(new PhoneDTO(57575757, "nonya bizniz")),
+                "charlie@charlie.com",
+                "Charlie",
+                "Chaplin",
+                new AddressDTO("Comedy Inn",
+                        new ZipDTO(p1.getAddress().getZip())),
+                HobbyDTO.getDtos(p1.getHobbies())
+        );
+        PersonDTO created = facade.create(person);
+        assertEquals(3, HOBBY_FACADE.getHobbyCount());
+    }
+
+    @Test
     void getById() {
         PersonDTO person = facade.getById(p1.getId());
         assertNotNull(person);
@@ -158,6 +176,21 @@ class PersonFacadeTest {
 
         facade.update(p2DTO);
         assertEquals("Allis", facade.getById(p2.getId()).getLastName());
+    }
+
+    @Test
+    void editPersonHobby_deleteHobby() throws Exception {
+        p2.setHobbies(Arrays.asList(h1));
+        PersonDTO p2DTO = new PersonDTO(p2);
+
+        PersonDTO edited1 = facade.update(p2DTO);
+        assertEquals(1, edited1.getHobbies().size());
+        assertTrue(h1.equals(edited1.getHobbies().get(0)));
+
+        HOBBY_FACADE.delete(h1.getId());
+        PersonDTO edited2 = facade.update(p2DTO);
+//        edited2.getHobbies().forEach(System.out::println);    // only needed to debug if below test fails
+        assertEquals(0, edited2.getHobbies().size());
     }
     
     // if a person is deleted, their address cascade deletes
@@ -227,7 +260,6 @@ class PersonFacadeTest {
         List<PersonDTO> persons2 = facade.getByHobby(hobby2);
         assertNotNull(persons2);
         assertEquals(1, persons2.size());
-        
     }
 
     @Test
