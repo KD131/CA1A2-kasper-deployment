@@ -173,6 +173,10 @@ class AddressFacadeTest {
 
     @Test
     void getByZip() {
+        ZipDTO zip = new ZipDTO(a3.getZip());
+        List<AddressDTO> addresses = facade.getByZip(zip);
+        assertEquals(1, addresses.size());
+        assertTrue(a3.equals(addresses.get(0)));
     }
 
     @Test
