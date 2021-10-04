@@ -182,5 +182,15 @@ class AddressFacadeTest {
 
     @Test
     void getAll() {
+        List<AddressDTO> addresses = facade.getAll();
+        assertEquals(3, addresses.size());
+        addresses.forEach(a -> {
+            if (a1.getId() == a.getId())
+                assertTrue(a1.equals(a));
+            else if (a2.getId() == a.getId())
+                assertTrue(a2.equals(a));
+            else if (a3.getId() == a.getId())
+                assertTrue(a3.equals(a));
+        });
     }
 }
