@@ -22,7 +22,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 //Uncomment the line below, to temporarily disable this test
 
-@Disabled
+//@Disabled
 public class PhoneResourceTest {
 
     private static final int SERVER_PORT = 7777;
@@ -122,16 +122,17 @@ public class PhoneResourceTest {
                 .body("number", equalTo(66666666))
                 .body("info", equalTo("Pleasure"));
     }
-@Disabled
-    @Test
-    void deletePhone() { // Shall one or the other way be reprogrammed so that it works @Disabled
-        new PhoneDTO(p2);
 
+    @Test
+    void deletePhone() {
         given()
                 .contentType("application/json")
                 .delete("phone/id/" + p2.getId())
                 .then()
                 .assertThat()
-                .statusCode(HttpStatus.OK_200.getStatusCode());
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("id", equalTo((int)p2.getId()))
+                .body("number", equalTo(p2.getNumber()))
+                .body("info", equalTo(p2.getInfo()));;
     }
 }
