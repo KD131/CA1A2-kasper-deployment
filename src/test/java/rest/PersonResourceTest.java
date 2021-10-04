@@ -30,7 +30,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 //Uncomment the line below, to temporarily disable this test
-@Disabled
+//@Disabled
 
 public class PersonResourceTest {
 
@@ -254,14 +254,14 @@ public class PersonResourceTest {
 
     @Test
     void deletePerson() {
-        new PersonDTO(p2);
-
         given()
                 .contentType("application/json")
-                .put("person" )
+                .delete("person/" + p2.getId())
                 .then()
                 .assertThat()
-                .statusCode(HttpStatus.OK_200.getStatusCode());
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("id", equalTo((int)p2.getId()))
+                .body("firstName", equalTo(p2.getFirstName()));
     }
     
     @Test
