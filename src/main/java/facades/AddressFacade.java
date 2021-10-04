@@ -39,11 +39,12 @@ public class AddressFacade implements AddressFacadeInterface {
     }
 
     @Override
-    public AddressDTO create(AddressDTO address) {
+    public AddressDTO create(AddressDTO address) throws Exception {
         EntityManager em = emf.createEntityManager();
-        Zip zipEntity = em.find(Zip.class, address.getZip().getId());
+        ZipDTO zipDTO = address.getZip();
+        Zip zipEntity = em.find(Zip.class, zipDTO.getId());
         if (zipEntity == null) {
-            zipEntity = new Zip(address.getZip());
+            throw new Exception("ZIP code does not exist in the database: " + zipDTO.getId());
         }
         Address addressEntity = new Address(address.getAddress(), zipEntity);
         try {
@@ -100,6 +101,22 @@ public class AddressFacade implements AddressFacadeInterface {
         EntityManager em = emf.createEntityManager();
         try {
             return new AddressDTO(em.find(Address.class, id));
+        } finally {
+            em.close();
+        }
+    }
+
+    public AddressDTO getByFields(AddressDTO dto) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<Address> query = em.createQuery("SELECT a FROM Address a WHERE a.address = :address AND a.zip.zip = :zip", Address.class);
+            query.setParameter("address", dto.getAddress());
+            query.setParameter("zip", dto.getZip().getId());
+            Address entity = query.getSingleResult();
+            return new AddressDTO(entity);
+        } catch (Exception e) {
+            // if address not already in database, i.e. SingleResult fails.
+            return null;
         } finally {
             em.close();
         }

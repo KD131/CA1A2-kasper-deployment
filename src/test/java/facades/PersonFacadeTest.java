@@ -78,7 +78,42 @@ class PersonFacadeTest {
     }
 
     @Test
-    void create() {
+    void create_newAddress_newZip() {
+        PersonDTO person = new PersonDTO(
+                Arrays.asList(new PhoneDTO(34343434, "work")),
+                "lars@larsen.lars",
+                "Lars",
+                "Larsen",
+                new AddressDTO("Lars street",
+                        new ZipDTO(1234, "Lars city")));
+
+        Exception ex = assertThrows(Exception.class,
+                () -> facade.create(person));
+        assertEquals("ZIP code does not exist in the database: " + person.getAddress().getZip().getId(), ex.getMessage());
+    }
+
+    @Test
+    void create_newAddress_existingZip() throws Exception {
+        PersonDTO person = new PersonDTO(
+                Arrays.asList(new PhoneDTO(33333333, "work")),
+                "chad@chad.com",
+                "Chad",
+                "Kroeger",
+                new AddressDTO("Someday 42",
+                        new ZipDTO(p2.getAddress().getZip())));
+
+        PersonDTO created = facade.create(person);
+        assertNotNull(created);
+        assertEquals(person.getFirstName(), created.getFirstName());
+
+        PersonDTO fromDb = facade.getById(created.getId());
+
+        assertNotNull(fromDb);
+        assertEquals(created.getFirstName(), fromDb.getFirstName());
+    }
+
+    @Test
+    void create_existingAddress() throws Exception {
         List<PhoneDTO> phones = new ArrayList<>();
         phones.add(new PhoneDTO(34343434, "work"));
         PersonDTO person = new PersonDTO(
@@ -86,14 +121,13 @@ class PersonFacadeTest {
                 "lars@larsen.lars",
                 "Lars",
                 "Larsen",
-                new AddressDTO("Lars street",
-                        new ZipDTO(1234, "Lars city")));
+                new AddressDTO(p1.getAddress()));
         PersonDTO created = facade.create(person);
         assertNotNull(created);
         assertEquals(person.getFirstName(), created.getFirstName());
-        
+
         PersonDTO fromDb = facade.getById(created.getId());
-        
+
         assertNotNull(fromDb);
         assertEquals(created.getFirstName(), fromDb.getFirstName());
     }

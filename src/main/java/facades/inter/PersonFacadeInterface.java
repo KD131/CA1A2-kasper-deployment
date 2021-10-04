@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface PersonFacadeInterface {
 
-    PersonDTO create(PersonDTO person);
+    PersonDTO create(PersonDTO person) throws Exception;
 
     PersonDTO update(PersonDTO person);
 

@@ -90,23 +90,13 @@ class AddressFacadeTest {
     void createNewZip() {
         AddressDTO addressDTO = new AddressDTO("21 Jump Street",
                 new ZipDTO(1515, "Cowabunga city"));
-        AddressDTO created = facade.create(addressDTO);
-        assertNotNull(created);
-        assertTrue(created.hasId());
+        assertThrows(Exception.class,
+                () -> facade.create(addressDTO));
 
-        AddressDTO fromDb = facade.getById(created.getId());
-
-        assertEquals(addressDTO.getAddress(), created.getAddress());
-        assertEquals(addressDTO.getZip().getId(), created.getZip().getId());
-        assertEquals(addressDTO.getZip().getCity(), created.getZip().getCity());
-
-        assertEquals(addressDTO.getAddress(), fromDb.getAddress());
-        assertEquals(addressDTO.getZip().getId(), fromDb.getZip().getId());
-        assertEquals(addressDTO.getZip().getCity(), fromDb.getZip().getCity());
     }
 
     @Test
-    void createExistingZip() {
+    void createExistingZip() throws Exception {
         AddressDTO addressDTO = new AddressDTO("21 Jump Street",
                 new ZipDTO(a1.getZip()));
         AddressDTO created = facade.create(addressDTO);
@@ -125,7 +115,7 @@ class AddressFacadeTest {
     }
 
     @Test
-    void createEqualToExistingZip() {
+    void createEqualToExistingZip() throws Exception {
         AddressDTO addressDTO = new AddressDTO("21 Jump Street",
                 new ZipDTO(a1.getZip().getZip(), a1.getZip().getCity()));
         AddressDTO created = facade.create(addressDTO);

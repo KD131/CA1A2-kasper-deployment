@@ -39,6 +39,7 @@ public class Address extends Ent implements Serializable {
         if (addressDTO.hasId()) this.id = addressDTO.getId();
         this.address = addressDTO.getAddress();
         setZipFromDTO(addressDTO.getZip());
+        this.persons = new ArrayList<>();
     }
 
 

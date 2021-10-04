@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface AddressFacadeInterface {
 
-    AddressDTO create(AddressDTO address);
+    AddressDTO create(AddressDTO address) throws Exception;
 
     AddressDTO update(AddressDTO addressDTO);
 

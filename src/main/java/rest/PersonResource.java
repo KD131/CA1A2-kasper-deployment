@@ -33,8 +33,7 @@ public class PersonResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String create(String person)
-    {
+    public String create(String person) throws Exception {
         PersonDTO pToCreate = GSON.fromJson(person, PersonDTO.class);
         PersonDTO pCreated = PERSON_FACADE.create(pToCreate);
         return GSON.toJson(pCreated);
@@ -52,7 +51,6 @@ public class PersonResource {
     @Path("{id}")
     @DELETE
     @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
     public String delete(@PathParam("id") long id) {
         PersonDTO deleted = PERSON_FACADE.delete(id);
         return GSON.toJson(deleted);

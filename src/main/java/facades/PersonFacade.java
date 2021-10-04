@@ -32,10 +32,21 @@ public class PersonFacade implements PersonFacadeInterface {
     }
 
     @Override
-    public PersonDTO create(PersonDTO personDTO) {
+    public PersonDTO create(PersonDTO personDTO) throws Exception {
+        AddressFacade ADDRESS_FACADE = AddressFacade.getAddressFacade(emf);
         EntityManager em = emf.createEntityManager();
+
+        // check if address already exist. If it doesn't, create new address and get managed entity.
+        AddressDTO aDto = ADDRESS_FACADE.getByFields(personDTO.getAddress());
+        Address aEntity = null;
+        if (aDto == null) {
+            aDto = ADDRESS_FACADE.create(personDTO.getAddress());
+        }
+        aEntity = em.find(Address.class, aDto.getId());
+
         try {
             Person person = new Person(personDTO);
+            person.setAddress(aEntity);
             em.getTransaction().begin();
             em.persist(person);
             em.getTransaction().commit();
