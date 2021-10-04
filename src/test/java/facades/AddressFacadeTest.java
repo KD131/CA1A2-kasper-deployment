@@ -169,6 +169,8 @@ class AddressFacadeTest {
 
     @Test
     void getById() {
+        AddressDTO address = facade.getById(a2.getId());
+        assertTrue(a2.equals(address));
     }
 
     @Test
