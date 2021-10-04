@@ -1,6 +1,7 @@
 package facades;
 
 import dtos.AddressDTO;
+import dtos.ZipDTO;
 import edu.emory.mathcs.backport.java.util.Arrays;
 import entities.*;
 import org.junit.jupiter.api.BeforeAll;
@@ -86,7 +87,60 @@ class AddressFacadeTest {
     }
 
     @Test
-    void create() {
+    void createNewZip() {
+        AddressDTO addressDTO = new AddressDTO("21 Jump Street",
+                new ZipDTO(1515, "Cowabunga city"));
+        AddressDTO created = facade.create(addressDTO);
+        assertNotNull(created);
+        assertTrue(created.hasId());
+
+        AddressDTO fromDb = facade.getById(created.getId());
+
+        assertEquals(addressDTO.getAddress(), created.getAddress());
+        assertEquals(addressDTO.getZip().getId(), created.getZip().getId());
+        assertEquals(addressDTO.getZip().getCity(), created.getZip().getCity());
+
+        assertEquals(addressDTO.getAddress(), fromDb.getAddress());
+        assertEquals(addressDTO.getZip().getId(), fromDb.getZip().getId());
+        assertEquals(addressDTO.getZip().getCity(), fromDb.getZip().getCity());
+    }
+
+    @Test
+    void createExistingZip() {
+        AddressDTO addressDTO = new AddressDTO("21 Jump Street",
+                new ZipDTO(a1.getZip()));
+        AddressDTO created = facade.create(addressDTO);
+        assertNotNull(created);
+        assertTrue(created.hasId());
+
+        AddressDTO fromDb = facade.getById(created.getId());
+
+        assertEquals(addressDTO.getAddress(), created.getAddress());
+        assertEquals(addressDTO.getZip().getId(), created.getZip().getId());
+        assertEquals(addressDTO.getZip().getCity(), created.getZip().getCity());
+
+        assertEquals(addressDTO.getAddress(), fromDb.getAddress());
+        assertEquals(addressDTO.getZip().getId(), fromDb.getZip().getId());
+        assertEquals(addressDTO.getZip().getCity(), fromDb.getZip().getCity());
+    }
+
+    @Test
+    void createEqualToExistingZip() {
+        AddressDTO addressDTO = new AddressDTO("21 Jump Street",
+                new ZipDTO(a1.getZip().getZip(), a1.getZip().getCity()));
+        AddressDTO created = facade.create(addressDTO);
+        assertNotNull(created);
+        assertTrue(created.hasId());
+
+        AddressDTO fromDb = facade.getById(created.getId());
+
+        assertEquals(addressDTO.getAddress(), created.getAddress());
+        assertEquals(addressDTO.getZip().getId(), created.getZip().getId());
+        assertEquals(addressDTO.getZip().getCity(), created.getZip().getCity());
+
+        assertEquals(addressDTO.getAddress(), fromDb.getAddress());
+        assertEquals(addressDTO.getZip().getId(), fromDb.getZip().getId());
+        assertEquals(addressDTO.getZip().getCity(), fromDb.getZip().getCity());
     }
 
     @Test

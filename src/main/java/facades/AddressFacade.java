@@ -42,6 +42,9 @@ public class AddressFacade implements AddressFacadeInterface {
     public AddressDTO create(AddressDTO address) {
         EntityManager em = emf.createEntityManager();
         Zip zipEntity = em.find(Zip.class, address.getZip().getId());
+        if (zipEntity == null) {
+            zipEntity = new Zip(address.getZip());
+        }
         Address addressEntity = new Address(address.getAddress(), zipEntity);
         try {
             em.getTransaction().begin();
