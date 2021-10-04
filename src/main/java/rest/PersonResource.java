@@ -49,13 +49,13 @@ public class PersonResource {
         return GSON.toJson(pNew);
     }
 
+    @Path("{id}")
     @DELETE
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public String delete(long id) {
-        PersonDTO pDeleted = PERSON_FACADE.getById(id);
-        PERSON_FACADE.delete(id);
-        return GSON.toJson(pDeleted);
+    public String delete(@PathParam("id") long id) {
+        PersonDTO deleted = PERSON_FACADE.delete(id);
+        return GSON.toJson(deleted);
     }
 
     @Path("list")
