@@ -40,13 +40,12 @@ public class PhoneResource {
         return GSON.toJson(pNew);
     }
 
+    @Path("{id}")
     @DELETE
     @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
-    public String deletePerson(long id) {
-        PhoneDTO pDeleted = PHONE_FACADE.getById(id);
-        PHONE_FACADE.delete(id);
-        return GSON.toJson(pDeleted);
+    public String deletePhone(@PathParam("id") long id) {
+        PhoneDTO deleted = PHONE_FACADE.delete(id);
+        return GSON.toJson(deleted);
     }
 
     @Path("list")

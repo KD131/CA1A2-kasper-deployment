@@ -127,7 +127,8 @@ public class PhoneResourceTest {
     void deletePhone() {
         given()
                 .contentType("application/json")
-                .delete("phone/id/" + p2.getId())
+                .when()
+                .delete("phone/" + p2.getId())
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
