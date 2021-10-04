@@ -141,4 +141,10 @@ class HobbyFacadeTest
     {
         assertEquals(3, HOBBY_FACADE.getHobbyCount());
     }
+
+    @Test
+    void getById() {
+        HobbyDTO hobby = HOBBY_FACADE.getById(h3.getId());
+        assertTrue(h3.equals(hobby));
+    }
 }
