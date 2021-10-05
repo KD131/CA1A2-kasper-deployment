@@ -7,7 +7,6 @@ import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.WebApplicationException;
 import java.util.List;
@@ -116,10 +115,10 @@ public class PersonFacade implements PersonFacadeInterface {
             TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE :phone MEMBER OF p.phones", Person.class);
             query.setParameter("phone", phone);
             Person person = query.getSingleResult();
+            if (person == null) throw new WebApplicationException("Person not found", 404);
             return new PersonDTO(person);
         } catch (Exception e) {
-            if (e instanceof NoResultException) throw new WebApplicationException("Person not found", 404);
-            else throw new WebApplicationException("Request failed", 500);
+            throw new WebApplicationException("Request failed", 500);
         } finally {
             em.close();
         }
