@@ -49,7 +49,7 @@ public class HobbyResource {
     @Path("{id}")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    public String deleteHobby(@PathParam("id") long id) throws Exception {
+    public String deleteHobby(@PathParam("id") long id) {
         HobbyDTO deleted = HOBBY_FACADE.delete(id);
         return GSON.toJson(deleted);
     }

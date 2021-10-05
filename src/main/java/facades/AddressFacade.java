@@ -96,7 +96,7 @@ public class AddressFacade implements AddressFacadeInterface {
     }
 
     @Override
-    public AddressDTO delete(long id) throws Exception {
+    public AddressDTO delete(long id) {
         EntityManager em = emf.createEntityManager();
         Address address = em.find(Address.class, id);
         if (address == null) throw new WebApplicationException("Address not found", 404);

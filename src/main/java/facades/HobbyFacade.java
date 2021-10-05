@@ -7,6 +7,7 @@ import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.WebApplicationException;
 import java.util.List;
@@ -42,55 +43,56 @@ public class HobbyFacade implements HobbyFacadeInterface {
 
     @Override
     public HobbyDTO create(HobbyDTO hobbyDTO) {
-        Hobby hobbyEntity = new Hobby(hobbyDTO);
         EntityManager em = emf.createEntityManager();
+        Hobby hobby = new Hobby(hobbyDTO);
         try {
             em.getTransaction().begin();
-            em.persist(hobbyEntity);
+            em.persist(hobby);
             em.getTransaction().commit();
+            return new HobbyDTO(hobby);
+        } catch (Exception e) {
+            throw new WebApplicationException("Transaction failed, 500");
         } finally {
             em.close();
         }
-        return new HobbyDTO(hobbyEntity);
     }
 
     @Override
     public HobbyDTO update(HobbyDTO hobbyDTO) {
         EntityManager em = emf.createEntityManager();
-        Hobby original = em.find(Hobby.class, hobbyDTO.getId());
-        Hobby hobbyEntity = new Hobby(hobbyDTO);
-        try {
-            if (original != null) {
-                /* More complex, bidirectional removal and setting. Unneeded in this situation.
-                hobbyEntity.setPersonsBi(original.getPersons());
-                original.removeAllPersons(); */
-                hobbyEntity.setPersonsUni(original.getPersons());
+        Hobby oldHobby = em.find(Hobby.class, hobbyDTO.getId());
+        if (oldHobby == null) throw new WebApplicationException("No hobby with id: " + hobbyDTO.getId(), 404);
+        Hobby newHobby = new Hobby(hobbyDTO);
+        try {   /* More complex, bidirectional removal and setting. Unneeded in this situation.
+                newHobby.setPersonsBi(original.getPersons());
+                oldHobby.removeAllPersons(); */
+            newHobby.setPersonsUnidirectional(oldHobby.getPersons());
 
-                em.getTransaction().begin();
-                em.merge(hobbyEntity);
-                em.getTransaction().commit();
-            }
-            return new HobbyDTO(hobbyEntity);
-        }
-        finally {
+            em.getTransaction().begin();
+            em.merge(newHobby);
+            em.getTransaction().commit();
+            return new HobbyDTO(newHobby);
+        } catch (Exception e) {
+            throw new WebApplicationException("Transaction failed, 500");
+        } finally {
             em.close();
         }
     }
 
     @Override
-    public HobbyDTO delete(long id)
-    {
+    public HobbyDTO delete(long id) {
         EntityManager em = emf.createEntityManager();
+
+        Hobby hobby = em.find(Hobby.class, id);
+        if (hobby == null) throw new WebApplicationException("No hobby with id: " + id, 404);
         try {
-            Hobby h = em.find(Hobby.class, id);
-            if (h != null) {
-                em.getTransaction().begin();
-                h.removeAllPersons();
-                em.remove(h);
-                em.getTransaction().commit();
-                return new HobbyDTO(h);
-            }
-            else throw new WebApplicationException("No hobby with id: " + id, 404);
+            em.getTransaction().begin();
+            hobby.removeAllPersons();
+            em.remove(hobby);
+            em.getTransaction().commit();
+            return new HobbyDTO(hobby);
+        } catch (Exception e) {
+            throw new WebApplicationException("Transaction failed, 500");
         } finally {
             em.close();
         }
@@ -101,6 +103,7 @@ public class HobbyFacade implements HobbyFacadeInterface {
         EntityManager em = emf.createEntityManager();
         try {
             Hobby hobby = em.find(Hobby.class, id);
+            if (hobby == null) throw new WebApplicationException("Hobby not found", 404);
             return new HobbyDTO(hobby);
         } finally {
             em.close();
@@ -114,6 +117,7 @@ public class HobbyFacade implements HobbyFacadeInterface {
             TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h WHERE h.category = :category", Hobby.class);
             query.setParameter("category", category);
             List<Hobby> hobbies = query.getResultList();
+            if (hobbies.size() == 0) throw new WebApplicationException("Hobbies not found", 404);
             return HobbyDTO.getDtos(hobbies);
         } finally {
             em.close();
@@ -127,6 +131,7 @@ public class HobbyFacade implements HobbyFacadeInterface {
             TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h WHERE h.type = :type", Hobby.class);
             query.setParameter("type", type);
             List<Hobby> hobbies = query.getResultList();
+            if (hobbies.size() == 0) throw new WebApplicationException("Hobbies not found", 404);
             return HobbyDTO.getDtos(hobbies);
         } finally {
             em.close();
@@ -141,6 +146,7 @@ public class HobbyFacade implements HobbyFacadeInterface {
             TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h JOIN Person p WHERE p = :p AND h MEMBER OF p.hobbies", Hobby.class);
             query.setParameter("p", person);
             List<Hobby> hobbies = query.getResultList();
+            if (hobbies.size() == 0) throw new WebApplicationException("Hobbies not found", 404);
             return HobbyDTO.getDtos(hobbies);
         } finally {
             em.close();
@@ -155,6 +161,7 @@ public class HobbyFacade implements HobbyFacadeInterface {
             TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h JOIN Person p WHERE h MEMBER OF p.hobbies AND :phone MEMBER OF p.phones", Hobby.class);
             query.setParameter("phone", phone);
             List<Hobby> hobbies = query.getResultList();
+            if (hobbies.size() == 0) throw new WebApplicationException("Hobbies not found", 404);
             return HobbyDTO.getDtos(hobbies);
         } finally {
             em.close();
@@ -169,6 +176,7 @@ public class HobbyFacade implements HobbyFacadeInterface {
             TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h JOIN Person p WHERE h MEMBER OF p.hobbies AND p.address.zip = :zip", Hobby.class);
             query.setParameter("zip", zip);
             List<Hobby> hobbies = query.getResultList();
+            if (hobbies.size() == 0) throw new WebApplicationException("Hobbies not found", 404);
             return HobbyDTO.getDtos(hobbies);
         } finally {
             em.close();
@@ -183,6 +191,7 @@ public class HobbyFacade implements HobbyFacadeInterface {
             TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h JOIN Person p WHERE h MEMBER OF p.hobbies AND p.address = :address", Hobby.class);
             query.setParameter("address", address);
             List<Hobby> hobbies = query.getResultList();
+            if (hobbies.size() == 0) throw new WebApplicationException("Hobbies not found", 404);
             return HobbyDTO.getDtos(hobbies);
         } finally {
             em.close();
@@ -195,6 +204,7 @@ public class HobbyFacade implements HobbyFacadeInterface {
         try {
             TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h", Hobby.class);
             List<Hobby> hobbies = query.getResultList();
+            if (hobbies.size() == 0) throw new WebApplicationException("Hobbies not found", 404);
             return HobbyDTO.getDtos(hobbies);
         } finally {
             em.close();
@@ -209,7 +219,7 @@ public class HobbyFacade implements HobbyFacadeInterface {
             return hobbyCount;
         } catch (NoResultException e) {
             throw new WebApplicationException("Hobby database empty", 404);
-        }  finally {
+        } finally {
             em.close();
         }
     }
