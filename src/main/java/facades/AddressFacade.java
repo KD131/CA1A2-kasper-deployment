@@ -1,19 +1,18 @@
 package facades;
 
 import dtos.AddressDTO;
-
 import dtos.PersonDTO;
 import dtos.ZipDTO;
 import entities.Address;
 import entities.Person;
 import entities.Zip;
-import errorhandling.ExceptionDTO;
 import facades.inter.AddressFacadeInterface;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.WebApplicationException;
 import java.util.List;
 
 
@@ -39,23 +38,20 @@ public class AddressFacade implements AddressFacadeInterface {
     }
 
     @Override
-    public AddressDTO create(AddressDTO address) throws Exception {
+    public AddressDTO create(AddressDTO addressDTO) {
         EntityManager em = emf.createEntityManager();
-        ZipDTO zipDTO = address.getZip();
-        Zip zipEntity = em.find(Zip.class, zipDTO.getId());
-        if (zipEntity == null) {
-            throw new Exception("ZIP code does not exist in the database: " + zipDTO.getId());
-        }
-        Address addressEntity = new Address(address.getAddress(), zipEntity);
+        Zip zip = em.find(Zip.class, addressDTO.getZip().getId());
+        if (zip == null)
+            throw new WebApplicationException("ZIP code " + addressDTO.getZip().getId() + " not found.", 404);
+        Address address = new Address(addressDTO.getAddress(), zip);
         try {
             em.getTransaction().begin();
-            em.persist(addressEntity);
+            em.persist(address);
             em.getTransaction().commit();
-            return new AddressDTO(addressEntity);
+            return new AddressDTO(address);
         } finally {
             em.close();
         }
-
     }
 
     @Override
@@ -67,30 +63,29 @@ public class AddressFacade implements AddressFacadeInterface {
                 em.getTransaction().begin();
                 em.merge(address);
                 em.getTransaction().commit();
+                if (address == null) ;
                 return new AddressDTO(address);
-            }
-            return null;
+            } else throw new WebApplicationException("Address not found", 404);
         } finally {
             em.close();
         }
     }
 
     @Override
-    public AddressDTO delete(long id) throws Exception
-    {
+    public AddressDTO delete(long id) throws Exception {
         EntityManager em = emf.createEntityManager();
-        Address a = em.find(Address.class, id);
+        Address address = em.find(Address.class, id);
         try {
-            AddressDTO aDTO = new AddressDTO(a);
-            if(getById(id) != null) {
-                if (!a.getPersons().isEmpty()) {
-                    throw new Exception("Address has persons.");
+            AddressDTO addressDTO = new AddressDTO(address);
+            if (getById(id) != null) {
+                if (!address.getPersons().isEmpty()) {
+                    throw new WebApplicationException("Address has persons.", 400);
                 }
                 em.getTransaction().begin();
-                em.remove(a);
+                em.remove(address);
                 em.getTransaction().commit();
             }
-            return aDTO;
+            return addressDTO;
         } finally {
             em.close();
         }
@@ -100,23 +95,23 @@ public class AddressFacade implements AddressFacadeInterface {
     public AddressDTO getById(long id) {
         EntityManager em = emf.createEntityManager();
         try {
-            return new AddressDTO(em.find(Address.class, id));
+            Address address = em.find(Address.class, id);
+            if (address == null) throw new WebApplicationException("Address not found", 404);
+            return new AddressDTO(address);
         } finally {
             em.close();
         }
     }
 
-    public AddressDTO getByFields(AddressDTO dto) {
+    public AddressDTO getByFields(AddressDTO addressDTO) {
         EntityManager em = emf.createEntityManager();
         try {
             TypedQuery<Address> query = em.createQuery("SELECT a FROM Address a WHERE a.address = :address AND a.zip.zip = :zip", Address.class);
-            query.setParameter("address", dto.getAddress());
-            query.setParameter("zip", dto.getZip().getId());
-            Address entity = query.getSingleResult();
-            return new AddressDTO(entity);
-        } catch (Exception e) {
-            // if address not already in database, i.e. SingleResult fails.
-            return null;
+            query.setParameter("address", addressDTO.getAddress());
+            query.setParameter("zip", addressDTO.getZip().getId());
+            Address address = query.getSingleResult();
+            if (address == null) throw new WebApplicationException("Address not found.", 404);
+            return new AddressDTO(address);
         } finally {
             em.close();
         }
@@ -130,6 +125,7 @@ public class AddressFacade implements AddressFacadeInterface {
             TypedQuery<Address> query = em.createQuery("SELECT a FROM Address a WHERE a.zip = :zip", Address.class);
             query.setParameter("zip", zip);
             List<Address> addresses = query.getResultList();
+            if (addresses.size() == 0) throw new WebApplicationException("Addresses not found.", 404);
             return AddressDTO.getDtos(addresses);
         } finally {
             em.close();
@@ -144,6 +140,7 @@ public class AddressFacade implements AddressFacadeInterface {
             TypedQuery<Address> query = em.createQuery("SELECT a FROM Address a JOIN Person p WHERE a = p.address AND p = :person", Address.class);
             query.setParameter("person", person);
             Address address = query.getSingleResult();
+            if (address == null) throw new WebApplicationException("Address not found", 404);
             return new AddressDTO(address);
         } finally {
             em.close();
@@ -167,6 +164,7 @@ public class AddressFacade implements AddressFacadeInterface {
         try {
             TypedQuery<Address> query = em.createQuery("SELECT a FROM Address a", Address.class);
             List<Address> addresses = query.getResultList();
+            if (addresses.size() == 0) throw new WebApplicationException("Addresses not found", 404);
             return AddressDTO.getDtos(addresses);
         } finally {
             em.close();

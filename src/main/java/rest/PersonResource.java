@@ -33,27 +33,27 @@ public class PersonResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String create(String person) throws Exception {
-        PersonDTO pToCreate = GSON.fromJson(person, PersonDTO.class);
-        PersonDTO pCreated = PERSON_FACADE.create(pToCreate);
-        return GSON.toJson(pCreated);
+    public String create(String person) {
+        PersonDTO personToCreate = GSON.fromJson(person, PersonDTO.class);
+        PersonDTO personCreated = PERSON_FACADE.create(personToCreate);
+        return GSON.toJson(personCreated);
     }
 
     @PUT
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     public String update(String person) {
-        PersonDTO pDTO = GSON.fromJson(person, PersonDTO.class);
-        PersonDTO pNew = PERSON_FACADE.update(pDTO);
-        return GSON.toJson(pNew);
+        PersonDTO newPersonDTO = GSON.fromJson(person, PersonDTO.class);
+        PersonDTO updatedPersonDTO = PERSON_FACADE.update(newPersonDTO);
+        return GSON.toJson(updatedPersonDTO);
     }
 
     @Path("{id}")
     @DELETE
     @Produces({MediaType.APPLICATION_JSON})
     public String delete(@PathParam("id") long id) {
-        PersonDTO deleted = PERSON_FACADE.delete(id);
-        return GSON.toJson(deleted);
+        PersonDTO deletedPerson = PERSON_FACADE.delete(id);
+        return GSON.toJson(deletedPerson);
     }
 
     @Path("list")
