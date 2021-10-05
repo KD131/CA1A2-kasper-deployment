@@ -7,6 +7,7 @@ import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.WebApplicationException;
 import java.util.ArrayList;
@@ -150,13 +151,15 @@ public class PersonFacade implements PersonFacadeInterface {
     @Override
     public PersonDTO getByPhone(PhoneDTO phoneDTO) {
         EntityManager em = emf.createEntityManager();
+
+        Phone phone = new Phone(phoneDTO);
+        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE :phone MEMBER OF p.phones", Person.class);
+        query.setParameter("phone", phone);
         try {
-            Phone phone = new Phone(phoneDTO);
-            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE :phone MEMBER OF p.phones", Person.class);
-            query.setParameter("phone", phone);
             Person person = query.getSingleResult();
-            if (person == null) throw new WebApplicationException("Person not found", 404);
             return new PersonDTO(person);
+        } catch (NoResultException e) {
+            throw new WebApplicationException("Person not found", 404);
         } finally {
             em.close();
         }

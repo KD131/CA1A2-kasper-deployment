@@ -9,7 +9,9 @@ import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.WebApplicationException;
 import java.util.List;
 
 /**
@@ -71,21 +73,20 @@ public class PhoneFacade implements PhoneFacadeInterface {
     @Override
     public PhoneDTO delete(long id) {
         EntityManager em = emf.createEntityManager();
+        Phone phone = em.find(Phone.class, id);
+        if (phone == null) throw new WebApplicationException("Phone not found, 404");
+        PhoneDTO phoneDTO = new PhoneDTO(phone);
         try {
-            Phone p = em.find(Phone.class, id);
-            PhoneDTO pDTO = new PhoneDTO(p);
-            if (getById(id) != null) {
-                em.getTransaction().begin();
-                Person person = em.createQuery("SELECT p FROM Person p WHERE :phone MEMBER OF p.phones", Person.class)
-                        .setParameter("phone", p)
-                        .getSingleResult();
-                if (person != null) {   // person should never be null because a phone should never be orphaned, but just in case
-                    person.removePhone(p);
-                }
-                em.remove(p);   // orphan removal also takes care of this so explicitly removing the phone is unneeded.
-                em.getTransaction().commit();
-            }
-            return pDTO;
+            Person person = em.createQuery("SELECT p FROM Person p WHERE :phone MEMBER OF p.phones", Person.class)
+                    .setParameter("phone", phone)
+                    .getSingleResult();
+            person.removePhone(phone);
+            em.getTransaction().begin();
+            em.remove(phone);   // orphan removal also takes care of this so explicitly removing the phone is unneeded.
+            em.getTransaction().commit();
+            return phoneDTO;
+        } catch (NoResultException e) {
+            throw new WebApplicationException("Phone not found, 404");
         } finally {
             em.close();
         }
@@ -104,11 +105,13 @@ public class PhoneFacade implements PhoneFacadeInterface {
     @Override
     public PhoneDTO getByNumber(Integer number) {
         EntityManager em = emf.createEntityManager();
+        TypedQuery<Phone> query = em.createQuery("SELECT p FROM Phone p WHERE p.number = :number", Phone.class);
+        query.setParameter("number", number);
         try {
-            TypedQuery<Phone> query = em.createQuery("SELECT p FROM Phone p WHERE p.number = :number", Phone.class);
-            query.setParameter("number", number);
             Phone phone = query.getSingleResult();
             return new PhoneDTO(phone);
+        } catch (NoResultException e) {
+            throw new WebApplicationException("Phone not found, 404");
         } finally {
             em.close();
         }

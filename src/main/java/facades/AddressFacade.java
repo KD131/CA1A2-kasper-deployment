@@ -105,16 +105,18 @@ public class AddressFacade implements AddressFacadeInterface {
 
     public AddressDTO getByFields(AddressDTO addressDTO) {
         EntityManager em = emf.createEntityManager();
+        TypedQuery<Address> query = em.createQuery("SELECT a FROM Address a WHERE a.address = :address AND a.zip.zip = :zip", Address.class);
+        query.setParameter("address", addressDTO.getAddress());
+        query.setParameter("zip", addressDTO.getZip().getId());
         try {
-            TypedQuery<Address> query = em.createQuery("SELECT a FROM Address a WHERE a.address = :address AND a.zip.zip = :zip", Address.class);
-            query.setParameter("address", addressDTO.getAddress());
-            query.setParameter("zip", addressDTO.getZip().getId());
             Address address = query.getSingleResult();
-            if (address == null) throw new WebApplicationException("Address not found.", 404);
             return new AddressDTO(address);
+        } catch (NoResultException e) {
+            throw new WebApplicationException("Address not found.", 404);
         } finally {
             em.close();
         }
+
     }
 
     @Override
@@ -135,13 +137,14 @@ public class AddressFacade implements AddressFacadeInterface {
     @Override
     public AddressDTO getByPerson(PersonDTO personDTO) {
         EntityManager em = emf.createEntityManager();
+        Person person = new Person(personDTO);
+        TypedQuery<Address> query = em.createQuery("SELECT a FROM Address a JOIN Person p WHERE a = p.address AND p = :person", Address.class);
+        query.setParameter("person", person);
         try {
-            Person person = new Person(personDTO);
-            TypedQuery<Address> query = em.createQuery("SELECT a FROM Address a JOIN Person p WHERE a = p.address AND p = :person", Address.class);
-            query.setParameter("person", person);
             Address address = query.getSingleResult();
-            if (address == null) throw new WebApplicationException("Address not found", 404);
             return new AddressDTO(address);
+        } catch (NoResultException e) {
+            throw new WebApplicationException("Address not found.", 404);
         } finally {
             em.close();
         }
