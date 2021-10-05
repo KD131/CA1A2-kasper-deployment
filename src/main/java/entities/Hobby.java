@@ -118,7 +118,7 @@ public class Hobby extends Ent implements Serializable {
         persons.forEach(this::addPerson);
     }
 
-    public void setPersonsUni(List<Person> persons) {
+    public void setPersonsUnidirectional(List<Person> persons) {
         this.persons = persons;
     }
 

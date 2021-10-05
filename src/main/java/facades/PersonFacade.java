@@ -80,11 +80,17 @@ public class PersonFacade implements PersonFacadeInterface {
         Address address = em.find(Address.class, newAddressDTO.getId());
         if (address == null) throw new WebApplicationException("Failed to get or create address, 500");
         else return address;
+
     }
 
     @Override
     public PersonDTO update(PersonDTO personDTO) {
         EntityManager em = emf.createEntityManager();
+        // New person
+        Person newPerson = new Person(personDTO);
+        newPerson.setHobbies(getHobbiesFromDTOs(em, personDTO.getHobbies()));
+        Address newAddress = getAddressOrCreateNew(em, personDTO.getAddress());
+        newPerson.setAddress(newAddress);
         // Old person
         Person oldPerson = em.find(Person.class, personDTO.getId());
         if (oldPerson == null) throw new WebApplicationException("Person not found", 404);
@@ -92,11 +98,7 @@ public class PersonFacade implements PersonFacadeInterface {
         Address oldAddress = oldPerson.getAddress();
         oldAddress.getPersons().remove(oldPerson);
         removeAddressIfChildless(em, oldAddress);
-        // new person
-        Person newPerson = new Person(personDTO);
-        newPerson.setHobbies(getHobbiesFromDTOs(em, personDTO.getHobbies()));
-        Address newAddress = getAddressOrCreateNew(em, personDTO.getAddress());
-        newPerson.setAddress(newAddress);
+
         // merge
         try {
             em.getTransaction().begin();
