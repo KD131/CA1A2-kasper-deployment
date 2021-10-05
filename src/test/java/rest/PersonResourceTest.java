@@ -266,6 +266,19 @@ public class PersonResourceTest {
     }
 
     @Test
+    void deletePerson_badId() {
+        given()
+                .contentType("application/json")
+                .when()
+                .delete("person/" + 666)
+                .then()
+                .assertThat()
+                .statusCode(404)
+                .body("code", equalTo(404))
+                .body("message", equalTo("Person not found"));
+    }
+
+    @Test
     void createPerson()
     {
         List<PhoneDTO> phones = new ArrayList<>();
