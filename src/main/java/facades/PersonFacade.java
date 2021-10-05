@@ -63,7 +63,7 @@ public class PersonFacade implements PersonFacadeInterface {
         hobbyDTOs.forEach(hobbyDTO -> {
             Hobby hobby = em.find(Hobby.class, hobbyDTO.getId());
             if (hobby != null) hobbies.add(hobby);
-            else throw new WebApplicationException("Hobby not found, 404");
+            else throw new WebApplicationException("Hobby not found", 404);
         });
         return hobbies;
     }

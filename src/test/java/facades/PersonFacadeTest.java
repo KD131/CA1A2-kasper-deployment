@@ -7,6 +7,7 @@ import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.ws.rs.WebApplicationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -92,13 +93,14 @@ class PersonFacadeTest {
                 new AddressDTO("Lars street",
                         new ZipDTO(1234, "Lars city")));
 
-        Exception ex = assertThrows(Exception.class,
+        WebApplicationException e = assertThrows(WebApplicationException.class,
                 () -> facade.create(person));
-        assertEquals("ZIP code does not exist in the database: " + person.getAddress().getZip().getId(), ex.getMessage());
+        assertEquals(404, e.getResponse().getStatus());
+        assertEquals("ZIP code " + person.getAddress().getZip().getId() + " not found.", e.getMessage());
     }
 
     @Test
-    void create_newAddress_existingZip() throws Exception {
+    void create_newAddress_existingZip() {
         PersonDTO person = new PersonDTO(
                 Arrays.asList(new PhoneDTO(33333333, "work")),
                 "chad@chad.com",
@@ -118,7 +120,7 @@ class PersonFacadeTest {
     }
 
     @Test
-    void create_existingAddress() throws Exception {
+    void create_existingAddress() {
         List<PhoneDTO> phones = new ArrayList<>();
         phones.add(new PhoneDTO(34343434, "work"));
         PersonDTO person = new PersonDTO(
@@ -138,7 +140,7 @@ class PersonFacadeTest {
     }
 
     @Test
-    void create_withHobbies() throws Exception {
+    void create_withHobbies() {
         PersonDTO person = new PersonDTO(
                 Arrays.asList(new PhoneDTO(57575757, "nonya bizniz")),
                 "charlie@charlie.com",
@@ -181,7 +183,7 @@ class PersonFacadeTest {
     }
 
     @Test
-    void editPersonHobby_deleteHobby() throws Exception {
+    void editPersonHobby_deleteHobby() {
         p2.setHobbies(Arrays.asList(h1));
         PersonDTO p2DTO = new PersonDTO(p2);
 
@@ -190,9 +192,14 @@ class PersonFacadeTest {
         assertTrue(h1.equals(edited1.getHobbies().get(0)));
 
         HOBBY_FACADE.delete(h1.getId());
-        PersonDTO edited2 = facade.update(p2DTO);
+        WebApplicationException e = assertThrows(WebApplicationException.class, () -> {
+            facade.update(p2DTO);
+        });
+        assertEquals(404, e.getResponse().getStatus());
+        assertEquals("Hobby not found", e.getMessage());
+//        PersonDTO edited2 = facade.update(p2DTO);
 //        edited2.getHobbies().forEach(System.out::println);    // only needed to debug if below test fails
-        assertEquals(0, edited2.getHobbies().size());
+//        assertEquals(0, edited2.getHobbies().size());         // if we want to ignore deleted hobbies and only process hobbies that are valid.
     }
 
     @Test
@@ -249,6 +256,16 @@ class PersonFacadeTest {
         assertTrue(p1.equals(persons.get(0)));
         assertTrue(persons.get(0).equals(p1));
         assertEquals(1, ADDRESS_FACADE.getAddressCount());
+    }
+
+    @Test
+    void delete_badId() {
+        long id = 99;
+        WebApplicationException e = assertThrows(WebApplicationException.class, () -> {
+            facade.delete(99);
+        });
+        assertEquals(404, e.getResponse().getStatus());
+        assertEquals("Person not found", e.getMessage());
     }
 
     @Test
