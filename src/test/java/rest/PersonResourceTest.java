@@ -1,7 +1,6 @@
 package rest;
 
 import dtos.*;
-import edu.emory.mathcs.backport.java.util.Arrays;
 import entities.*;
 import facades.PersonFacade;
 import io.restassured.http.ContentType;
@@ -14,10 +13,10 @@ import static org.hamcrest.Matchers.hasItem;
 import io.restassured.parsing.Parser;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.util.HttpStatus;
@@ -37,6 +36,7 @@ public class PersonResourceTest {
     private static final int SERVER_PORT = 7777;
     private static final String SERVER_URL = "http://localhost/api";
     private static Person p1, p2;
+    private static Hobby h1, h2, h3;
     private static PersonFacade personFacade;
 
     static final URI BASE_URI = UriBuilder.fromUri(SERVER_URL).port(SERVER_PORT).build();
@@ -76,12 +76,12 @@ public class PersonResourceTest {
     public void setUp() {
         EntityManager em = emf.createEntityManager();
     
-        Hobby h1 = new Hobby("Skiing", "skiing.com", "General", "Outdoors");
-        Hobby h2 = new Hobby("Polo", "polo.com", "Sport", "Outdoors");
-        Hobby h3 = new Hobby("Jogging", "jogging.com", "General", "Outdoors");
+        h1 = new Hobby("Skiing", "skiing.com", "General", "Outdoors");
+        h2 = new Hobby("Polo", "polo.com", "Sport", "Outdoors");
+        h3 = new Hobby("Jogging", "jogging.com", "General", "Outdoors");
 
         p1 = new Person(
-                new ArrayList<Phone>(Arrays.asList(new Phone[]{new Phone(11111111)})),
+                new ArrayList<Phone>(Arrays.asList(new Phone(11111111))),
                 "bob@bob.com",
                 "Bob",
                 "Roberts",
@@ -264,23 +264,24 @@ public class PersonResourceTest {
                 .body("id", equalTo((int)p2.getId()))
                 .body("firstName", equalTo(p2.getFirstName()));
     }
-    
+
     @Test
     void createPerson()
     {
         List<PhoneDTO> phones = new ArrayList<>();
         phones.add(new PhoneDTO(12341234, "personal"));
-        List<HobbyDTO> hobbies = new ArrayList<>();
-        hobbies.add(new HobbyDTO("Testing", "testing.com", "general", "indoors"));
+        List<HobbyDTO> hobbies = HobbyDTO.getDtos(Arrays.asList(
+                h1, h3
+        ));
         PersonDTO person = new PersonDTO(
                 phones,
                 "testing@testing.com",
                 "Charles",
                 "Testing",
                 new AddressDTO("Street Street 78",
-                        new ZipDTO(5656, "Test city, baby")),
+                        new ZipDTO(p1.getAddress().getZip())),
                 hobbies);
-        
+
         given()
                 .contentType(ContentType.JSON)
                 .body(person)
@@ -294,5 +295,33 @@ public class PersonResourceTest {
                 .body("lastName", equalTo(person.getLastName()))
                 .body("address.address", equalTo(person.getAddress().getAddress()))
                 .body("address.zip.id", equalTo((int)person.getAddress().getZip().getId()));
+    }
+
+    @Test
+    void createPerson_badZip()
+    {
+        List<PhoneDTO> phones = new ArrayList<>();
+        phones.add(new PhoneDTO(12341234, "personal"));
+        List<HobbyDTO> hobbies = HobbyDTO.getDtos(Arrays.asList(
+                h1, h3
+        ));
+        PersonDTO person = new PersonDTO(
+                phones,
+                "testing@testing.com",
+                "Charles",
+                "Testing",
+                new AddressDTO("Street Street 78",
+                        new ZipDTO(5656, "Test city, baby")),
+                hobbies);
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(person)
+                .when()
+                .post("person")
+                .then()
+                .statusCode(404)
+                .body("code", equalTo(404))
+                .body("message", equalTo("ZIP code " + person.getAddress().getZip().getId() + " not found."));
     }
 }
