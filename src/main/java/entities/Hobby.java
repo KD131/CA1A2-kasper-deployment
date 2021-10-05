@@ -19,7 +19,8 @@ public class Hobby extends Ent implements Serializable {
     private String category;
     private String type;
 
-    @ManyToMany(mappedBy = "hobbies")
+    @ManyToMany(mappedBy = "hobbies",
+        cascade = CascadeType.MERGE)
     private List<Person> persons;
 
     public Hobby() {
@@ -112,9 +113,13 @@ public class Hobby extends Ent implements Serializable {
         }
     }
 
-    public void setPersons(List<Person> persons) {
+    public void setPersonsBi(List<Person> persons) {
         removeAllPersons();
         persons.forEach(this::addPerson);
+    }
+
+    public void setPersonsUni(List<Person> persons) {
+        this.persons = persons;
     }
 
     public boolean equals(HobbyDTO dto) {

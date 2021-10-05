@@ -14,6 +14,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.WebApplicationException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -59,8 +60,14 @@ public class AddressFacade implements AddressFacadeInterface {
     public AddressDTO update(AddressDTO addressDTO) {
         EntityManager em = emf.createEntityManager();
         try {
+            Address original = em.find(Address.class, addressDTO.getId());
             Address address = new Address(addressDTO);
-            if (addressDTO.getId() == getById(addressDTO.getId()).getId()) {
+            if (original != null) {
+                /* More complex, bidirectional removal and setting. Unneeded in this situation.
+                List<Person> persons = getRealPersons(em, original.getPersons());
+                address.setPersonsBi(persons); */
+                address.setPersonsUni(original.getPersons());
+
                 em.getTransaction().begin();
                 em.merge(address);
                 em.getTransaction().commit();
@@ -70,6 +77,18 @@ public class AddressFacade implements AddressFacadeInterface {
         } finally {
             em.close();
         }
+    }
+
+    // only needed if we're using the bidirectional Set method when updating Addresses.
+    private List<Person> getRealPersons(EntityManager em, List<Person> addressPersons) {
+        List<Person> realPersons = new ArrayList<>();
+        addressPersons.forEach(person -> {
+            Person newPerson = em.find(Person.class, person.getId());
+            if (person != null) {
+                realPersons.add(newPerson);
+            }
+        });
+        return realPersons;
     }
 
     @Override

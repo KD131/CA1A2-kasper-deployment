@@ -60,8 +60,11 @@ public class HobbyFacade implements HobbyFacadeInterface {
         Hobby hobbyEntity = new Hobby(hobbyDTO);
         try {
             if (original != null) {
-                hobbyEntity.setPersons(original.getPersons());
-                original.removeAllPersons();
+                /* More complex, bidirectional removal and setting. Unneeded in this situation.
+                hobbyEntity.setPersonsBi(original.getPersons());
+                original.removeAllPersons(); */
+                hobbyEntity.setPersonsUni(original.getPersons());
+
                 em.getTransaction().begin();
                 em.merge(hobbyEntity);
                 em.getTransaction().commit();
