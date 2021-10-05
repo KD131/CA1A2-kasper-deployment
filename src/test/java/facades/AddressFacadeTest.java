@@ -1,6 +1,7 @@
 package facades;
 
 import dtos.AddressDTO;
+import dtos.PersonDTO;
 import dtos.ZipDTO;
 import edu.emory.mathcs.backport.java.util.Arrays;
 import entities.*;
@@ -20,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class AddressFacadeTest {
     private static EntityManagerFactory emf;
     private static AddressFacade facade;
+    private static PersonFacade PERSON_FACADE;
 
     private static Address a1, a2, a3;
     private static Person p1, p2;
@@ -28,6 +30,7 @@ class AddressFacadeTest {
     static void beforeAll() {
         emf = EMF_Creator.createEntityManagerFactoryForTest();
         facade = AddressFacade.getAddressFacade(emf);
+        PERSON_FACADE = PersonFacade.getPersonFacade(emf);
     }
 
     @BeforeEach
@@ -135,11 +138,35 @@ class AddressFacadeTest {
 
     @Test
     void edit() {
+        EntityManager em = emf.createEntityManager();
+
         a1.setAddress("Fest street 21");
         AddressDTO a1DTO = new AddressDTO(a1);
 
         facade.update(a1DTO);
         assertEquals("Fest street 21", facade.getById(a1.getId()).getAddress());
+
+        Address address = em.find(Address.class, a1.getId());
+        assertEquals(1, address.getPersons().size());
+
+        PersonDTO person = PERSON_FACADE.getById(p1.getId());
+
+        assertTrue(address.equals(person.getAddress()));
+    }
+
+    @Test
+    void edit_thenDelete_HasPerson() {
+        EntityManager em = emf.createEntityManager();
+
+        a1.setAddress("Fest street 21");
+        AddressDTO a1DTO = new AddressDTO(a1);
+
+        facade.update(a1DTO);
+        Address a = em.find(Address.class, a1.getId());
+        assertEquals(1, a.getPersons().size());
+        Exception ex = assertThrows(Exception.class, () ->
+                facade.delete(a1.getId()));
+        assertEquals("Address has persons.", ex.getMessage());
     }
     
     @Test

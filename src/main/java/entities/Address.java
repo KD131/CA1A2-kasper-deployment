@@ -23,7 +23,8 @@ public class Address extends Ent implements Serializable {
     })
     private Zip zip;
 
-    @OneToMany(mappedBy = "address") // Isn't it this we need in phone
+    @OneToMany(mappedBy = "address",
+        cascade = CascadeType.MERGE) // Isn't it this we need in phone
     private List<Person> persons;    //            --||--
 
     public Address() {               //            --||--
@@ -63,8 +64,23 @@ public class Address extends Ent implements Serializable {
         this.zip = zip;
     }
 
+    public void addPerson(Person person) {
+        if (person != null) {
+            // Person.setAddress is the bidirectional set method.
+            person.setAddress(this);
+        }
+    }
+
     public List<Person> getPersons() {
         return persons;
+    }
+
+    public void setPersonsBi(List<Person> persons) {
+        persons.forEach(this::addPerson);
+    }
+
+    public void setPersonsUni(List<Person> persons) {
+        this.persons = persons;
     }
 
     public boolean equals(AddressDTO dto) {
