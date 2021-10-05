@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.WebApplicationException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PersonFacade implements PersonFacadeInterface {
@@ -34,20 +35,17 @@ public class PersonFacade implements PersonFacadeInterface {
 
     @Override
     public PersonDTO create(PersonDTO personDTO) throws Exception {
-        AddressFacade ADDRESS_FACADE = AddressFacade.getAddressFacade(emf);
         EntityManager em = emf.createEntityManager();
 
-        // check if address already exist. If it doesn't, create new address and get managed entity.
-        AddressDTO aDto = ADDRESS_FACADE.getByFields(personDTO.getAddress());
-        Address aEntity = null;
-        if (aDto == null) {
-            aDto = ADDRESS_FACADE.create(personDTO.getAddress());
-        }
-        aEntity = em.find(Address.class, aDto.getId());
+        Address aEntity = getAddressOrCreateNew(em, personDTO.getAddress());
+
+        List<Hobby> hobbyEnts = getHobbiesFromDtos(em, personDTO.getHobbies());
+
+        Person person = new Person(personDTO);
+        person.setAddress(aEntity);
+        person.setHobbies(hobbyEnts);
 
         try {
-            Person person = new Person(personDTO);
-            person.setAddress(aEntity);
             em.getTransaction().begin();
             em.persist(person);
             em.getTransaction().commit();
@@ -57,12 +55,45 @@ public class PersonFacade implements PersonFacadeInterface {
         }
     }
 
+    // gets managed entity for each hobby in the DTO
+    private List<Hobby> getHobbiesFromDtos(EntityManager em, List<HobbyDTO> dtos) {
+        List<Hobby> ents = new ArrayList<>();
+        dtos.forEach(h -> {
+            Hobby hEnt = em.find(Hobby.class, h.getId());
+            if (hEnt != null) {
+                ents.add(hEnt);
+            }
+        });
+        return ents;
+    }
+
+    // check if address already exist. If it doesn't, create new address and get managed entity.
+    private Address getAddressOrCreateNew(EntityManager em, AddressDTO dto) throws Exception {
+        AddressFacade ADDRESS_FACADE = AddressFacade.getAddressFacade(emf);
+        AddressDTO aDto = ADDRESS_FACADE.getByFields(dto);
+        if (aDto == null) {
+            aDto = ADDRESS_FACADE.create(dto);
+        }
+        return em.find(Address.class, aDto.getId());
+    }
+
     @Override
     public PersonDTO update(PersonDTO personDTO) {
         EntityManager em = emf.createEntityManager();
         try {
+            Person original = em.find(Person.class, personDTO.getId());
             Person person = new Person(personDTO);
-            if (personDTO.getId() == getById(personDTO.getId()).getId()) {
+            Address address = getAddressOrCreateNew(em, personDTO.getAddress());
+            if (original != null) {
+                original.removeAllHobbies();
+                List<Hobby> hobbies = getHobbiesFromDtos(em, personDTO.getHobbies());
+                person.setHobbies(hobbies);
+
+                Address oldAddress = original.getAddress();
+                oldAddress.getPersons().remove(original);
+                person.setAddress(address);
+                removeAddressIfChildless(em, oldAddress);
+
                 em.getTransaction().begin();
                 em.merge(person);
                 em.getTransaction().commit();
@@ -84,6 +115,9 @@ public class PersonFacade implements PersonFacadeInterface {
             if (person == null) throw new WebApplicationException("Person not found", 404);
             PersonDTO personDTO = new PersonDTO(person);
             em.getTransaction().begin();
+            Address address = person.getAddress();
+            address.getPersons().remove(person);
+            removeAddressIfChildless(em, address);
             em.remove(person);
             em.getTransaction().commit();
             em.clear();
@@ -92,6 +126,12 @@ public class PersonFacade implements PersonFacadeInterface {
             throw new WebApplicationException("Transaction failed", 500);
         } finally {
             em.close();
+        }
+    }
+
+    private void removeAddressIfChildless(EntityManager em, Address address) {
+        if (address.getPersons().isEmpty()) {
+            em.remove(address);
         }
     }
 

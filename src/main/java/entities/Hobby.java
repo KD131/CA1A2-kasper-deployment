@@ -47,6 +47,7 @@ public class Hobby extends Ent implements Serializable {
         this.link = hobbyDTO.getLink();
         this.category = hobbyDTO.getCategory();
         this.type = hobbyDTO.getType();
+        this.persons = new ArrayList<>();
     }
 
     public String getName() {
@@ -112,7 +113,8 @@ public class Hobby extends Ent implements Serializable {
     }
 
     public void setPersons(List<Person> persons) {
-        this.persons = persons;
+        removeAllPersons();
+        persons.forEach(this::addPerson);
     }
 
     public boolean equals(HobbyDTO dto) {

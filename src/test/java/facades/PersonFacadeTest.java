@@ -16,13 +16,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class PersonFacadeTest {
     private static EntityManagerFactory emf;
     private static PersonFacade facade;
+    private static HobbyFacade HOBBY_FACADE;
+    private static AddressFacade ADDRESS_FACADE;
 
     private static Person p1, p2;
+    private static Hobby h1, h2, h3;
     
     @BeforeAll
     static void beforeAll() {
         emf = EMF_Creator.createEntityManagerFactoryForTest();
         facade = PersonFacade.getPersonFacade(emf);
+        HOBBY_FACADE = HobbyFacade.getHobbyFacade(emf);
+        ADDRESS_FACADE = AddressFacade.getAddressFacade(emf);
     }
 
     @AfterAll
@@ -33,9 +38,9 @@ class PersonFacadeTest {
     void setUp() {
         EntityManager em = emf.createEntityManager();
         
-        Hobby h1 = new Hobby("Skiing", "skiing.com", "General", "Outdoors");
-        Hobby h2 = new Hobby("Polo", "polo.com", "Sport", "Outdoors");
-        Hobby h3 = new Hobby("Jogging", "jogging.com", "General", "Outdoors");
+        h1 = new Hobby("Skiing", "skiing.com", "General", "Outdoors");
+        h2 = new Hobby("Polo", "polo.com", "Sport", "Outdoors");
+        h3 = new Hobby("Jogging", "jogging.com", "General", "Outdoors");
     
         p1 = new Person(
                 Arrays.asList(new Phone(11111111)),
@@ -133,6 +138,21 @@ class PersonFacadeTest {
     }
 
     @Test
+    void create_withHobbies() throws Exception {
+        PersonDTO person = new PersonDTO(
+                Arrays.asList(new PhoneDTO(57575757, "nonya bizniz")),
+                "charlie@charlie.com",
+                "Charlie",
+                "Chaplin",
+                new AddressDTO("Comedy Inn",
+                        new ZipDTO(p1.getAddress().getZip())),
+                HobbyDTO.getDtos(p1.getHobbies())
+        );
+        PersonDTO created = facade.create(person);
+        assertEquals(3, HOBBY_FACADE.getHobbyCount());
+    }
+
+    @Test
     void getById() {
         PersonDTO person = facade.getById(p1.getId());
         assertNotNull(person);
@@ -159,12 +179,37 @@ class PersonFacadeTest {
         facade.update(p2DTO);
         assertEquals("Allis", facade.getById(p2.getId()).getLastName());
     }
-    
+
+    @Test
+    void editPersonHobby_deleteHobby() throws Exception {
+        p2.setHobbies(Arrays.asList(h1));
+        PersonDTO p2DTO = new PersonDTO(p2);
+
+        PersonDTO edited1 = facade.update(p2DTO);
+        assertEquals(1, edited1.getHobbies().size());
+        assertTrue(h1.equals(edited1.getHobbies().get(0)));
+
+        HOBBY_FACADE.delete(h1.getId());
+        PersonDTO edited2 = facade.update(p2DTO);
+//        edited2.getHobbies().forEach(System.out::println);    // only needed to debug if below test fails
+        assertEquals(0, edited2.getHobbies().size());
+    }
+
+    @Test
+    void editAddress() {
+        Address address = new Address("Test street 12", p1.getAddress().getZip());
+        p1.setAddress(address);
+        PersonDTO p1DTO = new PersonDTO(p1);
+
+        facade.update(p1DTO);
+        assertEquals(p1.getAddress().getAddress(), facade.getById(p1.getId()).getAddress().getAddress());
+        assertEquals(2, ADDRESS_FACADE.getAddressCount());
+    }
+
     // if a person is deleted, their address cascade deletes
-    // oddly, the Zip's city name is null regardless of whether we delete anything
     @Test
     void editAddressOnOneAndRemovePerson() {
-        Address address = new Address("Test street", new Zip(2323, "Test city"));
+        Address address = new Address("Test street 1", p1.getAddress().getZip());
         p1.setAddress(address);
         PersonDTO p1DTO = new PersonDTO(p1);
 
@@ -172,15 +217,14 @@ class PersonFacadeTest {
         assertEquals(p1.getAddress().getAddress(), facade.getById(p1.getId()).getAddress().getAddress());
         
         facade.delete(p1.getId());
-        
-        AddressFacade af = AddressFacade.getAddressFacade(emf);
-        assertEquals(2, af.getAll().size());
+
+        assertEquals(1, ADDRESS_FACADE.getAddressCount());
     }
     
     // if two persons have same address, and one is deleted, the address is not deleted
     @Test
     void editAddressOnTwoAndRemovePerson() {
-        Address address = new Address("Test street", new Zip(2323, "Test city"));
+        Address address = new Address("Test street 12", p2.getAddress().getZip());
         p1.setAddress(address);
         p2.setAddress(address);
         PersonDTO p1DTO = new PersonDTO(p1);
@@ -192,9 +236,8 @@ class PersonFacadeTest {
         assertEquals(p2.getAddress().getAddress(), facade.getById(p2.getId()).getAddress().getAddress());
         
         facade.delete(p1.getId());
-    
-        AddressFacade af = AddressFacade.getAddressFacade(emf);
-        assertEquals(3, af.getAll().size());
+
+        assertEquals(1, ADDRESS_FACADE.getAddressCount());
     }
 
     @Test
@@ -205,6 +248,7 @@ class PersonFacadeTest {
         assertEquals(p1.getFirstName(), persons.get(0).getFirstName());
         assertTrue(p1.equals(persons.get(0)));
         assertTrue(persons.get(0).equals(p1));
+        assertEquals(1, ADDRESS_FACADE.getAddressCount());
     }
 
     @Test
@@ -227,7 +271,6 @@ class PersonFacadeTest {
         List<PersonDTO> persons2 = facade.getByHobby(hobby2);
         assertNotNull(persons2);
         assertEquals(1, persons2.size());
-        
     }
 
     @Test

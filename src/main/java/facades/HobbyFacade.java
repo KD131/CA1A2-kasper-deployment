@@ -56,9 +56,12 @@ public class HobbyFacade implements HobbyFacadeInterface {
     @Override
     public HobbyDTO update(HobbyDTO hobbyDTO) {
         EntityManager em = emf.createEntityManager();
+        Hobby original = em.find(Hobby.class, hobbyDTO.getId());
         Hobby hobbyEntity = new Hobby(hobbyDTO);
         try {
-            if (em.find(Hobby.class, hobbyDTO.getId()) != null) {
+            if (original != null) {
+                hobbyEntity.setPersons(original.getPersons());
+                original.removeAllPersons();
                 em.getTransaction().begin();
                 em.merge(hobbyEntity);
                 em.getTransaction().commit();
@@ -93,7 +96,8 @@ public class HobbyFacade implements HobbyFacadeInterface {
     public HobbyDTO getById(long id) {
         EntityManager em = emf.createEntityManager();
         try {
-            return new HobbyDTO(em.find(Hobby.class, id));
+            Hobby hobby = em.find(Hobby.class, id);
+            return new HobbyDTO(hobby);
         } finally {
             em.close();
         }

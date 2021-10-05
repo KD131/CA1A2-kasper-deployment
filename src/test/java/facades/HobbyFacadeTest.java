@@ -106,6 +106,17 @@ class HobbyFacadeTest
             }
         });
     }
+
+    @Test
+    void updateThenDelete() throws Exception {
+        h1.setName("Snowboarding");
+        HobbyDTO hobbyDTO = new HobbyDTO(h1);
+        HOBBY_FACADE.update(hobbyDTO);
+        HOBBY_FACADE.delete(hobbyDTO.getId());
+
+        PersonDTO p1DTO = PERSON_FACADE.getById(p1.getId());    // gets fresh from DB
+        assertEquals(1, p1DTO.getHobbies().size());
+    }
     
     @Test
     void delete_goodId() throws Exception
