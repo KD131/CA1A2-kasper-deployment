@@ -51,6 +51,8 @@ public class AddressFacade implements AddressFacadeInterface {
             em.persist(address);
             em.getTransaction().commit();
             return new AddressDTO(address);
+        } catch (Exception e) {
+            throw new WebApplicationException("Transaction failed.", 500);
         } finally {
             em.close();
         }
@@ -61,25 +63,27 @@ public class AddressFacade implements AddressFacadeInterface {
         EntityManager em = emf.createEntityManager();
         try {
             Address original = em.find(Address.class, addressDTO.getId());
+            if (original == null) throw new WebApplicationException("Address not found", 404);
             Address address = new Address(addressDTO);
-            if (original != null) {
                 /* More complex, bidirectional removal and setting. Unneeded in this situation.
                 List<Person> persons = getRealPersons(em, original.getPersons());
                 address.setPersonsBi(persons); */
-                address.setPersonsUni(original.getPersons());
-
+            address.setPersonsUnidirectional(original.getPersons());
+            try {
                 em.getTransaction().begin();
                 em.merge(address);
                 em.getTransaction().commit();
-                if (address == null) ;
                 return new AddressDTO(address);
-            } else throw new WebApplicationException("Address not found", 404);
+            } catch (Exception e) {
+                throw new WebApplicationException("Transaction failed", 500);
+            }
         } finally {
             em.close();
         }
     }
 
     // only needed if we're using the bidirectional Set method when updating Addresses.
+    // TODO: ERROR HANDLING IF IN USE
     private List<Person> getRealPersons(EntityManager em, List<Person> addressPersons) {
         List<Person> realPersons = new ArrayList<>();
         addressPersons.forEach(person -> {
@@ -95,17 +99,18 @@ public class AddressFacade implements AddressFacadeInterface {
     public AddressDTO delete(long id) throws Exception {
         EntityManager em = emf.createEntityManager();
         Address address = em.find(Address.class, id);
+        if (address == null) throw new WebApplicationException("Address not found", 404);
+        AddressDTO addressDTO = new AddressDTO(address);
+        if (!address.getPersons().isEmpty()) {
+            throw new WebApplicationException("Address has persons.", 400);
+        }
         try {
-            AddressDTO addressDTO = new AddressDTO(address);
-            if (getById(id) != null) {
-                if (!address.getPersons().isEmpty()) {
-                    throw new WebApplicationException("Address has persons.", 400);
-                }
-                em.getTransaction().begin();
-                em.remove(address);
-                em.getTransaction().commit();
-            }
+            em.getTransaction().begin();
+            em.remove(address);
+            em.getTransaction().commit();
             return addressDTO;
+        } catch (Exception e) {
+            throw new WebApplicationException("Transaction failed.", 500);
         } finally {
             em.close();
         }
@@ -176,6 +181,8 @@ public class AddressFacade implements AddressFacadeInterface {
         try {
             long addressCount = (long) em.createQuery("SELECT COUNT(a) FROM Address a").getSingleResult();
             return addressCount;
+        } catch (NoResultException e) {
+            throw new WebApplicationException("Address databases empty", 404);
         } finally {
             em.close();
         }

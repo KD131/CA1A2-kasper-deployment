@@ -47,6 +47,8 @@ public class PhoneFacade implements PhoneFacadeInterface {
             em.persist(phone);
             em.getTransaction().commit();
             return new PhoneDTO(phone);
+        } catch (Exception e) {
+            throw new WebApplicationException("Transaction failed", 500);
         } finally {
             em.close();
         }
@@ -62,8 +64,9 @@ public class PhoneFacade implements PhoneFacadeInterface {
                 em.merge(phone);
                 em.getTransaction().commit();
                 return new PhoneDTO(phone);
-            }
-            return null;
+            } else throw new WebApplicationException("Phone not found", 404);
+        } catch (Exception e) {
+            throw new WebApplicationException("Transaction failed", 500);
         } finally {
             em.close();
         }
@@ -84,8 +87,9 @@ public class PhoneFacade implements PhoneFacadeInterface {
             em.remove(phone);   // orphan removal also takes care of this so explicitly removing the phone is unneeded.
             em.getTransaction().commit();
             return phoneDTO;
-        } catch (NoResultException e) {
-            throw new WebApplicationException("Phone not found, 404");
+        } catch (Exception e) {
+            if (e instanceof NoResultException) throw new WebApplicationException("Phone not found, 404");
+            else throw new WebApplicationException("Transaction failed, 500");
         } finally {
             em.close();
         }
@@ -95,7 +99,9 @@ public class PhoneFacade implements PhoneFacadeInterface {
     public PhoneDTO getById(long id) {
         EntityManager em = emf.createEntityManager();
         try {
-            return new PhoneDTO(em.find(Phone.class, id));
+            Phone phone = em.find(Phone.class, id);
+            if (phone == null) throw new WebApplicationException("Phone not found", 404);
+            return new PhoneDTO(phone);
         } finally {
             em.close();
         }
@@ -119,15 +125,17 @@ public class PhoneFacade implements PhoneFacadeInterface {
     @Override
     public List<PhoneDTO> getByPerson(PersonDTO personDTO) {
         EntityManager em = emf.createEntityManager();
+        Person person = new Person(personDTO);
+        TypedQuery<Phone> query = em.createQuery("SELECT pho FROM Phone pho JOIN Person pers WHERE pers = :person and pho MEMBER OF pers.phones", Phone.class);
+        query.setParameter("person", person);
         try {
-            Person person = new Person(personDTO);
-            TypedQuery<Phone> query = em.createQuery("SELECT pho FROM Phone pho JOIN Person pers WHERE pers = :person and pho MEMBER OF pers.phones", Phone.class);
-            query.setParameter("person", person);
             List<Phone> phones = query.getResultList();
+            if (phones.size() == 0) throw new WebApplicationException("Phones not found", 404);
             return PhoneDTO.getDtos(phones);
         } finally {
             em.close();
         }
+
     }
 
     @Override
@@ -136,6 +144,7 @@ public class PhoneFacade implements PhoneFacadeInterface {
         try {
             TypedQuery<Phone> query = em.createQuery("SELECT p FROM Phone p", Phone.class);
             List<Phone> phones = query.getResultList();
+            if (phones.size() == 0) throw new WebApplicationException("Phones not found", 404);
             return PhoneDTO.getDtos(phones);
         } finally {
             em.close();
@@ -148,6 +157,8 @@ public class PhoneFacade implements PhoneFacadeInterface {
         try {
             long phoneCount = (long) em.createQuery("SELECT COUNT(p) FROM Phone p").getSingleResult();
             return phoneCount;
+        } catch (NoResultException e) {
+            throw new WebApplicationException("Phone database empty", 404);
         } finally {
             em.close();
         }

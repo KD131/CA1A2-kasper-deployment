@@ -76,10 +76,10 @@ public class PersonFacade implements PersonFacadeInterface {
             newAddressDTO = ADDRESS_FACADE.getByFields(addressDTO);
         } catch (WebApplicationException e) {
             newAddressDTO = ADDRESS_FACADE.create(addressDTO);
-        } finally {
-            if (newAddressDTO == null) throw new WebApplicationException("Failed to get or create address, 500");
-            return em.find(Address.class, newAddressDTO.getId());
         }
+        Address address = em.find(Address.class, newAddressDTO.getId());
+        if (address == null) throw new WebApplicationException("Failed to get or create address, 500");
+        else return address;
     }
 
     @Override

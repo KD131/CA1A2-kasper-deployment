@@ -75,11 +75,11 @@ public class Address extends Ent implements Serializable {
         return persons;
     }
 
-    public void setPersonsBi(List<Person> persons) {
+    public void setPersonsBidirectional(List<Person> persons) {
         persons.forEach(this::addPerson);
     }
 
-    public void setPersonsUni(List<Person> persons) {
+    public void setPersonsUnidirectional(List<Person> persons) {
         this.persons = persons;
     }
 

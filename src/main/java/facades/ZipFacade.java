@@ -62,22 +62,26 @@ public class ZipFacade implements ZipFacadeInterface {
     }
 
     @Override
-    public void delete(long zip) {
+    public ZipDTO delete(long id) {
         EntityManager em = emf.createEntityManager();
         try {
-            ZipDTO zipDTO = new ZipDTO(em.find(Zip.class, zip));
-            if (zipDTO != null) em.remove(zipDTO);
-            else throw new WebApplicationException("Zip not found.", 404);
+            Zip zip = em.find(Zip.class, id);
+            if (zip == null) throw new WebApplicationException("Zip not found.", 404);
+            ZipDTO zipDTO = new ZipDTO(zip);
+            em.remove(new ZipDTO(zip));
+            return zipDTO;
         } finally {
             em.close();
         }
     }
 
     @Override
-    public ZipDTO getByZip(long zip) {
+    public ZipDTO getByZip(long id) {
         EntityManager em = emf.createEntityManager();
         try {
-            return new ZipDTO(em.find(Zip.class, zip));
+            Zip zip = em.find(Zip.class, id);
+            if (zip == null) throw new WebApplicationException("Zip not found", 404);
+            return new ZipDTO(zip);
         } finally {
             em.close();
         }
@@ -122,6 +126,7 @@ public class ZipFacade implements ZipFacadeInterface {
         try {
             TypedQuery<Zip> query = em.createQuery("SELECT z FROM Zip z", Zip.class);
             List<Zip> zips = query.getResultList();
+            if (zips.size() == 0) throw new WebApplicationException("Zips not found", 404);
             return ZipDTO.getDtos(zips);
         } finally {
             em.close();
@@ -134,6 +139,8 @@ public class ZipFacade implements ZipFacadeInterface {
         try {
             long zipCount = (long) em.createQuery("SELECT COUNT(z) FROM Zip z").getSingleResult();
             return zipCount;
+        } catch (NoResultException e) {
+            throw new WebApplicationException("Zip database empty", 404);
         } finally {
             em.close();
         }
