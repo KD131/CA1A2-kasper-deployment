@@ -67,7 +67,6 @@ public class PhoneFacade implements PhoneFacadeInterface {
         } finally {
             em.close();
         }
-
     }
 
     @Override
