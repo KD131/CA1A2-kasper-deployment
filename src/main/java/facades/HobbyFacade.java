@@ -8,6 +8,7 @@ import utils.EMF_Creator;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.WebApplicationException;
 import java.util.List;
 
 /**
@@ -77,7 +78,7 @@ public class HobbyFacade implements HobbyFacadeInterface {
     }
 
     @Override
-    public HobbyDTO delete(long id) throws Exception
+    public HobbyDTO delete(long id)
     {
         EntityManager em = emf.createEntityManager();
         try {
@@ -89,7 +90,7 @@ public class HobbyFacade implements HobbyFacadeInterface {
                 em.getTransaction().commit();
                 return new HobbyDTO(h);
             }
-            else throw new Exception("No hobby with id: " + id);
+            else throw new WebApplicationException("No hobby with id: " + id, 404);
         } finally {
             em.close();
         }

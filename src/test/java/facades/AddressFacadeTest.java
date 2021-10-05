@@ -12,6 +12,7 @@ import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.ws.rs.WebApplicationException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,7 +100,7 @@ class AddressFacadeTest {
     }
 
     @Test
-    void createExistingZip() throws Exception {
+    void createExistingZip() {
         AddressDTO addressDTO = new AddressDTO("21 Jump Street",
                 new ZipDTO(a1.getZip()));
         AddressDTO created = facade.create(addressDTO);
@@ -118,7 +119,7 @@ class AddressFacadeTest {
     }
 
     @Test
-    void createEqualToExistingZip() throws Exception {
+    void createEqualToExistingZip() {
         AddressDTO addressDTO = new AddressDTO("21 Jump Street",
                 new ZipDTO(a1.getZip().getZip(), a1.getZip().getCity()));
         AddressDTO created = facade.create(addressDTO);
@@ -164,9 +165,10 @@ class AddressFacadeTest {
         facade.update(a1DTO);
         Address a = em.find(Address.class, a1.getId());
         assertEquals(1, a.getPersons().size());
-        Exception ex = assertThrows(Exception.class, () ->
+        WebApplicationException e = assertThrows(WebApplicationException.class, () ->
                 facade.delete(a1.getId()));
-        assertEquals("Address has persons.", ex.getMessage());
+        assertEquals(400, e.getResponse().getStatus());
+        assertEquals("Address has persons.", e.getMessage());
     }
     
     @Test
@@ -180,8 +182,10 @@ class AddressFacadeTest {
     @Test
     void delete_addressHasPerson()
     {
-        assertThrows(Exception.class, () ->
+        WebApplicationException e = assertThrows(WebApplicationException.class, () ->
                 facade.delete(a2.getId()));
+        assertEquals(400, e.getResponse().getStatus());
+        assertEquals("Address has persons.", e.getMessage());
     }
 
     @Test

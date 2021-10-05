@@ -63,7 +63,7 @@ public class PersonFacade implements PersonFacadeInterface {
         hobbyDTOs.forEach(hobbyDTO -> {
             Hobby hobby = em.find(Hobby.class, hobbyDTO.getId());
             if (hobby != null) hobbies.add(hobby);
-            else throw new WebApplicationException("Hobby not found, 404");
+            else throw new WebApplicationException("Hobby not found", 404);
         });
         return hobbies;
     }
@@ -76,10 +76,8 @@ public class PersonFacade implements PersonFacadeInterface {
             newAddressDTO = ADDRESS_FACADE.getByFields(addressDTO);
         } catch (WebApplicationException e) {
             newAddressDTO = ADDRESS_FACADE.create(addressDTO);
-        } finally {
-            if (newAddressDTO == null) throw new WebApplicationException("Failed to get or create address, 500");
-            return em.find(Address.class, newAddressDTO.getId());
         }
+        return em.find(Address.class, newAddressDTO.getId());
     }
 
     @Override

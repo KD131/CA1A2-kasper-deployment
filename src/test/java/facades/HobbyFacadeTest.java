@@ -10,6 +10,7 @@ import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.ws.rs.WebApplicationException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -133,9 +134,10 @@ class HobbyFacadeTest
     void delete_badId()
     {
         long id = 666;
-        Exception ex = assertThrows(Exception.class,
+        WebApplicationException e = assertThrows(WebApplicationException.class,
                 () -> HOBBY_FACADE.delete(id));
-        assertEquals("No hobby with id: " + id, ex.getMessage());
+        assertEquals(404, e.getResponse().getStatus());
+        assertEquals("No hobby with id: " + id, e.getMessage());
     }
     
     @Test
