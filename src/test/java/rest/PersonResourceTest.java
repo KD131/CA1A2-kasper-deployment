@@ -296,4 +296,32 @@ public class PersonResourceTest {
                 .body("address.address", equalTo(person.getAddress().getAddress()))
                 .body("address.zip.id", equalTo((int)person.getAddress().getZip().getId()));
     }
+
+    @Test
+    void createPerson_badZip()
+    {
+        List<PhoneDTO> phones = new ArrayList<>();
+        phones.add(new PhoneDTO(12341234, "personal"));
+        List<HobbyDTO> hobbies = HobbyDTO.getDtos(Arrays.asList(
+                h1, h3
+        ));
+        PersonDTO person = new PersonDTO(
+                phones,
+                "testing@testing.com",
+                "Charles",
+                "Testing",
+                new AddressDTO("Street Street 78",
+                        new ZipDTO(5656, "Test city, baby")),
+                hobbies);
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(person)
+                .when()
+                .post("person")
+                .then()
+                .statusCode(404)
+                .body("code", equalTo(404))
+                .body("message", equalTo("ZIP code " + person.getAddress().getZip().getId() + " not found."));
+    }
 }
