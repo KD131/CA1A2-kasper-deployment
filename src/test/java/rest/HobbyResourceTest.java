@@ -172,7 +172,6 @@ class HobbyResourceTest {
                 .body("type", equalTo(hobbyDTO.getType()));
     }
 
-    @Disabled
     @Test
     void deleteHobby_badId() {
         long id = 666;
@@ -182,7 +181,7 @@ class HobbyResourceTest {
                 .when()
                 .delete("hobby/" + id)
                 .then()
-                .body("code", equalTo(500))
+                .body("code", equalTo(404))
                 .body("message", equalTo("No hobby with id: " + id));
     }
 
