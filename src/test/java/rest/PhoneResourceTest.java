@@ -1,7 +1,10 @@
 package rest;
 
 import dtos.PhoneDTO;
+import entities.Address;
+import entities.Person;
 import entities.Phone;
+import entities.Zip;
 import facades.PhoneFacade;
 import io.restassured.http.ContentType;
 import org.glassfish.grizzly.http.util.HttpStatus;
@@ -17,6 +20,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
@@ -27,7 +32,8 @@ public class PhoneResourceTest {
 
     private static final int SERVER_PORT = 7777;
     private static final String SERVER_URL = "http://localhost/api";
-    private static Phone p1, p2;
+    private static Phone ph1, ph2;
+    private static Person pe1;
     private static PhoneFacade phoneFacade;
 
     static final URI BASE_URI = UriBuilder.fromUri(SERVER_URL).port(SERVER_PORT).build();
@@ -67,8 +73,16 @@ public class PhoneResourceTest {
     public void setUp() {
         EntityManager em = emf.createEntityManager();
 
-        p1 = new Phone(11111111, "Business");
-        p2 = new Phone(22222222, "Pleasure");
+        ph1 = new Phone(11111111, "Business");
+        ph2 = new Phone(22222222, "Pleasure");
+
+        pe1 = new Person(
+                Arrays.asList(ph1, ph2),
+                "bob@bob.com",
+                "Bob",
+                "Roberts",
+                new Address("Test street 21",
+                        new Zip(6969, "Nice-ville")));
 
         try {
             em.getTransaction().begin();
@@ -80,8 +94,9 @@ public class PhoneResourceTest {
             em.createNamedQuery("Hobby.deleteAllRows").executeUpdate();
             em.createNamedQuery("Address.deleteAllRows").executeUpdate();
             em.createNamedQuery("Zip.deleteAllRows").executeUpdate();
-            em.persist(p1);
-            em.persist(p2);
+            em.persist(ph1);
+            em.persist(ph2);
+            em.persist(pe1);
             em.getTransaction().commit();
         } finally {
             em.close();
@@ -110,7 +125,7 @@ public class PhoneResourceTest {
 
     @Test
     void updatePhone() {
-        PhoneDTO p2DTO = new PhoneDTO(p2);
+        PhoneDTO p2DTO = new PhoneDTO(ph2);
         p2DTO.setNumber(66666666);
 
         given()
@@ -128,12 +143,12 @@ public class PhoneResourceTest {
         given()
                 .contentType("application/json")
                 .when()
-                .delete("phone/" + p2.getId())
+                .delete("phone/" + ph2.getId())
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("id", equalTo((int)p2.getId()))
-                .body("number", equalTo(p2.getNumber()))
-                .body("info", equalTo(p2.getInfo()));;
+                .body("id", equalTo((int) ph2.getId()))
+                .body("number", equalTo(ph2.getNumber()))
+                .body("info", equalTo(ph2.getInfo()));;
     }
 }
