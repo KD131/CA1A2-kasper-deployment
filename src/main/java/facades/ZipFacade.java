@@ -11,7 +11,9 @@ import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.WebApplicationException;
 import java.util.List;
 
 /**
@@ -47,6 +49,8 @@ public class ZipFacade implements ZipFacadeInterface {
             em.persist(zip);
             em.getTransaction().commit();
             return new ZipDTO(zip);
+        } catch(Exception e) {
+            throw new WebApplicationException("Transaction failed.", 500);
         } finally {
             em.close();
         }
@@ -59,13 +63,11 @@ public class ZipFacade implements ZipFacadeInterface {
 
     @Override
     public void delete(long zip) {
-
         EntityManager em = emf.createEntityManager();
         try {
             ZipDTO zipDTO = new ZipDTO(em.find(Zip.class, zip));
-            if (zipDTO != null) {
-                em.remove(zipDTO);
-            }
+            if (zipDTO != null) em.remove(zipDTO);
+            else throw new WebApplicationException("Zip not found.", 404);
         } finally {
             em.close();
         }
@@ -84,12 +86,14 @@ public class ZipFacade implements ZipFacadeInterface {
     @Override
     public ZipDTO getByPerson(PersonDTO personDTO) {
         EntityManager em = emf.createEntityManager();
+        Person person = new Person(personDTO);
+        TypedQuery<Zip> query = em.createQuery("SELECT z FROM Zip z JOIN Person p WHERE p.address.zip = z AND p = :person", Zip.class);
+        query.setParameter("person", person);
         try {
-            Person person = new Person(personDTO);
-            TypedQuery<Zip> query = em.createQuery("SELECT z FROM Zip z JOIN Person p WHERE p.address.zip = z AND p = :person", Zip.class);
-            query.setParameter("person", person);
             Zip zip = query.getSingleResult();
             return new ZipDTO(zip);
+        } catch (NoResultException e) {
+            throw new WebApplicationException("Zip not found.", 404);
         } finally {
             em.close();
         }
@@ -98,12 +102,15 @@ public class ZipFacade implements ZipFacadeInterface {
     @Override
     public ZipDTO getByAddress(AddressDTO addressDTO) {
         EntityManager em = emf.createEntityManager();
+
+        Address address = new Address(addressDTO);
+        TypedQuery<Zip> query = em.createQuery("SELECT z FROM Zip z JOIN Address a WHERE a.zip = z AND a = :address", Zip.class);
+        query.setParameter("address", address);
         try {
-            Address address = new Address(addressDTO);
-            TypedQuery<Zip> query = em.createQuery("SELECT z FROM Zip z JOIN Address a WHERE a.zip = z AND a = :address", Zip.class);
-            query.setParameter("address", address);
             Zip zip = query.getSingleResult();
             return new ZipDTO(zip);
+        } catch (NoResultException e) {
+            throw new WebApplicationException("Zip not found.", 404);
         } finally {
             em.close();
         }
