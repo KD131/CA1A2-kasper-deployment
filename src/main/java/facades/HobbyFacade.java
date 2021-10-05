@@ -207,7 +207,9 @@ public class HobbyFacade implements HobbyFacadeInterface {
         try {
             long hobbyCount = (long) em.createQuery("SELECT COUNT(h) FROM Hobby h").getSingleResult();
             return hobbyCount;
-        } finally {
+        } catch (NoResultException e) {
+            throw new WebApplicationException("Hobby database empty", 404);
+        }  finally {
             em.close();
         }
     }
