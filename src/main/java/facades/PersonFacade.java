@@ -85,25 +85,26 @@ public class PersonFacade implements PersonFacadeInterface {
     @Override
     public PersonDTO update(PersonDTO personDTO) {
         EntityManager em = emf.createEntityManager();
+        // Old person
+        Person oldPerson = em.find(Person.class, personDTO.getId());
+        if (oldPerson == null) throw new WebApplicationException("Person not found", 404);
+        oldPerson.removeAllHobbies();
+        Address oldAddress = oldPerson.getAddress();
+        oldAddress.getPersons().remove(oldPerson);
+        removeAddressIfChildless(em, oldAddress);
+        // new person
+        Person newPerson = new Person(personDTO);
+        newPerson.setHobbies(getHobbiesFromDTOs(em, personDTO.getHobbies()));
+        Address newAddress = getAddressOrCreateNew(em, personDTO.getAddress());
+        newPerson.setAddress(newAddress);
+        // merge
         try {
-            Person original = em.find(Person.class, personDTO.getId());
-            Person person = new Person(personDTO);
-            Address address = getAddressOrCreateNew(em, personDTO.getAddress());
-            if (original != null) {
-                original.removeAllHobbies();
-                List<Hobby> hobbies = getHobbiesFromDTOs(em, personDTO.getHobbies());
-                person.setHobbies(hobbies);
-
-                Address oldAddress = original.getAddress();
-                oldAddress.getPersons().remove(original);
-                person.setAddress(address);
-                removeAddressIfChildless(em, oldAddress);
-
-                em.getTransaction().begin();
-                em.merge(person);
-                em.getTransaction().commit();
-                return new PersonDTO(person);
-            } else throw new WebApplicationException("Person not found", 404);
+            em.getTransaction().begin();
+            em.merge(newPerson);
+            em.getTransaction().commit();
+            return new PersonDTO(newPerson);
+        } catch (Exception e) {
+            throw new WebApplicationException("Transaction failed", 500);
         } finally {
             em.close();
         }
@@ -111,28 +112,30 @@ public class PersonFacade implements PersonFacadeInterface {
 
     @Override
     public PersonDTO delete(long id) {
-
         EntityManager em = emf.createEntityManager();
+        Person person = em.find(Person.class, id);
+        if (person == null) throw new WebApplicationException("Person not found", 404);
+        Address address = person.getAddress();
         try {
-            Person person = em.find(Person.class, id);
-            if (person == null) throw new WebApplicationException("Person not found", 404);
-            PersonDTO personDTO = new PersonDTO(person);
             em.getTransaction().begin();
-            Address address = person.getAddress();
             address.getPersons().remove(person);
             removeAddressIfChildless(em, address);
             em.remove(person);
             em.getTransaction().commit();
             em.clear();
-            return personDTO;
+            return new PersonDTO(person);
+        } catch (Exception e) {
+            throw new WebApplicationException("Transaction failed", 500);
         } finally {
             em.close();
         }
     }
 
     private void removeAddressIfChildless(EntityManager em, Address address) {
-        if (address.getPersons().isEmpty()) {
-            em.remove(address);
+        try {
+            if (address.getPersons().isEmpty()) em.remove(address);
+        } catch (Exception e) {
+            throw new WebApplicationException("Failed to delete empty address", 500);
         }
     }
 
@@ -229,6 +232,8 @@ public class PersonFacade implements PersonFacadeInterface {
         try {
             long personCount = (long) em.createQuery("SELECT COUNT(p) FROM Person p").getSingleResult();
             return personCount;
+        } catch (NoResultException e) {
+            throw new WebApplicationException("Person database empty", 404);
         } finally {
             em.close();
         }
