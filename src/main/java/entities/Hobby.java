@@ -113,9 +113,13 @@ public class Hobby extends Ent implements Serializable {
         }
     }
 
-    public void setPersons(List<Person> persons) {
+    public void setPersonsBi(List<Person> persons) {
         removeAllPersons();
         persons.forEach(this::addPerson);
+    }
+
+    public void setPersonsUni(List<Person> persons) {
+        this.persons = persons;
     }
 
     public boolean equals(HobbyDTO dto) {
