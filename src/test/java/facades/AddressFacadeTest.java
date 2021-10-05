@@ -94,9 +94,10 @@ class AddressFacadeTest {
     void createNewZip() {
         AddressDTO addressDTO = new AddressDTO("21 Jump Street",
                 new ZipDTO(1515, "Cowabunga city"));
-        assertThrows(Exception.class,
+        WebApplicationException e = assertThrows(WebApplicationException.class,
                 () -> facade.create(addressDTO));
-
+        assertEquals(404, e.getResponse().getStatus());
+        assertEquals("ZIP code " + addressDTO.getZip().getId() + " not found.", e.getMessage());
     }
 
     @Test
