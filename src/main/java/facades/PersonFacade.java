@@ -34,47 +34,51 @@ public class PersonFacade implements PersonFacadeInterface {
     }
 
     @Override
-    public PersonDTO create(PersonDTO personDTO) throws Exception {
+    public PersonDTO create(PersonDTO personDTO) {
         EntityManager em = emf.createEntityManager();
 
-        Address aEntity = getAddressOrCreateNew(em, personDTO.getAddress());
-
-        List<Hobby> hobbyEnts = getHobbiesFromDtos(em, personDTO.getHobbies());
+        Address address = getAddressOrCreateNew(em, personDTO.getAddress());
+        List<Hobby> hobbies = getHobbiesFromDTOs(em, personDTO.getHobbies());
 
         Person person = new Person(personDTO);
-        person.setAddress(aEntity);
-        person.setHobbies(hobbyEnts);
+        person.setAddress(address);
+        person.setHobbies(hobbies);
 
         try {
             em.getTransaction().begin();
             em.persist(person);
             em.getTransaction().commit();
             return new PersonDTO(person);
+        } catch (Exception e) {
+            throw new WebApplicationException("Transaction failed", 500);
         } finally {
             em.close();
         }
     }
 
     // gets managed entity for each hobby in the DTO
-    private List<Hobby> getHobbiesFromDtos(EntityManager em, List<HobbyDTO> dtos) {
-        List<Hobby> ents = new ArrayList<>();
-        dtos.forEach(h -> {
-            Hobby hEnt = em.find(Hobby.class, h.getId());
-            if (hEnt != null) {
-                ents.add(hEnt);
-            }
+    private List<Hobby> getHobbiesFromDTOs(EntityManager em, List<HobbyDTO> hobbyDTOs) {
+        List<Hobby> hobbies = new ArrayList<>();
+        hobbyDTOs.forEach(hobbyDTO -> {
+            Hobby hobby = em.find(Hobby.class, hobbyDTO.getId());
+            if (hobby != null) hobbies.add(hobby);
+            else throw new WebApplicationException("Hobby not found, 404");
         });
-        return ents;
+        return hobbies;
     }
 
     // check if address already exist. If it doesn't, create new address and get managed entity.
-    private Address getAddressOrCreateNew(EntityManager em, AddressDTO dto) throws Exception {
+    private Address getAddressOrCreateNew(EntityManager em, AddressDTO addressDTO) {
         AddressFacade ADDRESS_FACADE = AddressFacade.getAddressFacade(emf);
-        AddressDTO aDto = ADDRESS_FACADE.getByFields(dto);
-        if (aDto == null) {
-            aDto = ADDRESS_FACADE.create(dto);
+        AddressDTO newAddressDTO = null;
+        try {
+            newAddressDTO = ADDRESS_FACADE.getByFields(addressDTO);
+        } catch (WebApplicationException e) {
+            newAddressDTO = ADDRESS_FACADE.create(addressDTO);
+        } finally {
+            if (newAddressDTO == null) throw new WebApplicationException("Failed to get or create address, 500");
+            return em.find(Address.class, newAddressDTO.getId());
         }
-        return em.find(Address.class, aDto.getId());
     }
 
     @Override
@@ -86,7 +90,7 @@ public class PersonFacade implements PersonFacadeInterface {
             Address address = getAddressOrCreateNew(em, personDTO.getAddress());
             if (original != null) {
                 original.removeAllHobbies();
-                List<Hobby> hobbies = getHobbiesFromDtos(em, personDTO.getHobbies());
+                List<Hobby> hobbies = getHobbiesFromDTOs(em, personDTO.getHobbies());
                 person.setHobbies(hobbies);
 
                 Address oldAddress = original.getAddress();
@@ -99,8 +103,6 @@ public class PersonFacade implements PersonFacadeInterface {
                 em.getTransaction().commit();
                 return new PersonDTO(person);
             } else throw new WebApplicationException("Person not found", 404);
-        } catch (Exception e) {
-            throw new WebApplicationException("Transaction failed", 500);
         } finally {
             em.close();
         }
@@ -122,8 +124,6 @@ public class PersonFacade implements PersonFacadeInterface {
             em.getTransaction().commit();
             em.clear();
             return personDTO;
-        } catch (Exception e) {
-            throw new WebApplicationException("Transaction failed", 500);
         } finally {
             em.close();
         }
@@ -157,8 +157,6 @@ public class PersonFacade implements PersonFacadeInterface {
             Person person = query.getSingleResult();
             if (person == null) throw new WebApplicationException("Person not found", 404);
             return new PersonDTO(person);
-        } catch (Exception e) {
-            throw new WebApplicationException("Request failed", 500);
         } finally {
             em.close();
         }
@@ -174,8 +172,6 @@ public class PersonFacade implements PersonFacadeInterface {
             List<Person> persons = query.getResultList();
             if (persons.size() == 0) throw new WebApplicationException("Persons not found", 404);
             return PersonDTO.getDtos(persons);
-        } catch (Exception e) {
-            throw new WebApplicationException("Request failed", 500);
         } finally {
             em.close();
         }
@@ -191,8 +187,6 @@ public class PersonFacade implements PersonFacadeInterface {
             List<Person> persons = query.getResultList();
             if (persons.size() == 0) throw new WebApplicationException("Persons not found", 404);
             return PersonDTO.getDtos(persons);
-        } catch (Exception e) {
-            throw new WebApplicationException("Request failed", 500);
         } finally {
             em.close();
         }
@@ -208,8 +202,6 @@ public class PersonFacade implements PersonFacadeInterface {
             List<Person> persons = query.getResultList();
             if (persons.size() == 0) throw new WebApplicationException("Persons not found", 404);
             return PersonDTO.getDtos(persons);
-        } catch (Exception e) {
-            throw new WebApplicationException("Request failed", 500);
         } finally {
             em.close();
         }
@@ -223,8 +215,6 @@ public class PersonFacade implements PersonFacadeInterface {
             List<Person> persons = query.getResultList();
             if (persons.size() == 0) throw new WebApplicationException("Persons not found", 404);
             return PersonDTO.getDtos(persons);
-        } catch (Exception e) {
-            throw new WebApplicationException("Request failed", 500);
         } finally {
             em.close();
         }
@@ -236,8 +226,6 @@ public class PersonFacade implements PersonFacadeInterface {
         try {
             long personCount = (long) em.createQuery("SELECT COUNT(p) FROM Person p").getSingleResult();
             return personCount;
-        } catch (Exception e) {
-            throw new WebApplicationException("Request failed", 500);
         } finally {
             em.close();
         }

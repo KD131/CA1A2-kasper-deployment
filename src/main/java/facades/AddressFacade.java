@@ -49,8 +49,6 @@ public class AddressFacade implements AddressFacadeInterface {
             em.persist(address);
             em.getTransaction().commit();
             return new AddressDTO(address);
-        } catch (Exception e) {
-            throw new WebApplicationException("Transaction failed", 500);
         } finally {
             em.close();
         }
@@ -68,8 +66,6 @@ public class AddressFacade implements AddressFacadeInterface {
                 if (address == null) ;
                 return new AddressDTO(address);
             } else throw new WebApplicationException("Address not found", 404);
-        } catch (Exception e) {
-            throw new WebApplicationException("Transaction failed", 500);
         } finally {
             em.close();
         }
@@ -78,20 +74,18 @@ public class AddressFacade implements AddressFacadeInterface {
     @Override
     public AddressDTO delete(long id) throws Exception {
         EntityManager em = emf.createEntityManager();
-        Address a = em.find(Address.class, id);
+        Address address = em.find(Address.class, id);
         try {
-            AddressDTO aDTO = new AddressDTO(a);
+            AddressDTO addressDTO = new AddressDTO(address);
             if (getById(id) != null) {
-                if (!a.getPersons().isEmpty()) {
-                    throw new Exception("Address has persons.");
+                if (!address.getPersons().isEmpty()) {
+                    throw new WebApplicationException("Address has persons.", 400);
                 }
                 em.getTransaction().begin();
-                em.remove(a);
+                em.remove(address);
                 em.getTransaction().commit();
             }
-            return aDTO;
-        } catch (Exception e) {
-            throw new WebApplicationException("Transaction failed", 500);
+            return addressDTO;
         } finally {
             em.close();
         }
@@ -109,20 +103,6 @@ public class AddressFacade implements AddressFacadeInterface {
         }
     }
 
-    public AddressDTO getOrCreateAddress(AddressDTO addressDTO) {
-        EntityManager em = emf.createEntityManager();
-        AddressDTO dto;
-        try {
-            dto = getByFields(addressDTO);
-            return dto;
-        } catch (WebApplicationException e) {
-            dto = create(addressDTO);
-            return dto;
-        } finally {
-            em.close();
-        }
-    }
-
     public AddressDTO getByFields(AddressDTO addressDTO) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -132,8 +112,6 @@ public class AddressFacade implements AddressFacadeInterface {
             Address address = query.getSingleResult();
             if (address == null) throw new WebApplicationException("Address not found.", 404);
             return new AddressDTO(address);
-        } catch (Exception e) {
-            throw new WebApplicationException("Request failed", 500);
         } finally {
             em.close();
         }
@@ -149,8 +127,6 @@ public class AddressFacade implements AddressFacadeInterface {
             List<Address> addresses = query.getResultList();
             if (addresses.size() == 0) throw new WebApplicationException("Addresses not found.", 404);
             return AddressDTO.getDtos(addresses);
-        } catch (Exception e) {
-            throw new WebApplicationException("Request failed", 500);
         } finally {
             em.close();
         }
@@ -166,8 +142,6 @@ public class AddressFacade implements AddressFacadeInterface {
             Address address = query.getSingleResult();
             if (address == null) throw new WebApplicationException("Address not found", 404);
             return new AddressDTO(address);
-        } catch (Exception e) {
-            throw new WebApplicationException("Request failed", 500);
         } finally {
             em.close();
         }
@@ -179,8 +153,6 @@ public class AddressFacade implements AddressFacadeInterface {
         try {
             long addressCount = (long) em.createQuery("SELECT COUNT(a) FROM Address a").getSingleResult();
             return addressCount;
-        } catch (Exception e) {
-            throw new WebApplicationException("Request failed", 500);
         } finally {
             em.close();
         }
@@ -194,8 +166,6 @@ public class AddressFacade implements AddressFacadeInterface {
             List<Address> addresses = query.getResultList();
             if (addresses.size() == 0) throw new WebApplicationException("Addresses not found", 404);
             return AddressDTO.getDtos(addresses);
-        } catch (Exception e) {
-            throw new WebApplicationException("Request failed", 500);
         } finally {
             em.close();
         }
