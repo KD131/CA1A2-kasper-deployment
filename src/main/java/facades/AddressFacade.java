@@ -201,6 +201,22 @@ public class AddressFacade implements AddressFacadeInterface {
         }
     }
 
+    /*public AddressDTO create(AddressDTO addressDTO, PersonDTO personDTO) {
+        EntityManager em = emf.createEntityManager();
+
+        try{
+            Person person = new Person(personDTO);
+            if(em.find(Person.class, person.getId()) != null) {
+            Address address = new Address(addressDTO);
+                if(getById(address.getId()) == null) {
+                    em.getTransaction().begin();
+                    em.persist(address);
+                }
+
+        }
+
+    }              */  // add address?
+
     public static void main(String[] args) {
         emf = EMF_Creator.createEntityManagerFactory();
         AddressFacade af = getAddressFacade(emf);
