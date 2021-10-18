@@ -1,4 +1,5 @@
-INSERT INTO  VALUES ('0555','Scanning');
+DELETE FROM ZIP;
+INSERT INTO ZIP VALUES ('0555','Scanning');
 INSERT INTO ZIP VALUES ('0800','Høje Taastrup');
 INSERT INTO ZIP VALUES ('0877','København C');
 INSERT INTO ZIP VALUES ('0892','Sjælland USF P');
@@ -1349,4 +1350,4 @@ INSERT INTO ZIP VALUES ('928','Vikarbyrgi');
 INSERT INTO ZIP VALUES ('950','Porkeri');
 INSERT INTO ZIP VALUES ('960','Hov');
 INSERT INTO ZIP VALUES ('970','Sumba');
-INSERT INTO ZIP VALUES ('','undefined');
+alter table ZIP modify ZIP bigint(4) zerofill not null;

@@ -1,31 +1,27 @@
 package entities;
 
+import dtos.HobbyDTO;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Table(name = "HOBBY")
 
 @Entity
 @NamedQuery(name = "Hobby.deleteAllRows", query = "DELETE FROM Hobby")
-public class Hobby implements Serializable {
+public class Hobby extends Ent implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String name;
     private String link;
     private String category;
-
     private String type;
 
-
-    
-    @ManyToMany(mappedBy = "hobbies")
+    @ManyToMany(mappedBy = "hobbies",
+        cascade = CascadeType.MERGE)
     private List<Person> persons;
-
 
     public Hobby() {
     }
@@ -38,12 +34,21 @@ public class Hobby implements Serializable {
         this.persons = new ArrayList<>();
     }
 
-    public Long getId() {
-        return id;
+    public List<Hobby> updateHobbyDTOToEntity(List<HobbyDTO> hobbiesDTO) {
+        List<Hobby> hobbies = new ArrayList<>();
+        for (HobbyDTO h : hobbiesDTO) {
+            hobbies.add(new Hobby(h));
+        }
+        return hobbies;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Hobby(HobbyDTO hobbyDTO) {
+        this.id = hobbyDTO.getId();
+        this.name = hobbyDTO.getName();
+        this.link = hobbyDTO.getLink();
+        this.category = hobbyDTO.getCategory();
+        this.type = hobbyDTO.getType();
+        this.persons = new ArrayList<>();
     }
 
     public String getName() {
@@ -82,8 +87,46 @@ public class Hobby implements Serializable {
     public void setCategory(String category) {
         this.category = category;
     }
+    
+    public void addPerson(Person person) {
+        if (person != null) {
+            this.persons.add(person);
+            person.getHobbies().add(this);
+        }
+    }
+    
+    public void removePerson(Person person) {
+        if (person != null) {
+            this.persons.remove(person);
+            person.getHobbies().remove(this);
+        }
+    }
+    
+    public void removeAllPersons() {
+        Iterator<Person> iterator = persons.iterator();
+        while (iterator.hasNext()) {
+            Person person = iterator.next();
+            if (person != null) {
+                iterator.remove();
+                person.getHobbies().remove(this);
+            }
+        }
+    }
 
-    public void setPersons(List<Person> persons) {
+    public void setPersonsBi(List<Person> persons) {
+        removeAllPersons();
+        persons.forEach(this::addPerson);
+    }
+
+    public void setPersonsUnidirectional(List<Person> persons) {
         this.persons = persons;
+    }
+
+    public boolean equals(HobbyDTO dto) {
+        if (getId() != dto.getId()) return false;
+        if (!getName().equals(dto.getName())) return false;
+        if (!getLink().equals(dto.getLink())) return false;
+        if (!getCategory().equals(dto.getCategory())) return false;
+        return getType().equals(dto.getType());
     }
 }

@@ -5,7 +5,6 @@
  */
 package dtos;
 
-import entities.Hobby;
 import entities.Phone;
 
 import java.util.ArrayList;
@@ -14,8 +13,7 @@ import java.util.List;
 /**
  * @author tha
  */
-public class PhoneDTO {
-    private long id;
+public class PhoneDTO extends DTO {
     private int number;
     private String info;
 
@@ -25,16 +23,16 @@ public class PhoneDTO {
     }
 
     public static List<PhoneDTO> getDtos(List<Phone> phones) {
-        List<PhoneDTO> PhoneDTOs = new ArrayList();
-        phones.forEach(phone -> PhoneDTOs.add(new PhoneDTO(phone)));
-        return PhoneDTOs;
+        List<PhoneDTO> phoneDTOs = new ArrayList();
+        phones.forEach(phone -> phoneDTOs.add(new PhoneDTO(phone)));
+        return phoneDTOs;
     }
 
     public PhoneDTO(Phone phone) {
-        if (phone.getId() != null)
+        if (phone.hasId())
             this.id = phone.getId();
-            this.number = phone.getNumber();
-            this.info = phone.getInfo();
+        this.number = phone.getNumber();
+        this.info = phone.getInfo();
     }
 
     public int getNumber() {
@@ -51,5 +49,11 @@ public class PhoneDTO {
 
     public void setInfo(String info) {
         this.info = info;
+    }
+
+    public boolean equals(Phone entity) {
+        if (getNumber() != entity.getNumber()) return false;
+        if (getId() != entity.getId()) return false;
+        return getInfo().equals(entity.getInfo());
     }
 }

@@ -6,8 +6,6 @@
 package dtos;
 
 import entities.Address;
-import entities.Person;
-import entities.Zip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +13,8 @@ import java.util.List;
 /**
  * @author tha
  */
-public class AddressDTO {
-    private Long id;
+public class AddressDTO extends DTO {
     private String address;
-
     private ZipDTO zip;
 
     public AddressDTO(String address, ZipDTO zip) {
@@ -32,12 +28,11 @@ public class AddressDTO {
         return addressDTOs;
     }
 
-
     public AddressDTO(Address address) {
-        if (address.getId() != null)
+        if (address.hasId())
             this.id = address.getId();
-            this.address = address.getAddress();
-            this.zip = new ZipDTO(address.getZip());
+        this.address = address.getAddress();
+        this.zip = new ZipDTO(address.getZip());
     }
 
     public String getAddress() {
@@ -54,6 +49,13 @@ public class AddressDTO {
 
     public void setZip(ZipDTO zip) {
         this.zip = zip;
+    }
+
+    public boolean equals(Address entity) {
+        if (getId() != entity.getId()) return false;
+        if (!getAddress().equals(entity.getAddress())) return false;
+        return getZip().equals(entity.getZip());
+
     }
 }
 

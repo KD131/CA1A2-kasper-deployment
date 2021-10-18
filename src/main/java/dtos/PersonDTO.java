@@ -5,7 +5,6 @@
  */
 package dtos;
 
-import entities.Address;
 import entities.Hobby;
 import entities.Person;
 import entities.Phone;
@@ -16,8 +15,7 @@ import java.util.List;
 /**
  * @author tha
  */
-public class PersonDTO {
-    private long id;
+public class PersonDTO extends DTO {
     private List<PhoneDTO> phones;
     private String email;
     private String firstName;
@@ -33,6 +31,7 @@ public class PersonDTO {
         this.address = address;
         this.hobbies = hobbies;
     }
+
     public PersonDTO(List<PhoneDTO> phones, String email, String firstName, String lastName, AddressDTO address) {
         this.phones = phones;
         this.email = email;
@@ -50,7 +49,7 @@ public class PersonDTO {
 
 
     public PersonDTO(Person person) {
-        if (person.getId() != null)
+        if (person.hasId())
             this.id = person.getId();
         this.phones = PhoneDTO.getDtos(person.getPhones());
         this.email = person.getEmail();
@@ -106,5 +105,33 @@ public class PersonDTO {
 
     public void setHobbies(List<HobbyDTO> hobbies) {
         this.hobbies = hobbies;
+    }
+
+    public boolean equals(Person entity) {
+        if (getId() != entity.getId()) return false;
+        if (!getEmail().equals(entity.getEmail())) return false;
+        if (!getFirstName().equals(entity.getFirstName())) return false;
+        if (!getLastName().equals(entity.getLastName())) return false;
+        for (HobbyDTO dto : hobbies) {
+            boolean hasEqual = false;
+            for (Hobby ent : entity.getHobbies()) {
+                if (ent.equals(dto)) {
+                    hasEqual = true;
+                    break;
+                }
+            }
+            if (!hasEqual) return false;
+        }
+        for (PhoneDTO dto : phones) {
+            boolean hasEqual = false;
+            for (Phone ent : entity.getPhones()) {
+                if (ent.equals(dto)) {
+                    hasEqual = true;
+                    break;
+                }
+            }
+            if (!hasEqual) return false;
+        }
+        return getAddress().equals(entity.getAddress());
     }
 }

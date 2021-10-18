@@ -5,8 +5,6 @@
  */
 package dtos;
 
-import entities.Address;
-import entities.Person;
 import entities.Zip;
 
 import java.util.ArrayList;
@@ -15,12 +13,11 @@ import java.util.List;
 /**
  * @author tha
  */
-public class ZipDTO {
-    private int zip;
+public class ZipDTO extends DTO {
     private String city;
 
-    public ZipDTO(int zip, String city) {
-        this.zip = zip;
+    public ZipDTO(long zip, String city) {
+        this.id = zip;
         this.city = city;
     }
 
@@ -31,20 +28,9 @@ public class ZipDTO {
         return zipDTOs;
     }
 
-
     public ZipDTO(Zip zip) {
-        //if (zip.getZip() != null) int can't be compared to nul with != operator
-            this.zip = zip.getZip();
+            this.id = zip.getZip();
             this.city = zip.getCity();
-
-    }
-
-    public int getZip() {
-        return zip;
-    }
-
-    public void setZip(int zip) {
-        this.zip = zip;
     }
 
     public String getCity() {
@@ -53,6 +39,11 @@ public class ZipDTO {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public boolean equals(Zip entity) {
+        if (getId() != entity.getZip()) return false;
+        return getCity().equals(entity.getCity());
     }
 }
 

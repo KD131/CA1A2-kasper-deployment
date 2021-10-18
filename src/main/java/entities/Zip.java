@@ -1,5 +1,7 @@
 package entities;
 
+import dtos.ZipDTO;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,8 +12,11 @@ import java.util.List;
 @Entity
 @NamedQuery(name = "Zip.deleteAllRows", query = "DELETE FROM Zip")
 public class Zip implements Serializable {
-    @Id
-    private int zip;
+
+    private static final long serialVersionUID = 1L;
+
+    @Id // set manually
+    long zip;
     private String city;
     
     @OneToMany(mappedBy = "zip")
@@ -20,18 +25,15 @@ public class Zip implements Serializable {
     public Zip() {
     }
 
-    public Zip(int zip, String city) {
+    public Zip(long zip, String city) {
         this.zip = zip;
         this.city = city;
         this.addresses = new ArrayList<>();
     }
 
-    public int getZip() {
-        return zip;
-    }
-
-    public void setZip(int zip) {
-        this.zip = zip;
+    public Zip(ZipDTO zipDTO) {
+        this.zip = zipDTO.getId();
+        this.city = zipDTO.getCity();
     }
 
     public String getCity() {
@@ -45,5 +47,21 @@ public class Zip implements Serializable {
     public List<Address> getAddresses()
     {
         return addresses;
+    }
+
+    public boolean equals(ZipDTO dto) {
+        if (getZip() != dto.getId()) return false;
+        return getCity().equals(dto.getCity());
+    }
+
+    // Ent methods (pseudo-superclass)
+    public long getZip() {
+        return zip;
+    }
+    public void setZip(long zip) {
+        this.zip = zip;
+    }
+    public boolean hasZip() {
+        return zip != 0;
     }
 }

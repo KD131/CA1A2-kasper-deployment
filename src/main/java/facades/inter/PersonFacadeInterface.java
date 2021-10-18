@@ -1,16 +1,17 @@
 package facades.inter;
 
 import dtos.*;
+import entities.Person;
 
 import java.util.List;
 
 public interface PersonFacadeInterface {
 
-    PersonDTO create(PersonDTO person);
+    PersonDTO create(PersonDTO person) throws Exception;
 
-    PersonDTO edit(PersonDTO person);
+    PersonDTO update(PersonDTO person);
 
-    boolean delete(long id);
+    PersonDTO delete(long id);
 
     PersonDTO getById(long id);
 
