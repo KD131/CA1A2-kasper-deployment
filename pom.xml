@@ -13,7 +13,7 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	    <remote.server>https://www.kavv.dk/manager/text</remote.server>
+	    <remote.server>https://www.kavv.dk/tomcat/manager/text</remote.server>
         <db.name>CA1A2</db.name>
     </properties>
 
